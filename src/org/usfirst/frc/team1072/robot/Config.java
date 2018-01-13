@@ -1,0 +1,68 @@
+/*----------------------------------------------------------------------------*/
+/* Copyright (c) 2017-2018 FIRST. All Rights Reserved. */
+/* Open Source Software - may be modified and shared by FRC teams. The code */
+/* must be accompanied by the FIRST BSD license file in the root directory of */
+/* the project. */
+/*----------------------------------------------------------------------------*/
+
+package org.usfirst.frc.team1072.robot;
+
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+
+/**
+ * The Config keeps track of the initial states of any hardware on the robot
+ */
+public class Config {
+	public static class Drivetrain {
+		/**
+		 * Default motor state (brake or coast)
+		 */
+		public static final NeutralMode NEUTRAL_MODE = NeutralMode.Coast;
+		/**
+		 * Timeout (ms) for operations that set motor controller states
+		 */
+		public static final int TIMEOUT = 0;
+		/**
+		 * Maximum standard current per motor (A)
+		 */
+		public static final int CONTINUOUS_CURRENT_LIMIT = 10;
+		/**
+		 * A motor may deviate to currents up to peak current limit (A), for a
+		 * short peak current duration of time (ms)
+		 */
+		public static final int PEAK_CURRENT_LIMIT = 15, PEAK_CURRENT_DURATION = 100;
+		/**
+		 * Controls whether current limiting is active
+		 */
+		public static final boolean ENABLE_CURRENT_LIMIT = true;
+		/**
+		 * Controls encoder mode (absolute or relative)
+		 */
+		public static final FeedbackDevice ENCODER_MODE = FeedbackDevice.CTRE_MagEncoder_Absolute;
+	}
+	
+	public static class Elevator {
+		/**
+		 * Default motor state (brake or coast)
+		 */
+		public static final NeutralMode NEUTRAL_MODE = NeutralMode.Coast;
+		/**
+		 * Timeout (ms) for operations that set motor controller states
+		 */
+		public static final int TIMEOUT = 0;
+		/**
+		 * Maximum standard current per motor (A)
+		 */
+		public static final int CONTINUOUS_CURRENT_LIMIT = 10;
+		/**
+		 * A motor may deviate to currents up to peak current limit (A), for a
+		 * short peak current duration of time (ms)
+		 */
+		public static final int PEAK_CURRENT_LIMIT = 15, PEAK_CURRENT_DURATION = 100;
+		/**
+		 * Controls whether current limiting is active
+		 */
+		public static final boolean ENABLE_CURRENT_LIMIT = true;
+	}
+}
