@@ -9,24 +9,33 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
- *
+ * Two stage elevator to lift power cubes from the floor to the scale
  */
 public class Elevator extends Subsystem {
 	
+	/**
+	 * Control only this motor, the others will copy its movement
+	 */
 	private TalonSRX master;
+	/**
+	 * Ignore these motors, they will simply follow the master
+	 */
 	private VictorSPX follower1, follower2, follower3;
 	
 	/**
 	 * Initialize the elevator subsystem
 	 */
 	public Elevator() {
+		// Initialize hardware links
 		master = new TalonSRX(TALON);
 		follower1 = new VictorSPX(VICTOR_1);
 		follower2 = new VictorSPX(VICTOR_2);
 		follower3 = new VictorSPX(VICTOR_3);
+		// Set following
 		follower1.follow(master);
 		follower2.follow(master);
 		follower3.follow(master);
+		// Configure settings
 		master.setNeutralMode(NEUTRAL_MODE);
 		master.configContinuousCurrentLimit(CONTINUOUS_CURRENT_LIMIT, TIMEOUT);
 		master.configPeakCurrentLimit(PEAK_CURRENT_LIMIT, TIMEOUT);
@@ -35,13 +44,12 @@ public class Elevator extends Subsystem {
 		master.configForwardLimitSwitchSource(FORWARD_SWITCH, FORWARD_NORMAL, TIMEOUT);
 		master.configReverseLimitSwitchSource(REVERSE_SWITCH, REVERSE_NORMAL, TIMEOUT);
 	}
-
-    // Put methods for controlling this subsystem
-    // here. Call these from Commands.
-
-    public void initDefaultCommand() {
-        // Set the default command for a subsystem here.
-        //setDefaultCommand(new MySpecialCommand());
-    }
+	
+	// Put methods for controlling this subsystem
+	// here. Call these from Commands.
+	
+	public void initDefaultCommand() {
+		// Set the default command for a subsystem here.
+		// setDefaultCommand(new MySpecialCommand());
+	}
 }
-
