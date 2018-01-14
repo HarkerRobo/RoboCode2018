@@ -12,7 +12,10 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  * Two stage elevator to lift power cubes from the floor to the scale
  */
 public class Elevator extends Subsystem {
-	
+	/**
+	 * Singleton instance
+	 */
+	private static Elevator instance;
 	/**
 	 * Control only this motor, the others will copy its movement
 	 */
@@ -25,7 +28,7 @@ public class Elevator extends Subsystem {
 	/**
 	 * Initialize the elevator subsystem
 	 */
-	public Elevator() {
+	private Elevator() {
 		// Initialize hardware links
 		master = new TalonSRX(TALON);
 		follower1 = new VictorSPX(VICTOR_1);
@@ -51,5 +54,17 @@ public class Elevator extends Subsystem {
 	public void initDefaultCommand() {
 		// Set the default command for a subsystem here.
 		// setDefaultCommand(new MySpecialCommand());
+	}
+	
+	/**
+	 * Reference to the singleton instance
+	 * 
+	 * @return the singleton instance
+	 */
+	public static Elevator getInstance() {
+		if(instance == null) {
+			instance = new Elevator();
+		}
+		return instance;
 	}
 }

@@ -15,7 +15,10 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  * scale
  */
 public class Intake extends Subsystem {
-	
+	/**
+	 * Singleton instance
+	 */
+	private static Intake instance;
 	/**
 	 * Control the intake wheels
 	 */
@@ -28,7 +31,7 @@ public class Intake extends Subsystem {
 	/**
 	 * Initialize the intake subsystem
 	 */
-	public Intake() {
+	private Intake() {
 		// Initialize hardware links
 		leftRoller = new TalonSRX(LEFT_ROLLER);
 		rightRoller = new TalonSRX(RIGHT_ROLLER);
@@ -60,5 +63,17 @@ public class Intake extends Subsystem {
 	public void initDefaultCommand() {
 		// Set the default command for a subsystem here.
 		// setDefaultCommand(new MySpecialCommand());
+	}
+	
+	/**
+	 * Reference to the singleton instance
+	 * 
+	 * @return the singleton instance
+	 */
+	public static Intake getInstance() {
+		if(instance == null) {
+			instance = new Intake();
+		}
+		return instance;
 	}
 }

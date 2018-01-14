@@ -14,7 +14,10 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  * 4-Cim west coast drivetrain to move the robot
  */
 public class Drivetrain extends Subsystem {
-	
+	/**
+	 * Singleton instance
+	 */
+	private static Drivetrain instance;
 	/**
 	 * Control only these motors, the others will copy its movement
 	 */
@@ -27,7 +30,7 @@ public class Drivetrain extends Subsystem {
 	/**
 	 * Initialize the drivetrain subsystem
 	 */
-	public Drivetrain() {
+	private Drivetrain() {
 		// Initialize hardware links
 		leftMaster = new TalonSRX(LEFT_TALON);
 		rightMaster = new TalonSRX(RIGHT_TALON);
@@ -64,5 +67,17 @@ public class Drivetrain extends Subsystem {
 	public void initDefaultCommand() {
 		// Set the default command for a subsystem here.
 		// setDefaultCommand(new MySpecialCommand());
+	}
+	
+	/**
+	 * Reference to the singleton instance
+	 * 
+	 * @return the singleton instance
+	 */
+	public static Drivetrain getInstance() {
+		if(instance == null) {
+			instance = new Drivetrain();
+		}
+		return instance;
 	}
 }
