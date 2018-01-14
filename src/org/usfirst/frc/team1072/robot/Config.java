@@ -8,6 +8,7 @@
 package org.usfirst.frc.team1072.robot;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 /**
@@ -64,5 +65,9 @@ public class Config {
 		 * Controls whether current limiting is active
 		 */
 		public static final boolean ENABLE_CURRENT_LIMIT = true;
+		/**
+		 * Normal state of the elevator limit switches
+		 */
+		public static final LimitSwitchNormal FORWARD_NORMAL = LimitSwitchNormal.NormallyOpen, REVERSE_NORMAL = LimitSwitchNormal.NormallyOpen;
 	}
 }

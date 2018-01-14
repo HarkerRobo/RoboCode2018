@@ -7,6 +7,8 @@
 
 package org.usfirst.frc.team1072.robot;
 
+import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
+
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
  * to a variable name. This provides flexibility changing wiring, makes checking
@@ -30,5 +32,9 @@ public class RobotMap {
 		 * 4 775 Pros lift raise and lower the elevator
 		 */
 		public static final int TALON = 0, VICTOR_1 = 0, VICTOR_2 = 0, VICTOR_3 = 0;
+		/**
+		 * Two limit switches prevent the elevator from going too far
+		 */
+		public static final LimitSwitchSource FORWARD_SWITCH = LimitSwitchSource.FeedbackConnector, REVERSE_SWITCH = LimitSwitchSource.FeedbackConnector;
 	}
 }
