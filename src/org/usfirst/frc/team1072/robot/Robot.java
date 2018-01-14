@@ -1,8 +1,9 @@
 /*----------------------------------------------------------------------------*/
-/* Copyright (c) 2017-2018 FIRST. All Rights Reserved.                        */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
+/*
+ * Copyright (c) 2017-2018 FIRST. All Rights Reserved. Open Source Software -
+ * may be modified and shared by FRC teams. The code must be accompanied by the
+ * FIRST BSD license file in the root directory of the project.
+ */
 /*----------------------------------------------------------------------------*/
 
 package org.usfirst.frc.team1072.robot;
@@ -21,7 +22,7 @@ import org.usfirst.frc.team1072.robot.subsystems.Drivetrain;
 public class Robot extends TimedRobot {
 	
 	public static final Drivetrain drivetrain = new Drivetrain();
-
+	
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -30,7 +31,7 @@ public class Robot extends TimedRobot {
 	public void robotInit() {
 		
 	}
-
+	
 	/**
 	 * This function is called once each time the robot enters Disabled mode.
 	 * You can use it to reset any subsystem information you want to clear when
@@ -38,14 +39,14 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void disabledInit() {
-
+		
 	}
-
+	
 	@Override
 	public void disabledPeriodic() {
 		Scheduler.getInstance().run();
 	}
-
+	
 	/**
 	 * This autonomous (along with the chooser code above) shows how to select
 	 * between different autonomous modes using the dashboard. The sendable
@@ -53,23 +54,24 @@ public class Robot extends TimedRobot {
 	 * LabVIEW Dashboard, remove all of the chooser code and uncomment the
 	 * getString code to get the auto name from the text box below the Gyro
 	 *
-	 * <p>You can add additional auto modes by adding additional commands to the
+	 * <p>
+	 * You can add additional auto modes by adding additional commands to the
 	 * chooser code above (like the commented example) or additional comparisons
 	 * to the switch structure below with additional strings & commands.
 	 */
 	@Override
 	public void autonomousInit() {
-
+		
 		/*
 		 * String autoSelected = SmartDashboard.getString("Auto Selector",
 		 * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
 		 * = new MyAutoCommand(); break; case "Default Auto": default:
 		 * autonomousCommand = new ExampleCommand(); break; }
 		 */
-
+		
 		// schedule the autonomous command (example)
 	}
-
+	
 	/**
 	 * This function is called periodically during autonomous.
 	 */
@@ -77,7 +79,7 @@ public class Robot extends TimedRobot {
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
 	}
-
+	
 	@Override
 	public void teleopInit() {
 		// This makes sure that the autonomous stops running when
@@ -85,7 +87,7 @@ public class Robot extends TimedRobot {
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
 	}
-
+	
 	/**
 	 * This function is called periodically during operator control.
 	 */
@@ -93,7 +95,7 @@ public class Robot extends TimedRobot {
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
 	}
-
+	
 	/**
 	 * This function is called periodically during test mode.
 	 */
