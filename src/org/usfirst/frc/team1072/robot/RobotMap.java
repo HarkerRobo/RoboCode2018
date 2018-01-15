@@ -39,6 +39,10 @@ public class RobotMap {
 		 */
 		public static final LimitSwitchSource FORWARD_SWITCH = LimitSwitchSource.FeedbackConnector,
 				REVERSE_SWITCH = LimitSwitchSource.FeedbackConnector;
+		/**
+		 * 1 VersaPlanetary encoder measures elevator position
+		 */
+		public static final int ENCODER = 0;
 	}
 	
 	public static class Intake {

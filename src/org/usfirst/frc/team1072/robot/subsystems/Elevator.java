@@ -46,6 +46,7 @@ public class Elevator extends Subsystem {
 		master.enableCurrentLimit(ENABLE_CURRENT_LIMIT);
 		master.configForwardLimitSwitchSource(FORWARD_SWITCH, FORWARD_NORMAL, TIMEOUT);
 		master.configReverseLimitSwitchSource(REVERSE_SWITCH, REVERSE_NORMAL, TIMEOUT);
+		master.configSelectedFeedbackSensor(ENCODER_MODE, ENCODER, TIMEOUT);
 	}
 	
 	// Put methods for controlling this subsystem

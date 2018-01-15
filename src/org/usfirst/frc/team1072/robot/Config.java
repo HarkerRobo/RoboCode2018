@@ -71,6 +71,10 @@ public class Config {
 		 */
 		public static final LimitSwitchNormal FORWARD_NORMAL = LimitSwitchNormal.NormallyOpen,
 				REVERSE_NORMAL = LimitSwitchNormal.NormallyOpen;
+		/**
+		 * Controls encoder mode (absolute or relative)
+		 */
+		public static final FeedbackDevice ENCODER_MODE = FeedbackDevice.CTRE_MagEncoder_Absolute;
 	}
 	
 	public static class Intake {
