@@ -61,6 +61,20 @@ public class Drivetrain extends Subsystem {
 		consumer.accept(rightMaster);
 	}
 	
+	/**
+	 * @return the left master talon
+	 */
+	public TalonSRX left() {
+		return leftMaster;
+	}
+	
+	/**
+	 * @return the right master talon
+	 */
+	public TalonSRX right() {
+		return rightMaster;
+	}
+	
 	// Put methods for controlling this subsystem
 	// here. Call these from Commands.
 	

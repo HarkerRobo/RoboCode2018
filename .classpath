@@ -32,5 +32,10 @@
 			<attribute name="javadoc_location" value="http://www.ctr-electronics.com/downloads/api/java/html/index.html"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="lib/Pathfinder-Java-1.8.jar" sourcepath="lib/Pathfinder-Java-1.8-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/RoboCode2018/lib/Pathfinder-Java-1.8-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
