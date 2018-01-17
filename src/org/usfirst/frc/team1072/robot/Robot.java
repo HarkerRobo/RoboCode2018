@@ -10,9 +10,10 @@ package org.usfirst.frc.team1072.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import org.usfirst.frc.team1072.robot.subsystems.Drivetrain;
-import org.usfirst.frc.team1072.robot.subsystems.Elevator;
-import org.usfirst.frc.team1072.robot.subsystems.Intake;
+//import org.usfirst.frc.team1072.robot.subsystems.Drivetrain;
+//import org.usfirst.frc.team1072.robot.subsystems.Elevator;
+import org.usfirst.frc.team1072.robot.subsystems.GearIntake;
+//import org.usfirst.frc.team1072.robot.subsystems.Intake;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -22,12 +23,10 @@ import org.usfirst.frc.team1072.robot.subsystems.Intake;
  * project.
  */
 public class Robot extends TimedRobot {
-	/**
-	 * Drivetrain singleton instance
-	 */
-	public static final Drivetrain drivetrain = Drivetrain.getInstance();
-	public static final Elevator elevator = Elevator.getInstance();
-	public static final Intake intake = Intake.getInstance();
+//	public static final Drivetrain drivetrain = Drivetrain.getInstance();
+//	public static final Elevator elevator = Elevator.getInstance();
+//	public static final Intake intake = Intake.getInstance();
+	public static final GearIntake gears = GearIntake.getInstance();
 	
 	/**
 	 * This function is run when the robot is first started up and should be
