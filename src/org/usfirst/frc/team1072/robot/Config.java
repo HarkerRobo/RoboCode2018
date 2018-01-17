@@ -100,4 +100,28 @@ public class Config {
 		 */
 		public static final boolean ENABLE_CURRENT_LIMIT = true;
 	}
+	
+	public static class GearIntake {
+		/**
+		 * Default motor state (brake or coast)
+		 */
+		public static final NeutralMode NEUTRAL_MODE = NeutralMode.Coast;
+		/**
+		 * Timeout (ms) for operations that set motor controller states
+		 */
+		public static final int TIMEOUT = 0;
+		/**
+		 * Maximum standard current per motor (A)
+		 */
+		public static final int CONTINUOUS_CURRENT_LIMIT = 10;
+		/**
+		 * A motor may deviate to currents up to peak current limit (A), for a
+		 * short peak current duration of time (ms)
+		 */
+		public static final int PEAK_CURRENT_LIMIT = 15, PEAK_CURRENT_DURATION = 100;
+		/**
+		 * Controls whether current limiting is active
+		 */
+		public static final boolean ENABLE_CURRENT_LIMIT = true;
+	}
 }
