@@ -6,6 +6,8 @@ import static org.usfirst.frc.team1072.robot.Config.GearIntake.*;
 
 import java.util.function.Consumer;
 
+import org.usfirst.frc.team1072.robot.commands.TestIntakeCommand;
+
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -40,6 +42,14 @@ public class GearIntake extends Subsystem {
 		});
 	}
 	
+	public TalonSRX getRollers() {
+	    return rollers;
+	}
+	
+	public TalonSRX getOrientation() {
+	    return orientation;
+	}
+	
 	/**
 	 * Runs a consumer on both motors
 	 * 
@@ -55,8 +65,7 @@ public class GearIntake extends Subsystem {
 	// here. Call these from Commands.
 	
 	public void initDefaultCommand() {
-		// Set the default command for a subsystem here.
-		// setDefaultCommand(new MySpecialCommand());
+		 setDefaultCommand(new TestIntakeCommand());
 	}
 	
 	/**
@@ -70,29 +79,4 @@ public class GearIntake extends Subsystem {
 		}
 		return instance;
 	}
-	
-	public static double findMaxCurrentOutput(double ms) {
-		rollers.set(ControlMode.PercentOutput,1.0);
-		double maxCurrent = 0;
-		
-		while (System.currentTimeMillis() < ms) {
-			if (getCurrent() > maxCurrent) {
-				maxCurrent = getTotalCurrent();	
-			}
-		}
-		rollers.set(ControlMode.PercentOutput,0.0);
-		return maxCurrent;
-	}
-	
-	public static double findAverageCurrentOutput(double ms) {
-		rollers.set(ControlMode.PercentOutput,1.0);
-		double averageCurrent = 0;
-		
-		while (System.currentTimeMillis() < ms) {
-			averageCurrent += getTotalCurrent();
-		}
-		rollers.set(ControlMode.PercentOutput,0.0);
-		return averageCurrent/ms;
-	}
-	
 }
