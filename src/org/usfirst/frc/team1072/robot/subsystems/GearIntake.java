@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1072.robot.subsystems;
 
 import static org.usfirst.frc.team1072.robot.RobotMap.GearIntake.*;
+
 import static org.usfirst.frc.team1072.robot.Config.GearIntake.*;
 
 import java.util.function.Consumer;
@@ -69,4 +70,29 @@ public class GearIntake extends Subsystem {
 		}
 		return instance;
 	}
+	
+	public static double findMaxCurrentOutput(double ms) {
+		rollers.set(ControlMode.PercentOutput,1.0);
+		double maxCurrent = 0;
+		
+		while (System.currentTimeMillis() < ms) {
+			if (getCurrent() > maxCurrent) {
+				maxCurrent = getTotalCurrent();	
+			}
+		}
+		rollers.set(ControlMode.PercentOutput,0.0);
+		return maxCurrent;
+	}
+	
+	public static double findAverageCurrentOutput(double ms) {
+		rollers.set(ControlMode.PercentOutput,1.0);
+		double averageCurrent = 0;
+		
+		while (System.currentTimeMillis() < ms) {
+			averageCurrent += getTotalCurrent();
+		}
+		rollers.set(ControlMode.PercentOutput,0.0);
+		return averageCurrent/ms;
+	}
+	
 }
