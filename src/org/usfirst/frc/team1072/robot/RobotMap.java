@@ -61,11 +61,11 @@ public class RobotMap {
 		/**
 		 * Compliant wheels bring gears into the intake
 		 */
-		public static final int ROLLERS = 1;
+		public static final int ROLLERS = 7;
 		/**
 		 * one talon controls whether the gear is being held upright or intaking
 		 * from the floor
 		 */
-		public static final int ORIENTATION = 7;
+		public static final int ORIENTATION = 1;
 	}
 }
