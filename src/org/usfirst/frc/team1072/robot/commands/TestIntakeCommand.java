@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class TestIntakeCommand extends Command {
 	
-	public static final double STALL_CURRENT = 18;
+	public static final double STALL_CURRENT = 13;
 	
 	public TestIntakeCommand() {
 		requires(Robot.gears);

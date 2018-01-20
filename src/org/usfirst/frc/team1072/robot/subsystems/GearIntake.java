@@ -66,7 +66,7 @@ public class GearIntake extends Subsystem {
 	// here. Call these from Commands.
 	
 	public void initDefaultCommand() {
-		 setDefaultCommand(new TestIntakeCommand());
+		 //setDefaultCommand(new TestIntakeCommand());
 	}
 	
 	/**
