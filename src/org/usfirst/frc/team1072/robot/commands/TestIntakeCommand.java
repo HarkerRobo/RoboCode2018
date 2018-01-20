@@ -14,13 +14,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class TestIntakeCommand extends Command {
 
+    public static final double STALL_CURRENT = 18;
+    
     public TestIntakeCommand() {
         requires(Robot.gears);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-        Robot.gears.getRollers().set(ControlMode.PercentOutput, 0/*0.4*/);
+        Robot.gears.getRollers().set(ControlMode.PercentOutput, 0.4);
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -32,7 +34,7 @@ public class TestIntakeCommand extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return false;
+        return Robot.gears.getRollers().getOutputCurrent() > STALL_CURRENT;
     }
 
     // Called once after isFinished returns true
