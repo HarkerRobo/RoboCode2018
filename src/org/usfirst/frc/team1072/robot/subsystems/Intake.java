@@ -39,10 +39,6 @@ public class Intake extends Subsystem {
 		rightSolenoid = new Solenoid(RIGHT_SOLENOID);
 		set((talon) -> {
 			talon.setNeutralMode(NEUTRAL_MODE);
-			talon.configContinuousCurrentLimit(CONTINUOUS_CURRENT_LIMIT, TIMEOUT);
-			talon.configPeakCurrentLimit(PEAK_CURRENT_LIMIT, TIMEOUT);
-			talon.configPeakCurrentDuration(PEAK_CURRENT_DURATION, TIMEOUT);
-			talon.enableCurrentLimit(ENABLE_CURRENT_LIMIT);
 		});
 	}
 	
@@ -66,6 +62,38 @@ public class Intake extends Subsystem {
 	}
 	
 	/**
+     * @return the leftRoller
+     */
+    public TalonSRX getLeftRoller()
+    {
+        return leftRoller;
+    }
+
+    /**
+     * @return the rightRoller
+     */
+    public TalonSRX getRightRoller()
+    {
+        return rightRoller;
+    }
+
+    /**
+     * @return the leftSolenoid
+     */
+    public Solenoid getLeftSolenoid()
+    {
+        return leftSolenoid;
+    }
+
+    /**
+     * @return the rightSolenoid
+     */
+    public Solenoid getRightSolenoid()
+    {
+        return rightSolenoid;
+    }
+
+    /**
 	 * Reference to the singleton instance
 	 * 
 	 * @return the singleton instance
