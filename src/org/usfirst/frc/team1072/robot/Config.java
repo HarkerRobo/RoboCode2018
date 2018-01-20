@@ -71,6 +71,10 @@ public class Config {
 		 */
 		public static final LimitSwitchNormal FORWARD_NORMAL = LimitSwitchNormal.NormallyOpen,
 				REVERSE_NORMAL = LimitSwitchNormal.NormallyOpen;
+		/**
+		 * Controls encoder mode (absolute or relative)
+		 */
+		public static final FeedbackDevice ENCODER_MODE = FeedbackDevice.CTRE_MagEncoder_Absolute;
 	}
 	
 	public static class Intake {
@@ -82,18 +86,5 @@ public class Config {
 		 * Timeout (ms) for operations that set motor controller states
 		 */
 		public static final int TIMEOUT = 0;
-		/**
-		 * Maximum standard current per motor (A)
-		 */
-		public static final int CONTINUOUS_CURRENT_LIMIT = 10;
-		/**
-		 * A motor may deviate to currents up to peak current limit (A), for a
-		 * short peak current duration of time (ms)
-		 */
-		public static final int PEAK_CURRENT_LIMIT = 15, PEAK_CURRENT_DURATION = 100;
-		/**
-		 * Controls whether current limiting is active
-		 */
-		public static final boolean ENABLE_CURRENT_LIMIT = true;
 	}
 }

@@ -19,11 +19,11 @@ public class Elevator extends Subsystem {
 	/**
 	 * Control only this motor, the others will copy its movement
 	 */
-	private TalonSRX master;
+	private final TalonSRX master;
 	/**
 	 * Ignore these motors, they will simply follow the master
 	 */
-	private VictorSPX follower1, follower2, follower3;
+	private final VictorSPX follower1, follower2, follower3;
 	
 	/**
 	 * Initialize the elevator subsystem
@@ -46,12 +46,21 @@ public class Elevator extends Subsystem {
 		master.enableCurrentLimit(ENABLE_CURRENT_LIMIT);
 		master.configForwardLimitSwitchSource(FORWARD_SWITCH, FORWARD_NORMAL, TIMEOUT);
 		master.configReverseLimitSwitchSource(REVERSE_SWITCH, REVERSE_NORMAL, TIMEOUT);
+		master.configSelectedFeedbackSensor(ENCODER_MODE, ENCODER, TIMEOUT);
 	}
 	
 	// Put methods for controlling this subsystem
 	// here. Call these from Commands.
 	
-	public void initDefaultCommand() {
+	/**
+     * @return the master talon in the gearbox
+     */
+    public TalonSRX getMaster()
+    {
+        return master;
+    }
+
+    public void initDefaultCommand() {
 		// Set the default command for a subsystem here.
 		// setDefaultCommand(new MySpecialCommand());
 	}

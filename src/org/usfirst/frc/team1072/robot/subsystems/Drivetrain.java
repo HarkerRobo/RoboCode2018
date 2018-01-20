@@ -5,6 +5,8 @@ import static org.usfirst.frc.team1072.robot.Config.Drivetrain.*;
 
 import java.util.function.Consumer;
 
+import org.usfirst.frc.team1072.robot.commands.ManualDriveCommand;
+
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
@@ -21,11 +23,11 @@ public class Drivetrain extends Subsystem {
 	/**
 	 * Control only these motors, the others will copy its movement
 	 */
-	private TalonSRX leftMaster, rightMaster;
+	private final TalonSRX leftMaster, rightMaster;
 	/**
 	 * Ignore these motors, they will simply follow the master
 	 */
-	private VictorSPX leftFollower, rightFollower;
+	private final VictorSPX leftFollower, rightFollower;
 	
 	/**
 	 * Initialize the drivetrain subsystem
@@ -79,8 +81,7 @@ public class Drivetrain extends Subsystem {
 	// here. Call these from Commands.
 	
 	public void initDefaultCommand() {
-		// Set the default command for a subsystem here.
-		// setDefaultCommand(new MySpecialCommand());
+		setDefaultCommand(new ManualDriveCommand());
 	}
 	
 	/**
