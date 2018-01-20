@@ -2,6 +2,8 @@ package org.usfirst.frc.team1072.robot.commands;
 
 import org.usfirst.frc.team1072.robot.Robot;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
@@ -29,7 +31,7 @@ public class ManualDriveCommand extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-    		Robot.drivetrain.drive(0, 0);
+    		Robot.drivetrain.set((talon) -> talon.set(ControlMode.Disabled, 0));
     }
 
     // Called when another command which requires one or more of the same
