@@ -22,11 +22,11 @@ public class Intake extends Subsystem {
 	/**
 	 * Control the intake wheels
 	 */
-	private TalonSRX leftRoller, rightRoller;
+	private final TalonSRX leftRoller, rightRoller;
 	/**
 	 * Expand and contract the intake
 	 */
-	private Solenoid leftSolenoid, rightSolenoid;
+	private final Solenoid leftSolenoid, rightSolenoid;
 	
 	/**
 	 * Initialize the intake subsystem

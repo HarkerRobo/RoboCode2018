@@ -23,11 +23,11 @@ public class Drivetrain extends Subsystem {
 	/**
 	 * Control only these motors, the others will copy its movement
 	 */
-	private TalonSRX leftMaster, rightMaster;
+	private final TalonSRX leftMaster, rightMaster;
 	/**
 	 * Ignore these motors, they will simply follow the master
 	 */
-	private VictorSPX leftFollower, rightFollower;
+	private final VictorSPX leftFollower, rightFollower;
 	
 	/**
 	 * Initialize the drivetrain subsystem

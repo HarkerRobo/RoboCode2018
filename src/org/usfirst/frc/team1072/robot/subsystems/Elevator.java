@@ -19,11 +19,11 @@ public class Elevator extends Subsystem {
 	/**
 	 * Control only this motor, the others will copy its movement
 	 */
-	private TalonSRX master;
+	private final TalonSRX master;
 	/**
 	 * Ignore these motors, they will simply follow the master
 	 */
-	private VictorSPX follower1, follower2, follower3;
+	private final VictorSPX follower1, follower2, follower3;
 	
 	/**
 	 * Initialize the elevator subsystem
@@ -52,7 +52,17 @@ public class Elevator extends Subsystem {
 	// Put methods for controlling this subsystem
 	// here. Call these from Commands.
 	
-	public void initDefaultCommand() {
+	/**
+     * @return the master talon in the gearbox
+     */
+    public TalonSRX getMaster()
+    {
+        return master;
+    }
+
+
+
+    public void initDefaultCommand() {
 		// Set the default command for a subsystem here.
 		// setDefaultCommand(new MySpecialCommand());
 	}
