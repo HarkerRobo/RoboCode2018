@@ -2,6 +2,8 @@ package org.usfirst.frc.team1072.robot.commands;
 
 import org.usfirst.frc.team1072.robot.Robot;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
@@ -9,16 +11,20 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class ElevatorCommand extends Command {
 
+    private final double height;
+    
 	/**
 	 * Initializes an elevator command
 	 * @param height height above the default position
 	 */
     public ElevatorCommand(double height) {
         requires(Robot.elevator);
+        this.height = height;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
+        Robot.elevator.getMaster().set(ControlMode.Position, height);
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -28,7 +34,6 @@ public class ElevatorCommand extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-    		//TODO decide if finished
         return false;
     }
 
