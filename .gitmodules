@@ -1,0 +1,3 @@
+[submodule "HarkerRoboLib"]
+	path = src/org/usfirst/frc/team1072/HarkerRoboLib
+	url = https://github.com/HarkerRobo/HarkerRoboLib
