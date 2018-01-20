@@ -1,7 +1,6 @@
 package org.usfirst.frc.team1072.robot.subsystems;
 
 import static org.usfirst.frc.team1072.robot.RobotMap.GearIntake.*;
-
 import static org.usfirst.frc.team1072.robot.Config.GearIntake.*;
 
 import java.util.function.Consumer;
@@ -32,14 +31,16 @@ public class GearIntake extends Subsystem {
 	private GearIntake() {
 		// Initialize hardware links
 		rollers = new TalonSRX(ROLLERS);
+		rollers.setInverted(true);
 		orientation = new TalonSRX(ORIENTATION);
 		set((talon) -> {
 			talon.setNeutralMode(NEUTRAL_MODE);
-			talon.configContinuousCurrentLimit(CONTINUOUS_CURRENT_LIMIT, TIMEOUT);
-			talon.configPeakCurrentLimit(PEAK_CURRENT_LIMIT, TIMEOUT);
-			talon.configPeakCurrentDuration(PEAK_CURRENT_DURATION, TIMEOUT);
-			talon.enableCurrentLimit(ENABLE_CURRENT_LIMIT);
+//			talon.configContinuousCurrentLimit(CONTINUOUS_CURRENT_LIMIT, TIMEOUT);
+//			talon.configPeakCurrentLimit(PEAK_CURRENT_LIMIT, TIMEOUT);
+//			talon.configPeakCurrentDuration(PEAK_CURRENT_DURATION, TIMEOUT);
+//			talon.enableCurrentLimit(ENABLE_CURRENT_LIMIT);
 		});
+	     orientation.configSelectedFeedbackSensor(ENCODER_MODE, 0, TIMEOUT);
 	}
 	
 	public TalonSRX getRollers() {

@@ -123,5 +123,9 @@ public class Config {
 		 * Controls whether current limiting is active
 		 */
 		public static final boolean ENABLE_CURRENT_LIMIT = true;
+	      /**
+         * Controls encoder mode (absolute or relative)
+         */
+        public static final FeedbackDevice ENCODER_MODE = FeedbackDevice.CTRE_MagEncoder_Absolute;
 	}
 }
