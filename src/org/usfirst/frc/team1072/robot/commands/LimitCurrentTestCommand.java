@@ -18,7 +18,7 @@ public class LimitCurrentTestCommand extends Command {
 	boolean pastMaxCurrent;
 	
 	public LimitCurrentTestCommand() {
-		requires(Robot.gears);
+		requires(Robot.gearIntake);
 		maxCurrent = 17;
 		pastMaxCurrent = false;
 		
@@ -26,14 +26,14 @@ public class LimitCurrentTestCommand extends Command {
 	
 	// Called just before this Command runs the first time
 	protected void initialize() {
-		Robot.gears.getRollers().set(ControlMode.PercentOutput, 1);
+		Robot.gearIntake.getRollers().set(ControlMode.PercentOutput, 1);
 		SmartDashboard.putNumber("max intake current", maxCurrent);
 	}
 	
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
-		if(Robot.gears.getRollers().getOutputCurrent() > SmartDashboard.getNumber("max intake current",
-				Robot.gears.getRollers().getOutputCurrent())) {
+		if(Robot.gearIntake.getRollers().getOutputCurrent() > SmartDashboard.getNumber("max intake current",
+				Robot.gearIntake.getRollers().getOutputCurrent())) {
 			pastMaxCurrent = true;
 		}
 	}
@@ -48,7 +48,7 @@ public class LimitCurrentTestCommand extends Command {
 	
 	// Called once after isFinished returns true
 	protected void end() {
-		Robot.gears.getRollers().set(ControlMode.PercentOutput, 0);
+		Robot.gearIntake.getRollers().set(ControlMode.PercentOutput, 0);
 	}
 	
 	// Called when another command which requires one or more of the same

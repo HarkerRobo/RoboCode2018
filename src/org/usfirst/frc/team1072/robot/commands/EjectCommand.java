@@ -13,12 +13,12 @@ public class EjectCommand extends TimedCommand {
 	
 	public EjectCommand() {
 		super(0.5);
-		requires(Robot.gears);
+		requires(Robot.gearIntake);
 	}
 	
 	// Called just before this Command runs the first time
 	protected void initialize() {
-		Robot.gears.getRollers().set(ControlMode.PercentOutput, -0.5);
+		Robot.gearIntake.getRollers().set(ControlMode.PercentOutput, -0.5);
 	}
 	
 	// Called repeatedly when this Command is scheduled to run
@@ -27,7 +27,7 @@ public class EjectCommand extends TimedCommand {
 	
 	// Called once after timeout
 	protected void end() {
-		Robot.gears.getRollers().set(ControlMode.Disabled, 0);
+		Robot.gearIntake.getRollers().set(ControlMode.Disabled, 0);
 	}
 	
 	// Called when another command which requires one or more of the same

@@ -26,7 +26,7 @@ public class Robot extends TimedRobot {
 	// public static final Drivetrain drivetrain = Drivetrain.getInstance();
 	// public static final Elevator elevator = Elevator.getInstance();
 	// public static final Intake intake = Intake.getInstance();
-	public static final GearIntake gears = GearIntake.getInstance();
+	public static final GearIntake gearIntake = GearIntake.getInstance();
 	
 	/**
 	 * This function is run when the robot is first started up and should be
