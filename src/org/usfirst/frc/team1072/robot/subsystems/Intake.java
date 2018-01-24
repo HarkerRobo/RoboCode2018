@@ -5,7 +5,7 @@ import static org.usfirst.frc.team1072.robot.Config.Intake.*;
 
 import java.util.function.Consumer;
 
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -22,7 +22,7 @@ public class Intake extends Subsystem {
 	/**
 	 * Control the intake wheels
 	 */
-	private final TalonSRX leftRoller, rightRoller;
+	private final VictorSPX leftRoller, rightRoller;
 	/**
 	 * Expand and contract the intake
 	 */
@@ -33,12 +33,12 @@ public class Intake extends Subsystem {
 	 */
 	private Intake() {
 		// Initialize hardware links
-		leftRoller = new TalonSRX(LEFT_ROLLER);
-		rightRoller = new TalonSRX(RIGHT_ROLLER);
+		leftRoller = new VictorSPX(LEFT_ROLLER);
+		rightRoller = new VictorSPX(RIGHT_ROLLER);
 		leftSolenoid = new Solenoid(LEFT_SOLENOID);
 		rightSolenoid = new Solenoid(RIGHT_SOLENOID);
-		set((talon) -> {
-			talon.setNeutralMode(NEUTRAL_MODE);
+		set((victor) -> {
+			victor.setNeutralMode(NEUTRAL_MODE);
 		});
 	}
 	
@@ -48,7 +48,7 @@ public class Intake extends Subsystem {
 	 * @param consumer
 	 *            the function (lambda?) to run on them
 	 */
-	public void set(Consumer<TalonSRX> consumer) {
+	public void set(Consumer<VictorSPX> consumer) {
 		consumer.accept(leftRoller);
 		consumer.accept(rightRoller);
 	}
@@ -64,7 +64,7 @@ public class Intake extends Subsystem {
 	/**
      * @return the leftRoller
      */
-    public TalonSRX getLeftRoller()
+    public VictorSPX getLeftRoller()
     {
         return leftRoller;
     }
@@ -72,7 +72,7 @@ public class Intake extends Subsystem {
     /**
      * @return the rightRoller
      */
-    public TalonSRX getRightRoller()
+    public VictorSPX getRightRoller()
     {
         return rightRoller;
     }

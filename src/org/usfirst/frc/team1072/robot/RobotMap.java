@@ -23,7 +23,7 @@ public class RobotMap {
 		 */
 		public static final int LEFT_TALON = 0, RIGHT_TALON = 0, LEFT_VICTOR = 0, RIGHT_VICTOR = 0;
 		/**
-		 * 1 VersaPlanetary encoder is in each gearbox, is it connected through
+		 * 1 CTRE magnetic encoder is in each gearbox, is it connected through
 		 * #0 or #1
 		 */
 		public static final int ENCODER = 0;
