@@ -5,11 +5,13 @@ import static org.usfirst.frc.team1072.robot.Config.GearIntake.*;
 
 import java.util.function.Consumer;
 
+import org.usfirst.frc.team1072.robot.commands.SlowRaiseCommand;
 import org.usfirst.frc.team1072.robot.commands.TestIntakeCommand;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Intakes cubes in front of the robot, then ejects them onto the switch or the
@@ -33,6 +35,18 @@ public class GearIntake extends Subsystem {
 		rollers = new TalonSRX(ROLLERS);
 		rollers.setInverted(true);
 		orientation = new TalonSRX(ORIENTATION);
+		orientation.setInverted(true);
+		orientation.setSensorPhase(true);
+		orientation.config_kP(0, UP_P, TIMEOUT);
+		orientation.config_kI(0, UP_I, TIMEOUT);
+		orientation.config_kD(0, UP_D, TIMEOUT);
+		orientation.config_kF(0, UP_F, TIMEOUT);
+		orientation.configAllowableClosedloopError(0, 20, 0);
+		orientation.config_kP(1, DOWN_P, TIMEOUT);
+		orientation.config_kI(1, DOWN_I, TIMEOUT);
+		orientation.config_kD(1, DOWN_D, TIMEOUT);
+		orientation.config_kF(1, DOWN_F, TIMEOUT);
+		orientation.configAllowableClosedloopError(1, 20, 0);
 		set((talon) -> {
 			talon.setNeutralMode(NEUTRAL_MODE);
 //			talon.configContinuousCurrentLimit(CONTINUOUS_CURRENT_LIMIT, TIMEOUT);

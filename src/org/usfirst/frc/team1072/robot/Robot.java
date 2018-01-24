@@ -10,10 +10,14 @@ package org.usfirst.frc.team1072.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 // import org.usfirst.frc.team1072.robot.subsystems.Drivetrain;
 // import org.usfirst.frc.team1072.robot.subsystems.Elevator;
 import org.usfirst.frc.team1072.robot.subsystems.GearIntake;
 // import org.usfirst.frc.team1072.robot.subsystems.Intake;
+
+import com.ctre.phoenix.motorcontrol.ControlMode;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -44,7 +48,8 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void disabledInit() {
-		
+		gearIntake.getOrientation().set(ControlMode.Disabled, 0);
+		gearIntake.getRollers().set(ControlMode.Disabled, 0);
 	}
 	
 	@Override
@@ -98,6 +103,7 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
+		SmartDashboard.putNumber("orientation pos", gearIntake.getOrientation().getSelectedSensorPosition(0));
 		Scheduler.getInstance().run();
 	}
 	

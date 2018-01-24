@@ -9,8 +9,12 @@
 package org.usfirst.frc.team1072.robot;
 
 import org.usfirst.frc.team1072.harkerrobolib.wrappers.GamepadWrapper;
+import org.usfirst.frc.team1072.robot.commands.ClosedLoopCommand;
 import org.usfirst.frc.team1072.robot.commands.EjectCommand;
+import org.usfirst.frc.team1072.robot.commands.SlowRaiseCommand;
 import org.usfirst.frc.team1072.robot.commands.TestIntakeCommand;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -50,5 +54,8 @@ public class OI {
 	public static void initializeCommandBindings() {
 		gamepad.getButtonBumperLeft().whenPressed(new TestIntakeCommand());
 		gamepad.getButtonBumperRight().whenPressed(new EjectCommand());
+		gamepad.getButtonA().whenPressed(new SlowRaiseCommand(3.0));
+		gamepad.getButtonB().whenPressed(new ClosedLoopCommand(1920.0));
+		gamepad.getButtonX().whenPressed(new ClosedLoopCommand(-3400.0));
 	}
 }
