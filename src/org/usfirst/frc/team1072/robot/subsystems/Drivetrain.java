@@ -5,8 +5,6 @@ import static org.usfirst.frc.team1072.robot.Config.Drivetrain.*;
 
 import java.util.function.Consumer;
 
-import org.usfirst.frc.team1072.robot.commands.ManualDriveCommand;
-
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
@@ -64,19 +62,24 @@ public class Drivetrain extends Subsystem {
 	}
 	
 	/**
-	 * Drive at a certain speed
-	 * @param left the left speed
-	 * @param right the right speed
+	 * @return the left talon
 	 */
-	public void drive(double left, double right) {
-		//TODO
+	public TalonSRX getLeft() {
+		return leftMaster;
+	}
+	
+	/**
+	 * @return the right talon
+	 */
+	public TalonSRX getRight() {
+		return rightMaster;
 	}
 	
 	// Put methods for controlling this subsystem
 	// here. Call these from Commands.
 	
 	public void initDefaultCommand() {
-		setDefaultCommand(new ManualDriveCommand());
+		//setDefaultCommand(null);
 	}
 	
 	/**
