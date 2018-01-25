@@ -11,6 +11,7 @@ package org.usfirst.frc.team1072.robot;
 import org.usfirst.frc.team1072.harkerrobolib.wrappers.GamepadWrapper;
 import org.usfirst.frc.team1072.robot.commands.ClosedLoopCommand;
 import org.usfirst.frc.team1072.robot.commands.EjectCommand;
+import org.usfirst.frc.team1072.robot.commands.IntakeMotionProfileCommand;
 import org.usfirst.frc.team1072.robot.commands.SlowRaiseCommand;
 import org.usfirst.frc.team1072.robot.commands.TestIntakeCommand;
 
@@ -57,5 +58,6 @@ public class OI {
 		gamepad.getButtonA().whenPressed(new SlowRaiseCommand(3.0));
 		gamepad.getButtonB().whenPressed(new ClosedLoopCommand(1920.0));
 		gamepad.getButtonX().whenPressed(new ClosedLoopCommand(-3400.0));
+		gamepad.getButtonY().whenPressed(new IntakeMotionProfileCommand());
 	}
 }
