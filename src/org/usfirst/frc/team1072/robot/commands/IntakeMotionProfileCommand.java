@@ -6,18 +6,22 @@ import com.ctre.phoenix.motion.TrajectoryPoint;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
 import edu.wpi.first.wpilibj.command.Command;
+import jaci.pathfinder.Waypoint;
 
 public class IntakeMotionProfileCommand extends Command{
 	
 	TrajectoryPoint [] traj;
-	int [] degrees = {45,-45};
+	double [] position = {0.003125,0.608947,2.099985};
+	double [] velocity = {0.125,2.163095,3.347098};
+	double [] heading = {0.000298,0.078973,0.508896};
+	
 	//These need to be the same length, as traj will take parallel elements from degrees to determine what
 	//heading to turn to
 	boolean MPFinished;
 	
 	public IntakeMotionProfileCommand() {
 		requires(Robot.gearIntake);
-		traj = new TrajectoryPoint [2];
+		traj = new TrajectoryPoint [3];
 		MPFinished = false;
 	}
 	
@@ -28,9 +32,9 @@ public class IntakeMotionProfileCommand extends Command{
 	protected void initialize() {
 		for (int i = 0; i < traj.length; i++) {
 			traj[i] = new TrajectoryPoint();
-			traj[i].position = 0;
-			traj[i].headingDeg = degrees[i]; //My theory is that we only need one of these three values to move
-			traj[i].velocity = 0;
+			traj[i].position = position[i];
+			traj[i].headingDeg = heading[i]; //We need all three of these values to move
+			traj[i].velocity = velocity[i];
 			Robot.gearIntake.getOrientation().pushMotionProfileTrajectory(traj[i]);
 		}
 	}
