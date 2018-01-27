@@ -6,7 +6,6 @@ import com.ctre.phoenix.motion.TrajectoryPoint;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
 import edu.wpi.first.wpilibj.command.Command;
-import jaci.pathfinder.Waypoint;
 
 public class IntakeMotionProfileCommand extends Command{
 	
