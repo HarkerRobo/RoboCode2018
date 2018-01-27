@@ -10,9 +10,14 @@ package org.usfirst.frc.team1072.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import org.usfirst.frc.team1072.robot.subsystems.Drivetrain;
-import org.usfirst.frc.team1072.robot.subsystems.Elevator;
-import org.usfirst.frc.team1072.robot.subsystems.Intake;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+// import org.usfirst.frc.team1072.robot.subsystems.Drivetrain;
+// import org.usfirst.frc.team1072.robot.subsystems.Elevator;
+import org.usfirst.frc.team1072.robot.subsystems.GearIntake;
+// import org.usfirst.frc.team1072.robot.subsystems.Intake;
+
+import com.ctre.phoenix.motorcontrol.ControlMode;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -22,12 +27,10 @@ import org.usfirst.frc.team1072.robot.subsystems.Intake;
  * project.
  */
 public class Robot extends TimedRobot {
-	/**
-	 * Drivetrain singleton instance
-	 */
-	public static final Drivetrain drivetrain = Drivetrain.getInstance();
-	public static final Elevator elevator = Elevator.getInstance();
-	public static final Intake intake = Intake.getInstance();
+	// public static final Drivetrain drivetrain = Drivetrain.getInstance();
+	// public static final Elevator elevator = Elevator.getInstance();
+	// public static final Intake intake = Intake.getInstance();
+	public static final GearIntake gearIntake = GearIntake.getInstance();
 	
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -35,7 +38,7 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void robotInit() {
-		
+		OI.initializeCommandBindings();
 	}
 	
 	/**
@@ -45,7 +48,8 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void disabledInit() {
-		
+		gearIntake.getOrientation().set(ControlMode.Disabled, 0);
+		gearIntake.getRollers().set(ControlMode.Disabled, 0);
 	}
 	
 	@Override
@@ -99,6 +103,7 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
+		SmartDashboard.putNumber("orientation pos", gearIntake.getOrientation().getSelectedSensorPosition(0));
 		Scheduler.getInstance().run();
 	}
 	
