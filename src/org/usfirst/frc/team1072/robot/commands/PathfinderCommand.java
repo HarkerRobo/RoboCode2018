@@ -84,7 +84,7 @@ public class PathfinderCommand extends Command {
 		trajPoint.headingDeg = seg.heading; // TODO check if radians
 		trajPoint.isLastPoint = last;
 		trajPoint.position = seg.position;
-		trajPoint.profileSlotSelect = PATHFINDER_PROFILE;
+		trajPoint.profileSlotSelect0 = PATHFINDER_PROFILE;
 		trajPoint.velocity = seg.velocity;
 		trajPoint.zeroPos = first;
 		return trajPoint;
