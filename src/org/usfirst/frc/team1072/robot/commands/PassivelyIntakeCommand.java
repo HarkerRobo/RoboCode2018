@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1072.robot.commands;
 
 import org.usfirst.frc.team1072.robot.Robot;
+import org.usfirst.frc.team1072.robot.subsystems.Intake;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
@@ -15,12 +16,12 @@ public class PassivelyIntakeCommand extends Command {
     public static final double STALL_CURRENT = 18;
 
     public PassivelyIntakeCommand() {
-        requires(Robot.intake);
+        requires(Intake.getInstance());
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-        Robot.intake.set((talon) -> talon.set(ControlMode.PercentOutput, PASSIVE_INTAKE_SPEED));
+        Intake.getInstance().set((talon) -> talon.set(ControlMode.PercentOutput, PASSIVE_INTAKE_SPEED));
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -30,12 +31,12 @@ public class PassivelyIntakeCommand extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return Robot.intake.getLeftRoller().getOutputCurrent() + Robot.intake.getRightRoller().getOutputCurrent() > STALL_CURRENT;
+        return Intake.getInstance().getLeftRoller().getOutputCurrent() + Intake.getInstance().getRightRoller().getOutputCurrent() > STALL_CURRENT;
     }
 
     // Called once after isFinished returns true
     protected void end() {
-        Robot.intake.set((talon) -> talon.set(ControlMode.Disabled, 0));
+        Intake.getInstance().set((talon) -> talon.set(ControlMode.Disabled, 0));
     }
 
     // Called when another command which requires one or more of the same

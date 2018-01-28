@@ -8,14 +8,23 @@
 
 package org.usfirst.frc.team1072.robot;
 
+import java.io.File;
+import java.util.Arrays;
+
 import org.usfirst.frc.team1072.harkerrobolib.wrappers.GamepadWrapper;
 import org.usfirst.frc.team1072.robot.commands.ClosedLoopCommand;
 import org.usfirst.frc.team1072.robot.commands.EjectCommand;
 import org.usfirst.frc.team1072.robot.commands.IntakeMotionProfileCommand;
+import org.usfirst.frc.team1072.robot.commands.LoadArrayProfile;
+import org.usfirst.frc.team1072.robot.commands.LoadMotionProfile;
+import org.usfirst.frc.team1072.robot.commands.PathfinderCommand;
+import org.usfirst.frc.team1072.robot.commands.RunMotionProfile;
 import org.usfirst.frc.team1072.robot.commands.SlowRaiseCommand;
 import org.usfirst.frc.team1072.robot.commands.TestIntakeCommand;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import jaci.pathfinder.Pathfinder;
+import jaci.pathfinder.Trajectory;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -58,6 +67,10 @@ public class OI {
 		gamepad.getButtonA().whenPressed(new SlowRaiseCommand(3.0));
 		gamepad.getButtonB().whenPressed(new ClosedLoopCommand(1920.0));
 		gamepad.getButtonX().whenPressed(new ClosedLoopCommand(-3400.0));
-		gamepad.getButtonY().whenPressed(new IntakeMotionProfileCommand());
+		Trajectory traj = Pathfinder.readFromCSV(new File("/home/lvuser/path.csv"));
+		System.out.println("loaded path: " + Arrays.toString(traj.segments));
+		gamepad.getButtonY().whenPressed(new LoadArrayProfile(Robot.gearIntake.getOrientation(), GeneratedMotionProfile.Points, 10, 2, new RunMotionProfile(Robot.gearIntake.getOrientation(), 10)::start));
+//		gamepad.getButtonY().whenPressed(new PathfinderCommand(traj));
+		//gamepad.getButtonY().whenPressed(new IntakeMotionProfileCommand());
 	}
 }
