@@ -44,7 +44,6 @@ public class MotionProfileCommand extends Command {
     		target.changeMotionControlFramePeriod(Math.max(1, period/2));
     		target.configMotionProfileTrajectoryPeriod(period, 0);
     		target.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, Math.max(1, period/2), 0);
-    		target.setSensorPhase(true); /* keep sensor and motor in phase */
     		target.configNeutralDeadband(settings.deadband, 0);
     		target.config_kF(settings.profileSlot, settings.F, 0);
     		target.config_kP(settings.profileSlot, settings.P, 0);
@@ -84,7 +83,7 @@ public class MotionProfileCommand extends Command {
     			TrajectoryPoint tp = new TrajectoryPoint();
     			tp.position = trajectory.segments[loadNext].position * settings.unitsPerRotation;
     			tp.velocity = trajectory.segments[loadNext].velocity * settings.unitsPerRotation / 600.0;
-    			tp.headingDeg = trajectory.segments[loadNext].heading;
+    			tp.headingDeg = trajectory.segments[loadNext].heading * 180.0 / Math.PI;
     			tp.profileSlotSelect0 = settings.profileSlot;
     			tp.profileSlotSelect1 = 0;
     			tp.timeDur = TrajectoryDuration.Trajectory_Duration_0ms;
