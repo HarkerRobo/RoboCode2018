@@ -38,18 +38,19 @@ public class LoadMotionProfile extends InstantCommand {
 
     @Override
     protected void initialize() {
+    		System.out.println("Load profile init");
     		target.set(ControlMode.MotionProfile, SetValueMotionProfile.Disable.value);
     		target.changeMotionControlFramePeriod(Math.max(1, trajectoryPeriod/2));
     		target.clearMotionProfileHasUnderrun(0);
     		target.clearMotionProfileTrajectories();
-    		target.configMotionProfileTrajectoryPeriod(trajectoryPeriod, 0);
-    		target.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, 0);
+    		target.configMotionProfileTrajectoryPeriod(0 * trajectoryPeriod, 100);
+    		target.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, 100);
     		target.setSensorPhase(true); /* keep sensor and motor in phase */
-    		target.configNeutralDeadband(0.01, 0);
-    		target.config_kF(profileSlot, 0.076, 0);
-    		target.config_kP(profileSlot, 2.000, 0);
-    		target.config_kI(profileSlot, 0.0, 0);
-    		target.config_kD(profileSlot, 20.0, 0);
+    		target.configNeutralDeadband(0.01, 100);
+    		target.config_kF(profileSlot, 0.076, 100);
+    		target.config_kP(profileSlot, 2.000, 100);
+    		target.config_kI(profileSlot, 0.0, 100);
+    		target.config_kD(profileSlot, 20.0, 100);
     		for(int i = 0; i < trajectory.segments.length; i++) {
     			TrajectoryPoint tp = new TrajectoryPoint();
     			tp.position = trajectory.segments[i].position * 4096.0;
@@ -60,11 +61,13 @@ public class LoadMotionProfile extends InstantCommand {
     			tp.timeDur = TrajectoryDuration.Trajectory_Duration_10ms;
     			tp.zeroPos = i == 0;
     			tp.isLastPoint = (i + 1) == trajectory.segments.length;
+    			target.pushMotionProfileTrajectory(tp);
     		}
     }
     
     @Override
     protected void end() {
+    		System.out.println("calling back");
     		callback.run();
     }
 

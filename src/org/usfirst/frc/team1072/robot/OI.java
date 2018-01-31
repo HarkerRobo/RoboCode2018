@@ -17,6 +17,7 @@ import org.usfirst.frc.team1072.robot.commands.EjectCommand;
 import org.usfirst.frc.team1072.robot.commands.IntakeMotionProfileCommand;
 import org.usfirst.frc.team1072.robot.commands.LoadArrayProfile;
 import org.usfirst.frc.team1072.robot.commands.LoadMotionProfile;
+import org.usfirst.frc.team1072.robot.commands.MotionProfileCommand;
 import org.usfirst.frc.team1072.robot.commands.PathfinderCommand;
 import org.usfirst.frc.team1072.robot.commands.RunMotionProfile;
 import org.usfirst.frc.team1072.robot.commands.SlowRaiseCommand;
@@ -68,8 +69,8 @@ public class OI {
 		gamepad.getButtonB().whenPressed(new ClosedLoopCommand(1920.0));
 		gamepad.getButtonX().whenPressed(new ClosedLoopCommand(-3400.0));
 		Trajectory traj = Pathfinder.readFromCSV(new File("/home/lvuser/path.csv"));
-		System.out.println("loaded path: " + Arrays.toString(traj.segments));
-		gamepad.getButtonY().whenPressed(new LoadArrayProfile(Robot.gearIntake.getOrientation(), GeneratedMotionProfile.Points, 10, 2, new RunMotionProfile(Robot.gearIntake.getOrientation(), 10)::start));
+		//gamepad.getButtonY().whenPressed(new LoadMotionProfile(Robot.gearIntake.getOrientation(), traj, 10, 2, new RunMotionProfile(Robot.gearIntake.getOrientation(), 10)::start));
+		gamepad.getButtonY().whenPressed(new MotionProfileCommand(Robot.gearIntake.getOrientation(), traj, MPSettings.ORIENTATION, 10));
 //		gamepad.getButtonY().whenPressed(new PathfinderCommand(traj));
 		//gamepad.getButtonY().whenPressed(new IntakeMotionProfileCommand());
 	}

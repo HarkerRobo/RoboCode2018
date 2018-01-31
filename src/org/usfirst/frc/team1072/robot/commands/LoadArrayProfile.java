@@ -42,7 +42,7 @@ public class LoadArrayProfile extends InstantCommand {
     		target.changeMotionControlFramePeriod(Math.max(1, trajectoryPeriod/2));
     		target.clearMotionProfileHasUnderrun(0);
     		target.clearMotionProfileTrajectories();
-    		target.configMotionProfileTrajectoryPeriod(trajectoryPeriod, 0);
+    		target.configMotionProfileTrajectoryPeriod(0 * trajectoryPeriod, 0);
     		target.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, 0);
     		target.setSensorPhase(true); /* keep sensor and motor in phase */
     		target.configNeutralDeadband(0.01, 0);
@@ -57,9 +57,10 @@ public class LoadArrayProfile extends InstantCommand {
     			tp.headingDeg = 0;
     			tp.profileSlotSelect0 = profileSlot;
     			tp.profileSlotSelect1 = 0;
-    			tp.timeDur = TrajectoryDuration.Trajectory_Duration_0ms;
+    			tp.timeDur = TrajectoryDuration.Trajectory_Duration_10ms;
     			tp.zeroPos = i == 0;
     			tp.isLastPoint = (i + 1) == trajectory.length;
+    			target.pushMotionProfileTrajectory(tp);
     		}
     }
     
