@@ -5,6 +5,8 @@ import static org.usfirst.frc.team1072.robot.Config.Drivetrain.*;
 
 import java.util.function.Consumer;
 
+import org.usfirst.frc.team1072.robot.commands.ArcadeDriveCommand;
+
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
@@ -79,7 +81,7 @@ public class Drivetrain extends Subsystem {
 	// here. Call these from Commands.
 	
 	public void initDefaultCommand() {
-		//setDefaultCommand(null);
+		setDefaultCommand(new ArcadeDriveCommand());
 	}
 	
 	/**
