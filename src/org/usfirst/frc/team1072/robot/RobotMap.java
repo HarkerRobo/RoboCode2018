@@ -21,7 +21,7 @@ public class RobotMap {
 		/**
 		 * 4 Cim motors, 2 per gearbox run the drivetrain
 		 */
-		public static final int LEFT_TALON = 0, RIGHT_TALON = 0, LEFT_VICTOR = 0, RIGHT_VICTOR = 0;
+		public static final int LEFT_TALON = 5, RIGHT_TALON = 2, LEFT_VICTOR = 4, RIGHT_VICTOR = 3;
 		/**
 		 * 1 VersaPlanetary encoder is in each gearbox, is it connected through
 		 * #0 or #1
@@ -33,7 +33,7 @@ public class RobotMap {
 		/**
 		 * 4 775 Pros lift raise and lower the elevator
 		 */
-		public static final int TALON = 0, VICTOR_1 = 0, VICTOR_2 = 0, VICTOR_3 = 0;
+		public static final int TALON = 9, VICTOR_1 = 7, VICTOR_2 = 8, VICTOR_3 = 10;
 		/**
 		 * Two limit switches prevent the elevator from going too far
 		 */
@@ -49,7 +49,7 @@ public class RobotMap {
 		/**
 		 * On each side of the intake, one motor runs two compliant wheels
 		 */
-		public static final int LEFT_ROLLER = 0, RIGHT_ROLLER = 0;
+		public static final int LEFT_ROLLER = 6, RIGHT_ROLLER = 1;
 		/**
 		 * On each side of the intake, a solenoid can extend to shrink the
 		 * intake area
