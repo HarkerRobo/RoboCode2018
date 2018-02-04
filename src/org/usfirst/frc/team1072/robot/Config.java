@@ -28,12 +28,12 @@ public class Config {
 		/**
 		 * Maximum standard current per motor (A)
 		 */
-		public static final int CONTINUOUS_CURRENT_LIMIT = 10;
+		public static final int CONTINUOUS_CURRENT_LIMIT = 8;
 		/**
 		 * A motor may deviate to currents up to peak current limit (A), for a
 		 * short peak current duration of time (ms)
 		 */
-		public static final int PEAK_CURRENT_LIMIT = 15, PEAK_CURRENT_DURATION = 100;
+		public static final int PEAK_CURRENT_LIMIT = 12, PEAK_CURRENT_DURATION = 100;
 		/**
 		 * Controls whether current limiting is active
 		 */

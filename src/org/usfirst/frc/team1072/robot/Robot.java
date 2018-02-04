@@ -16,7 +16,6 @@ import org.usfirst.frc.team1072.robot.subsystems.Drivetrain;
 
 // import org.usfirst.frc.team1072.robot.subsystems.Drivetrain;
 // import org.usfirst.frc.team1072.robot.subsystems.Elevator;
-import org.usfirst.frc.team1072.robot.subsystems.GearIntake;
 // import org.usfirst.frc.team1072.robot.subsystems.Intake;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -63,8 +62,9 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void disabledInit() {
-		gearIntake.getOrientation().set(ControlMode.Disabled, 0);
-		gearIntake.getRollers().set(ControlMode.Disabled, 0);
+		Robot.drivetrain.set((talon) -> talon.set(ControlMode.Disabled, 0));
+//		gearIntake.getOrientation().set(ControlMode.Disabled, 0);
+//		gearIntake.getRollers().set(ControlMode.Disabled, 0);
 	}
 	
 	@Override
@@ -118,7 +118,6 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
-		SmartDashboard.putNumber("orientation pos", gearIntake.getOrientation().getSelectedSensorPosition(0));
 		Scheduler.getInstance().run();
 	}
 	

@@ -5,6 +5,7 @@ import static org.usfirst.frc.team1072.robot.Config.Drivetrain.*;
 
 import java.util.function.Consumer;
 
+import org.usfirst.frc.team1072.robot.commands.ArcadeDriveCommand;
 import org.usfirst.frc.team1072.robot.commands.ManualDriveCommand;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -78,14 +79,14 @@ public class Drivetrain extends Subsystem {
 	/**
 	 * @return the left master talon
 	 */
-	public TalonSRX left() {
+	public TalonSRX getLeft() {
 		return leftMaster;
 	}
 	
 	/**
 	 * @return the right master talon
 	 */
-	public TalonSRX right() {
+	public TalonSRX getRight() {
 		return rightMaster;
 	}
 	
@@ -93,7 +94,7 @@ public class Drivetrain extends Subsystem {
 	// here. Call these from Commands.
 	
 	public void initDefaultCommand() {
-		setDefaultCommand(new ManualDriveCommand());
+		setDefaultCommand(new ArcadeDriveCommand());
 	}
 	
 	/**
