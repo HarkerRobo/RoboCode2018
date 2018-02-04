@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import org.usfirst.frc.team1072.robot.subsystems.Drivetrain;
+
 // import org.usfirst.frc.team1072.robot.subsystems.Drivetrain;
 // import org.usfirst.frc.team1072.robot.subsystems.Elevator;
 import org.usfirst.frc.team1072.robot.subsystems.GearIntake;
@@ -27,10 +29,12 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
  * project.
  */
 public class Robot extends TimedRobot {
-	// public static final Drivetrain drivetrain = Drivetrain.getInstance();
-	// public static final Elevator elevator = Elevator.getInstance();
-	// public static final Intake intake = Intake.getInstance();
-	public static final GearIntake gearIntake = GearIntake.getInstance();
+	/**
+	 * Drivetrain singleton instance
+	 */
+	public static final Drivetrain drivetrain = Drivetrain.getInstance();
+//	public static final Elevator elevator = Elevator.getInstance();
+//	public static final Intake intake = Intake.getInstance();
 	
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -41,6 +45,17 @@ public class Robot extends TimedRobot {
 		OI.initializeCommandBindings();
 	}
 	
+	/* (non-Javadoc)
+	 * @see edu.wpi.first.wpilibj.IterativeRobotBase#robotPeriodic()
+	 */
+	@Override
+	public void robotPeriodic() {
+		SmartDashboard.putNumber("left encoder", drivetrain.getLeft().getSelectedSensorPosition(0));
+		SmartDashboard.putNumber("right encoder", drivetrain.getRight().getSelectedSensorPosition(0));
+		SmartDashboard.putNumber("left encoder velocity", drivetrain.getLeft().getSelectedSensorVelocity(0));
+		SmartDashboard.putNumber("right encoder velocity", drivetrain.getRight().getSelectedSensorVelocity(0));
+	}
+
 	/**
 	 * This function is called once each time the robot enters Disabled mode.
 	 * You can use it to reset any subsystem information you want to clear when

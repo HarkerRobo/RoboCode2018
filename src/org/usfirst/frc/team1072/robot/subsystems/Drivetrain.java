@@ -38,6 +38,9 @@ public class Drivetrain extends Subsystem {
 		rightMaster = new TalonSRX(RIGHT_TALON);
 		leftFollower = new VictorSPX(LEFT_VICTOR);
 		rightFollower = new VictorSPX(RIGHT_VICTOR);
+		//invert
+		leftMaster.setInverted(true);
+		leftFollower.setInverted(true);
 		// Set following
 		leftFollower.follow(leftMaster);
 		rightFollower.follow(rightMaster);
@@ -49,6 +52,15 @@ public class Drivetrain extends Subsystem {
 			talon.configPeakCurrentDuration(PEAK_CURRENT_DURATION, TIMEOUT);
 			talon.enableCurrentLimit(ENABLE_CURRENT_LIMIT);
 			talon.configSelectedFeedbackSensor(ENCODER_MODE, ENCODER, TIMEOUT);
+			//Velocity closed loop
+			talon.configNominalOutputForward(0, 0);
+			talon.configNominalOutputReverse(0, 0);
+			talon.configPeakOutputForward(1, 0);
+			talon.configPeakOutputReverse(-1, 0);
+			talon.config_kF(0, 0.1097 + 0.075, 0);
+			talon.config_kP(0, 0.113333 + 0.05, 0);
+			talon.config_kI(0, 0, 0);
+			talon.config_kD(0, 0, 0);
 		});
 	}
 	
