@@ -53,6 +53,7 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("right encoder", drivetrain.getRight().getSelectedSensorPosition(0));
 		SmartDashboard.putNumber("left encoder velocity", drivetrain.getLeft().getSelectedSensorVelocity(0));
 		SmartDashboard.putNumber("right encoder velocity", drivetrain.getRight().getSelectedSensorVelocity(0));
+		SmartDashboard.putNumber("Diff", drivetrain.getLeft().getSelectedSensorVelocity(0) - drivetrain.getRight().getSelectedSensorVelocity(0));
 	}
 
 	/**

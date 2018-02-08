@@ -25,7 +25,7 @@ public class ArcadeDriveCommand extends Command {
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
 		double x = OI.gamepad.getLeftX(), y = OI.gamepad.getLeftY(),
-				k = Math.max(1.0, Math.max(Math.abs(y + x), Math.abs(y - x)));
+				k = Math.max(1.0, Math.max(Math.abs(y + x * x), Math.abs(y - x * x)));
 		if(Math.abs(x) < THRESHOLD && Math.abs(y) < THRESHOLD) {
 			Robot.drivetrain.set((talon) -> talon.set(ControlMode.Disabled, 0));
 		} else {

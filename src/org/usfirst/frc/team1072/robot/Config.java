@@ -28,12 +28,12 @@ public class Config {
 		/**
 		 * Maximum standard current per motor (A)
 		 */
-		public static final int CONTINUOUS_CURRENT_LIMIT = 8;
+		public static final int CONTINUOUS_CURRENT_LIMIT = 12;
 		/**
 		 * A motor may deviate to currents up to peak current limit (A), for a
 		 * short peak current duration of time (ms)
 		 */
-		public static final int PEAK_CURRENT_LIMIT = 12, PEAK_CURRENT_DURATION = 100;
+		public static final int PEAK_CURRENT_LIMIT = 16, PEAK_CURRENT_DURATION = 100;
 		/**
 		 * Controls whether current limiting is active
 		 */
@@ -42,6 +42,15 @@ public class Config {
 		 * Controls encoder mode (absolute or relative)
 		 */
 		public static final FeedbackDevice ENCODER_MODE = FeedbackDevice.CTRE_MagEncoder_Absolute;
+		
+		public static class Carpet {
+			
+			public static final double kF_LEFT = 0.7 * 1023.0 / 3640.0, kF_RIGHT = 0.7 * 1023.0 / 3880.0;
+			
+			// Autonomous public static final double kP = 0.8, kI = 0.0023, kD = 0.64;
+			public static final double kP = 0.3, kI = 0.0010, kD = 0.34;
+			
+		}
 	}
 	
 	public static class Elevator {

@@ -5,8 +5,10 @@ import static org.usfirst.frc.team1072.robot.Config.Drivetrain.*;
 
 import java.util.function.Consumer;
 
+import org.usfirst.frc.team1072.robot.Config;
 import org.usfirst.frc.team1072.robot.commands.ArcadeDriveCommand;
 import org.usfirst.frc.team1072.robot.commands.ManualDriveCommand;
+import org.usfirst.frc.team1072.robot.commands.TestDrive;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
@@ -46,6 +48,10 @@ public class Drivetrain extends Subsystem {
 		leftFollower.follow(leftMaster);
 		rightFollower.follow(rightMaster);
 		// Configure settings (on both masters)
+		
+		leftMaster.config_kF(0, Config.Drivetrain.Carpet.kF_LEFT, 0);
+		rightMaster.config_kF(0, Config.Drivetrain.Carpet.kF_RIGHT, 0);
+		
 		set((talon) -> {
 			talon.setNeutralMode(NEUTRAL_MODE);
 			talon.configContinuousCurrentLimit(CONTINUOUS_CURRENT_LIMIT, TIMEOUT);
@@ -58,10 +64,11 @@ public class Drivetrain extends Subsystem {
 			talon.configNominalOutputReverse(0, 0);
 			talon.configPeakOutputForward(1, 0);
 			talon.configPeakOutputReverse(-1, 0);
-			talon.config_kF(0, 0.1097 + 0.075, 0);
-			talon.config_kP(0, 0.113333 + 0.05, 0);
-			talon.config_kI(0, 0, 0);
-			talon.config_kD(0, 0, 0);
+//			talon.config_kF(0, 0.5, 0);
+			talon.config_kP(0, Config.Drivetrain.Carpet.kP, 0);
+			talon.config_kI(0, Config.Drivetrain.Carpet.kI, 0);
+			talon.config_kD(0, Config.Drivetrain.Carpet.kD, 0);
+			talon.selectProfileSlot(0, 0);
 		});
 	}
 	
@@ -95,6 +102,7 @@ public class Drivetrain extends Subsystem {
 	
 	public void initDefaultCommand() {
 		setDefaultCommand(new ArcadeDriveCommand());
+//		setDefaultCommand(new TestDrive());
 	}
 	
 	/**

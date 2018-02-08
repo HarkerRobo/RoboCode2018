@@ -122,7 +122,7 @@ public class MotionProfileCommand extends Command {
 					tp.zeroPos = statuses[i].loadNext[j] == 0;
 					tp.isLastPoint = ++statuses[i].loadNext[j] == trajectory.segments.length;
 					target.pushMotionProfileTrajectory(tp);
-					System.out.println("pushed pos = " + tp.position + " vel = " + tp.velocity);
+					//System.out.println("pushed pos = " + tp.position + " vel = " + tp.velocity);
 				}
 			}
 		}
