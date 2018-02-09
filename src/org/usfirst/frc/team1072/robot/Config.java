@@ -84,6 +84,11 @@ public class Config {
 		 * Controls encoder mode (absolute or relative)
 		 */
 		public static final FeedbackDevice ENCODER_MODE = FeedbackDevice.CTRE_MagEncoder_Absolute;
+		
+		/**
+		 * Ratio of Encoder counter to feet, need to test
+		 */
+		public static final int ENCODERTOFEET = 0;
 	}
 	
 	public static class Intake {

@@ -1,6 +1,8 @@
 package org.usfirst.frc.team1072.robot.commands;
 
 import org.usfirst.frc.team1072.robot.Robot;
+import org.usfirst.frc.team1072.robot.Config;
+import org.usfirst.frc.team1072.robot.subsystems.Elevator;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
@@ -15,21 +17,21 @@ public class ElevatorCommand extends Command {
     
 	/**
 	 * Initializes an elevator command
-	 * @param height height above the default position
+	 * @param height height (in feet) above the default position
 	 */
     public ElevatorCommand(double height) {
         requires(Robot.elevator);
-        this.height = height;
+        this.height = height*Config.Elevator.ENCODERTOFEET;
     }
 
     //Called just before this Command runs the first time
     protected void initialize() {
-        Robot.elevator.getMaster().set(ControlMode.Position, height);
+        
     }
 
     //Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    		//TODO move the elevator
+    	Robot.elevator.getMaster().set(ControlMode.Position, height);
     }
 
     //Make this return true when this Command no longer needs to run execute()
