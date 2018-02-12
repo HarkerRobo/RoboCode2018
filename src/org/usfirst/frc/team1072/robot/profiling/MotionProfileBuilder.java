@@ -11,6 +11,12 @@ import jaci.pathfinder.Trajectory;
 /**
  * @author joel
  *
+ *         Creates commands that run motion profiles following the java builder
+ *         paradigm
+ * 
+ *         This is used so that a single command can run multiple motion
+ *         profiles on multiple motor controllers at the same time (e.g. the
+ *         left and right sides of a drivetrain)
  */
 public class MotionProfileBuilder {
 	
@@ -23,6 +29,9 @@ public class MotionProfileBuilder {
 	 * 
 	 * @param period
 	 *            period of each segment (ms)
+	 * 
+	 * @param required
+	 *            subsystems that this command requires
 	 */
 	public MotionProfileBuilder(int period, Subsystem... required) {
 		this.period = period;
@@ -31,7 +40,8 @@ public class MotionProfileBuilder {
 	}
 	
 	/**
-	 * Add a new trajectory to the command
+	 * Add a new trajectory to the command assuming that FPID constants have
+	 * already been loaded into a profile
 	 * 
 	 * @param trajectory
 	 *            the trajectory to follow
@@ -49,6 +59,8 @@ public class MotionProfileBuilder {
 	}
 	
 	/**
+	 * Add a new trajectory to the command with FPID constants sent at runtime
+	 * 
 	 * @param trajectory
 	 *            pathfinder trajectory to follow
 	 * @param profileSlot
@@ -78,6 +90,12 @@ public class MotionProfileBuilder {
 		return this;
 	}
 	
+	/**
+	 * Turns this builder into a real command that can be run, but can no longer
+	 * have additional groups added
+	 * 
+	 * @return the command to run a motion profile
+	 */
 	public MotionProfileCommand build() {
 		return new MotionProfileCommand(period, groups.toArray(new Group[0]), required);
 	}
@@ -124,70 +142,70 @@ public class MotionProfileBuilder {
 			this.distancePerRotation = distancePerRotation;
 			this.targets = targets;
 		}
-
+		
 		/**
 		 * @return the trajectory
 		 */
 		public Trajectory getTrajectory() {
 			return trajectory;
 		}
-
+		
 		/**
 		 * @return the profileSlot
 		 */
 		public int getProfileSlot() {
 			return profileSlot;
 		}
-
+		
 		/**
 		 * @return the f
 		 */
 		public double getF() {
 			return F;
 		}
-
+		
 		/**
 		 * @return the p
 		 */
 		public double getP() {
 			return P;
 		}
-
+		
 		/**
 		 * @return the i
 		 */
 		public double getI() {
 			return I;
 		}
-
+		
 		/**
 		 * @return the d
 		 */
 		public double getD() {
 			return D;
 		}
-
+		
 		/**
 		 * @return the deadband
 		 */
 		public double getDeadband() {
 			return deadband;
 		}
-
+		
 		/**
 		 * @return the unitsPerRotation
 		 */
 		public double getUnitsPerRotation() {
 			return unitsPerRotation;
 		}
-
+		
 		/**
 		 * @return the distancePerRotation
 		 */
 		public double getDistancePerRotation() {
 			return distancePerRotation;
 		}
-
+		
 		/**
 		 * @return the targets
 		 */
