@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.command.TimedCommand;
 public class EjectCommand extends TimedCommand {
 	
 	public EjectCommand() {
-		super(0.5);
+		super(10.0);
 		requires(Robot.intake);
 	}
 	

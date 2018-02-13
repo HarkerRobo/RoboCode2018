@@ -7,6 +7,7 @@ import java.util.function.Consumer;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -26,7 +27,7 @@ public class Intake extends Subsystem {
 	/**
 	 * Expand and contract the intake
 	 */
-	private final Solenoid leftSolenoid, rightSolenoid;
+	private final DoubleSolenoid leftSolenoid, rightSolenoid;
 	
 	/**
 	 * Initialize the intake subsystem
@@ -35,9 +36,18 @@ public class Intake extends Subsystem {
 		// Initialize hardware links
 		leftRoller = new TalonSRX(LEFT_ROLLER);
 		rightRoller = new TalonSRX(RIGHT_ROLLER);
-		leftSolenoid = new Solenoid(LEFT_SOLENOID);
-		rightSolenoid = new Solenoid(RIGHT_SOLENOID);
+		leftSolenoid = new DoubleSolenoid(LEFT_SOLENOID_A, LEFT_SOLENOID_B);
+		rightSolenoid = new DoubleSolenoid(RIGHT_SOLENOID_A, RIGHT_SOLENOID_B);
+		
+		leftRoller.setInverted(true);
+		rightRoller.setInverted(false);
+		
 		set((talon) -> {
+			talon.setNeutralMode(NEUTRAL_MODE);
+			talon.configContinuousCurrentLimit(CONTINUOUS_CURRENT_LIMIT, TIMEOUT);
+			talon.configPeakCurrentLimit(PEAK_CURRENT_LIMIT, TIMEOUT);
+			talon.configPeakCurrentDuration(PEAK_CURRENT_DURATION, TIMEOUT);
+			talon.enableCurrentLimit(ENABLE_CURRENT_LIMIT);
 			talon.setNeutralMode(NEUTRAL_MODE);
 		});
 	}
@@ -80,7 +90,7 @@ public class Intake extends Subsystem {
     /**
      * @return the leftSolenoid
      */
-    public Solenoid getLeftSolenoid()
+    public DoubleSolenoid getLeftSolenoid()
     {
         return leftSolenoid;
     }
@@ -88,7 +98,7 @@ public class Intake extends Subsystem {
     /**
      * @return the rightSolenoid
      */
-    public Solenoid getRightSolenoid()
+    public DoubleSolenoid getRightSolenoid()
     {
         return rightSolenoid;
     }

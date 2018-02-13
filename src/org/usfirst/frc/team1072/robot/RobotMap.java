@@ -54,7 +54,7 @@ public class RobotMap {
 		 * On each side of the intake, a solenoid can extend to shrink the
 		 * intake area
 		 */
-		public static final int LEFT_SOLENOID = 0, RIGHT_SOLENOID = 0;
+		public static final int LEFT_SOLENOID_A = 0, LEFT_SOLENOID_B = 1, RIGHT_SOLENOID_A = 2, RIGHT_SOLENOID_B = 3;
 	}
 	
 //	public static class GearIntake {
