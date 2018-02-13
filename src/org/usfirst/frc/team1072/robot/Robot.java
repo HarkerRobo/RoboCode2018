@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc.team1072.robot.subsystems.Drivetrain;
 import org.usfirst.frc.team1072.robot.subsystems.Elevator;
+import org.usfirst.frc.team1072.robot.subsystems.Intake;
 
 // import org.usfirst.frc.team1072.robot.subsystems.Drivetrain;
 // import org.usfirst.frc.team1072.robot.subsystems.Elevator;
@@ -34,7 +35,7 @@ public class Robot extends TimedRobot {
 	 */
 	public static final Drivetrain drivetrain = Drivetrain.getInstance();
 	public static final Elevator elevator = Elevator.getInstance();
-//	public static final Intake intake = Intake.getInstance();
+	public static final Intake intake = Intake.getInstance();
 	
 	/**
 	 * This function is run when the robot is first started up and should be

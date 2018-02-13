@@ -15,8 +15,6 @@ import org.usfirst.frc.team1072.harkerrobolib.wrappers.GamepadWrapper;
 import org.usfirst.frc.team1072.robot.commands.ClosedLoopCommand;
 import org.usfirst.frc.team1072.robot.commands.DriveStraight;
 import org.usfirst.frc.team1072.robot.commands.ElevatorCommand;
-import org.usfirst.frc.team1072.robot.commands.LoadArrayProfile;
-import org.usfirst.frc.team1072.robot.commands.LoadMotionProfile;
 import org.usfirst.frc.team1072.robot.commands.RunMotionProfile;
 import org.usfirst.frc.team1072.robot.profiling.MotionProfileBuilder;
 import org.usfirst.frc.team1072.robot.profiling.MotionProfileCommand;

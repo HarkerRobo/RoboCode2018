@@ -7,7 +7,6 @@ import java.util.function.Consumer;
 
 import org.usfirst.frc.team1072.robot.Config;
 import org.usfirst.frc.team1072.robot.commands.ArcadeDriveCommand;
-import org.usfirst.frc.team1072.robot.commands.ManualDriveCommand;
 import org.usfirst.frc.team1072.robot.commands.TestDrive;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
