@@ -68,12 +68,12 @@ public class OI {
 		// gamepad.getButtonX().whenPressed(new ClosedLoopCommand(-3400.0));
 //		Trajectory traj = Pathfinder.readFromCSV(new File("/home/lvuser/path.csv"));
 //		System.out.println("Reading trajectories");
-//		Trajectory left = Pathfinder.readFromCSV(new File("/home/lvuser/leftPath2.csv")),
-//				right = Pathfinder.readFromCSV(new File("/home/lvuser/rightPath2.csv"));
-//		System.out.println("Read trajectories");
-//		gamepad.getButtonY().whenPressed(new MotionProfileBuilder(5, Robot.drivetrain)
-//				.group(left, 1, 5.876, 0.3, 0.0, 0.0, 0.00, 4096.0, 4.0 * Math.PI / 12.0/*0.31918*/, Robot.drivetrain.getLeft())
-//				.group(right, 1, 5.876, 0.3, 0.0, 0.0, 0.00, 4096.0, 4.0 * Math.PI / 12.0/*0.31918*/, Robot.drivetrain.getRight()).build());
+		Trajectory left = Pathfinder.readFromCSV(new File("/home/lvuser/leftPath4.csv")),
+				right = Pathfinder.readFromCSV(new File("/home/lvuser/rightPath4.csv"));
+		System.out.println("Read trajectories");
+		gamepad.getButtonY().whenPressed(new MotionProfileBuilder(5, Robot.drivetrain)
+				.group(left, 2, 0.7 * 1023.0 / 3640.0, 0.004, 0.0, 0.0, 0.00, 4096.0, 4.0 * Math.PI / 12.0/*0.31918*/, Robot.drivetrain.getLeft())
+				.group(right, 2, 0.7 * 1023.0 / 3640.0, 0.004, 0.0, 0.0, 0.00, 4096.0, 4.0 * Math.PI / 12.0/*0.31918*/, Robot.drivetrain.getRight()).build());
 		//gamepad.getButtonA().whenPressed(new ElevatorCommand());
 //		gamepad.getButtonY().whenPressed(new ElevatorCommand(1.0));
 		//gamepad.getButtonB().whenPressed(new ClosedLoopCommand(2000));

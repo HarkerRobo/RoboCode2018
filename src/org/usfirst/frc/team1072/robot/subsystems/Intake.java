@@ -27,7 +27,11 @@ public class Intake extends Subsystem {
 	/**
 	 * Expand and contract the intake
 	 */
-	private final DoubleSolenoid leftSolenoid, rightSolenoid;
+	private DoubleSolenoid leftSolenoid, rightSolenoid;
+	/**
+	 * Are all of the parts of this intake functioning?
+	 */
+	private boolean solenoidStatus;
 	
 	/**
 	 * Initialize the intake subsystem
@@ -36,8 +40,13 @@ public class Intake extends Subsystem {
 		// Initialize hardware links
 		leftRoller = new TalonSRX(LEFT_ROLLER);
 		rightRoller = new TalonSRX(RIGHT_ROLLER);
-		leftSolenoid = new DoubleSolenoid(LEFT_SOLENOID_A, LEFT_SOLENOID_B);
-		rightSolenoid = new DoubleSolenoid(RIGHT_SOLENOID_A, RIGHT_SOLENOID_B);
+		try {
+			leftSolenoid = new DoubleSolenoid(LEFT_SOLENOID_A, LEFT_SOLENOID_B);
+			rightSolenoid = new DoubleSolenoid(RIGHT_SOLENOID_A, RIGHT_SOLENOID_B);
+			solenoidStatus = true;
+		} catch (Exception e) {
+			System.err.println("Could not find intake solenoids");
+		}
 		
 		leftRoller.setInverted(true);
 		rightRoller.setInverted(false);
