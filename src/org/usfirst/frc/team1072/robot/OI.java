@@ -14,7 +14,7 @@ import java.util.Arrays;
 import org.usfirst.frc.team1072.harkerrobolib.wrappers.GamepadWrapper;
 import org.usfirst.frc.team1072.robot.commands.ClosedLoopCommand;
 import org.usfirst.frc.team1072.robot.commands.DriveStraight;
-import org.usfirst.frc.team1072.robot.commands.ElevatorCommand;
+import org.usfirst.frc.team1072.robot.commands.ElevatorPositionCommand;
 import org.usfirst.frc.team1072.robot.commands.RunMotionProfile;
 import org.usfirst.frc.team1072.robot.profiling.MotionProfileBuilder;
 import org.usfirst.frc.team1072.robot.profiling.MotionProfileCommand;
@@ -73,7 +73,9 @@ public class OI {
 //				.group(left, 1, 5.876, 0.3, 0.0, 0.0, 0.00, 4096.0, 4.0 * Math.PI / 12.0/*0.31918*/, Robot.drivetrain.getLeft())
 //				.group(right, 1, 5.876, 0.3, 0.0, 0.0, 0.00, 4096.0, 4.0 * Math.PI / 12.0/*0.31918*/, Robot.drivetrain.getRight()).build());
 		//gamepad.getButtonA().whenPressed(new ElevatorCommand());
-		gamepad.getButtonY().whenPressed(new ElevatorCommand(1.0));
+		gamepad.getButtonA().whenPressed(new ElevatorPositionCommand(0));
+		gamepad.getButtonB().whenPressed(new ElevatorPositionCommand(5.0));
+		gamepad.getButtonY().whenPressed(new ElevatorPositionCommand(6.333));
 		//gamepad.getButtonB().whenPressed(new ClosedLoopCommand(2000));
 		System.out.println("Built command");
 		// gamepad.getButtonY().whenPressed(new

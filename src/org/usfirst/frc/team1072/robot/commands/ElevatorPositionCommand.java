@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  * Command to move the elevator to a specific height
  */
-public class ElevatorCommand extends Command {
+public class ElevatorPositionCommand extends Command {
 
     private final double height;
     
@@ -19,7 +19,7 @@ public class ElevatorCommand extends Command {
 	 * Initializes an elevator command
 	 * @param height height (in feet) above the default position
 	 */
-    public ElevatorCommand(double height) {
+    public ElevatorPositionCommand(double height) {
         requires(Robot.elevator);
         this.height = height*Config.Elevator.ENCODERTOFEET;
     }
