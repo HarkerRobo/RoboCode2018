@@ -56,7 +56,7 @@ public class Drivetrain extends Subsystem {
 		// Configure settings (on both masters)
 		set((talon) -> talon.setNeutralMode(NEUTRAL_MODE));
 		// Configure current limiting
-		if(currentLimitStatus = log(leftMaster.configContinuousCurrentLimit(CONTINUOUS_CURRENT_LIMIT, TIMEOUT),
+		if(currentLimitStatus = ENABLE_CURRENT_LIMIT && log(leftMaster.configContinuousCurrentLimit(CONTINUOUS_CURRENT_LIMIT, TIMEOUT),
 				"Failed to configure left continuous current limit")
 				&& log(leftMaster.configPeakCurrentLimit(PEAK_CURRENT_LIMIT, TIMEOUT),
 						"Failed to configure left peak current limit")
@@ -71,7 +71,7 @@ public class Drivetrain extends Subsystem {
 			set((talon) -> talon.enableCurrentLimit(ENABLE_CURRENT_LIMIT));
 		}
 		
-		if(voltageCompensationStatus = log(leftMaster.configVoltageCompSaturation(VOLTAGE_SATURATION, TIMEOUT),
+		if(voltageCompensationStatus = ENABLE_VOLTAGE_COMPENSATION && log(leftMaster.configVoltageCompSaturation(VOLTAGE_SATURATION, TIMEOUT),
 				"Failed to configure left voltage saturation")
 				&& log(rightMaster.configVoltageCompSaturation(VOLTAGE_SATURATION, TIMEOUT),
 						"Failed to configure right voltage saturation")) {
