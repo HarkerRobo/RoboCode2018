@@ -24,24 +24,36 @@ public class Config {
 		/**
 		 * Timeout (ms) for operations that set motor controller states
 		 */
-		public static final int TIMEOUT = 0;
+		public static final int TIMEOUT = 100;
 		/**
 		 * Maximum standard current per motor (A)
 		 */
-		public static final int CONTINUOUS_CURRENT_LIMIT = 12;
+		public static final int CONTINUOUS_CURRENT_LIMIT = 30;
 		/**
 		 * A motor may deviate to currents up to peak current limit (A), for a
 		 * short peak current duration of time (ms)
 		 */
-		public static final int PEAK_CURRENT_LIMIT = 16, PEAK_CURRENT_DURATION = 100;
+		public static final int PEAK_CURRENT_LIMIT = 35, PEAK_CURRENT_DURATION = 100;
 		/**
 		 * Controls whether current limiting is active
 		 */
-		public static final boolean ENABLE_CURRENT_LIMIT = true;
+		public static final boolean ENABLE_CURRENT_LIMIT = false;
 		/**
 		 * Controls encoder mode (absolute or relative)
 		 */
 		public static final FeedbackDevice ENCODER_MODE = FeedbackDevice.CTRE_MagEncoder_Absolute;
+		/**
+		 * Voltage compensation saturation
+		 */
+		public static double VOLTAGE_SATURATION = 10;
+		/**
+		 * Use voltage compensation
+		 */
+		public static boolean ENABLE_VOLTAGE_COMPENSATION = true;
+		/**
+		 * Seconds to ramp from neutral to full
+		 */
+		public static double RAMP_SPEED = 1.0;
 		
 		public static class Carpet {
 			
@@ -61,7 +73,7 @@ public class Config {
 		/**
 		 * Timeout (ms) for operations that set motor controller states
 		 */
-		public static final int TIMEOUT = 0;
+		public static final int TIMEOUT = 100;
 		/**
 		 * Maximum standard current per motor (A)
 		 */
@@ -84,7 +96,18 @@ public class Config {
 		 * Controls encoder mode (absolute or relative)
 		 */
 		public static final FeedbackDevice ENCODER_MODE = FeedbackDevice.CTRE_MagEncoder_Absolute;
-		
+		/**
+		 * Voltage compensation saturation
+		 */
+		public static double VOLTAGE_SATURATION = 10;
+		/**
+		 * Use voltage compensation
+		 */
+		public static boolean ENABLE_VOLTAGE_COMPENSATION = true;
+		/**
+		 * Seconds to ramp from neutral to full
+		 */
+		public static double RAMP_SPEED = 1.0;
 		/**
 		 * Ratio of Encoder counter to feet, need to test
 		 */
@@ -92,17 +115,6 @@ public class Config {
 	}
 	
 	public static class Intake {
-		/**
-		 * Default motor state (brake or coast)
-		 */
-		public static final NeutralMode NEUTRAL_MODE = NeutralMode.Coast;
-		/**
-		 * Timeout (ms) for operations that set motor controller states
-		 */
-		public static final int TIMEOUT = 0;
-	}
-	
-	public static class GearIntake {
 		/**
 		 * Default motor state (brake or coast)
 		 */
@@ -124,23 +136,5 @@ public class Config {
 		 * Controls whether current limiting is active
 		 */
 		public static final boolean ENABLE_CURRENT_LIMIT = true;
-	     /**
-         * Controls encoder mode (absolute or relative)
-         */
-        public static final FeedbackDevice ENCODER_MODE = FeedbackDevice.CTRE_MagEncoder_Absolute;
-        /**
-         * PIDF constants for closed loop position on the orientation moving up
-         * 
-         * https://github.com/CrossTheRoadElec/Phoenix-Documentation#position-closed-loop-walkthrough
-         */
-        public static final double UP_P = 1.0, UP_I = 0.0, UP_D = 0, UP_F = 0.04;
-        /**
-         * PIDF constants for closed loop position on the orientation moving down
-         * 
-         * https://github.com/CrossTheRoadElec/Phoenix-Documentation#position-closed-loop-walkthrough
-         */
-        public static final double DOWN_P = 1.0, DOWN_I = 0.0, DOWN_D = 0, DOWN_F = -0.04;
-        
-        public static final double MAX = 2000.0, MIN = -4000.0;
 	}
 }

@@ -14,7 +14,9 @@ import java.util.Arrays;
 import org.usfirst.frc.team1072.harkerrobolib.wrappers.GamepadWrapper;
 import org.usfirst.frc.team1072.robot.commands.ClosedLoopCommand;
 import org.usfirst.frc.team1072.robot.commands.DriveStraight;
+import org.usfirst.frc.team1072.robot.commands.EjectCommand;
 import org.usfirst.frc.team1072.robot.commands.ElevatorCommand;
+import org.usfirst.frc.team1072.robot.commands.IntakeCommand;
 import org.usfirst.frc.team1072.robot.commands.RunMotionProfile;
 import org.usfirst.frc.team1072.robot.profiling.MotionProfileBuilder;
 import org.usfirst.frc.team1072.robot.profiling.MotionProfileCommand;
@@ -65,16 +67,19 @@ public class OI {
 		// gamepad.getButtonB().whenPressed(new ClosedLoopCommand(1920.0));
 		// gamepad.getButtonX().whenPressed(new ClosedLoopCommand(-3400.0));
 //		Trajectory traj = Pathfinder.readFromCSV(new File("/home/lvuser/path.csv"));
-		System.out.println("Reading trajectories");
-		Trajectory left = Pathfinder.readFromCSV(new File("/home/lvuser/leftPath2.csv")),
-				right = Pathfinder.readFromCSV(new File("/home/lvuser/rightPath2.csv"));
-		System.out.println("Read trajectories");
+//		System.out.println("Reading trajectories");
+//		Trajectory left = Pathfinder.readFromCSV(new File("/home/lvuser/leftPath2.csv")),
+//				right = Pathfinder.readFromCSV(new File("/home/lvuser/rightPath2.csv"));
+//		System.out.println("Read trajectories");
 //		gamepad.getButtonY().whenPressed(new MotionProfileBuilder(5, Robot.drivetrain)
 //				.group(left, 1, 5.876, 0.3, 0.0, 0.0, 0.00, 4096.0, 4.0 * Math.PI / 12.0/*0.31918*/, Robot.drivetrain.getLeft())
 //				.group(right, 1, 5.876, 0.3, 0.0, 0.0, 0.00, 4096.0, 4.0 * Math.PI / 12.0/*0.31918*/, Robot.drivetrain.getRight()).build());
 		//gamepad.getButtonA().whenPressed(new ElevatorCommand());
-		gamepad.getButtonY().whenPressed(new ElevatorCommand(1.0));
+//		gamepad.getButtonY().whenPressed(new ElevatorCommand(1.0));
 		//gamepad.getButtonB().whenPressed(new ClosedLoopCommand(2000));
+//		gamepad.getButtonA().whenPressed(new IntakeCommand());
+//		gamepad.getButtonB().whenPressed(new EjectCommand());
+		gamepad.getButtonA().whenPressed(new DriveStraight());
 		System.out.println("Built command");
 		// gamepad.getButtonY().whenPressed(new
 		// LoadMotionProfile(Robot.gearIntake.getOrientation(), traj, 10, 2, new

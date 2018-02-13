@@ -30,8 +30,10 @@ public class ArcadeDriveCommand extends Command {
 		if(Math.abs(x) < THRESHOLD && Math.abs(y) < THRESHOLD) {
 			Robot.drivetrain.set((talon) -> talon.set(ControlMode.Disabled, 0));
 		} else {
-			Robot.drivetrain.getLeft().set(ControlMode.Velocity, 5000.0 * (y + x * Math.abs(x)) / k);
-			Robot.drivetrain.getRight().set(ControlMode.Velocity, 5000.0 * (y - x * Math.abs(x)) / k);
+//			Robot.drivetrain.getLeft().set(ControlMode.Velocity, 5000.0 * (y + x * Math.abs(x)) / k);
+//			Robot.drivetrain.getRight().set(ControlMode.Velocity, 5000.0 * (y - x * Math.abs(x)) / k);
+			Robot.drivetrain.getLeft().set(ControlMode.PercentOutput, (y + x * Math.abs(x)) / k);
+			Robot.drivetrain.getRight().set(ControlMode.PercentOutput, (y - x * Math.abs(x)) / k);
 		}
 		
 	}
