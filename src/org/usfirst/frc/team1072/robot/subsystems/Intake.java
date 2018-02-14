@@ -8,7 +8,6 @@ import java.util.function.Consumer;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
@@ -25,9 +24,9 @@ public class Intake extends Subsystem {
 	 */
 	private final TalonSRX leftRoller, rightRoller;
 	/**
-	 * Expand and contract the intake
+	 * Expand and contract the intake, as well as raise and lower it
 	 */
-	private DoubleSolenoid leftSolenoid, rightSolenoid;
+	private DoubleSolenoid expansion, raise;
 	/**
 	 * Are all of the parts of this intake functioning?
 	 */
@@ -41,11 +40,11 @@ public class Intake extends Subsystem {
 		leftRoller = new TalonSRX(LEFT_ROLLER);
 		rightRoller = new TalonSRX(RIGHT_ROLLER);
 		try {
-			leftSolenoid = new DoubleSolenoid(LEFT_SOLENOID_A, LEFT_SOLENOID_B);
-			rightSolenoid = new DoubleSolenoid(RIGHT_SOLENOID_A, RIGHT_SOLENOID_B);
+			expansion = new DoubleSolenoid(EXPANSION_SOLENOID_A, EXPANSION_SOLENOID_B);
+			raise = new DoubleSolenoid(RAISING_SOLENOID_A, RAISING_SOLENOID_B);
 			solenoidStatus = true;
 		} catch (Exception e) {
-			System.err.println("Could not find intake solenoids");
+			System.err.println("Intake: Could not find intake solenoids");
 		}
 		
 		leftRoller.setInverted(true);
@@ -97,22 +96,20 @@ public class Intake extends Subsystem {
     }
 
     /**
-     * @return the leftSolenoid
-     */
-    public DoubleSolenoid getLeftSolenoid()
-    {
-        return leftSolenoid;
-    }
+	 * @return the expanding and contracting solenoid
+	 */
+	public DoubleSolenoid getExpansion() {
+		return expansion;
+	}
 
-    /**
-     * @return the rightSolenoid
-     */
-    public DoubleSolenoid getRightSolenoid()
-    {
-        return rightSolenoid;
-    }
+	/**
+	 * @return the raising and lowering solenoid
+	 */
+	public DoubleSolenoid getRaise() {
+		return raise;
+	}
 
-    /**
+	/**
 	 * Reference to the singleton instance
 	 * 
 	 * @return the singleton instance

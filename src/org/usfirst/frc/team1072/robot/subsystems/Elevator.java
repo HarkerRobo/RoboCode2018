@@ -1,6 +1,9 @@
 package org.usfirst.frc.team1072.robot.subsystems;
 
 import static org.usfirst.frc.team1072.robot.RobotMap.Elevator.*;
+
+import org.usfirst.frc.team1072.robot.commands.JoystickElevatorCommand;
+
 import static org.usfirst.frc.team1072.robot.Config.Elevator.*;
 
 import com.ctre.phoenix.ErrorCode;
@@ -113,8 +116,7 @@ public class Elevator extends Subsystem {
 	}
 	
 	public void initDefaultCommand() {
-		// Set the default command for a subsystem here.
-		// setDefaultCommand(new MySpecialCommand());
+		 setDefaultCommand(new JoystickElevatorCommand());
 	}
 	
 	/**

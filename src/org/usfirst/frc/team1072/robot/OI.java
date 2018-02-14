@@ -16,8 +16,11 @@ import org.usfirst.frc.team1072.robot.commands.ClosedLoopCommand;
 import org.usfirst.frc.team1072.robot.commands.DriveStraight;
 import org.usfirst.frc.team1072.robot.commands.EjectCommand;
 import org.usfirst.frc.team1072.robot.commands.ElevatorCommand;
+import org.usfirst.frc.team1072.robot.commands.InOut;
 import org.usfirst.frc.team1072.robot.commands.IntakeCommand;
 import org.usfirst.frc.team1072.robot.commands.RunMotionProfile;
+import org.usfirst.frc.team1072.robot.commands.UpDown;
+import org.usfirst.frc.team1072.robot.commands.VariableSpeedCommand;
 import org.usfirst.frc.team1072.robot.profiling.MotionProfileBuilder;
 import org.usfirst.frc.team1072.robot.profiling.MotionProfileCommand;
 
@@ -68,18 +71,24 @@ public class OI {
 		// gamepad.getButtonX().whenPressed(new ClosedLoopCommand(-3400.0));
 //		Trajectory traj = Pathfinder.readFromCSV(new File("/home/lvuser/path.csv"));
 //		System.out.println("Reading trajectories");
-		Trajectory left = Pathfinder.readFromCSV(new File("/home/lvuser/leftPath4.csv")),
-				right = Pathfinder.readFromCSV(new File("/home/lvuser/rightPath4.csv"));
-		System.out.println("Read trajectories");
-		gamepad.getButtonY().whenPressed(new MotionProfileBuilder(5, Robot.drivetrain)
-				.group(left, 2, 0.7 * 1023.0 / 3640.0, 0.004, 0.0, 0.0, 0.00, 4096.0, 4.0 * Math.PI / 12.0/*0.31918*/, Robot.drivetrain.getLeft())
-				.group(right, 2, 0.7 * 1023.0 / 3640.0, 0.004, 0.0, 0.0, 0.00, 4096.0, 4.0 * Math.PI / 12.0/*0.31918*/, Robot.drivetrain.getRight()).build());
+//		Trajectory left = Pathfinder.readFromCSV(new File("/home/lvuser/leftPath4.csv")),
+//				right = Pathfinder.readFromCSV(new File("/home/lvuser/rightPath4.csv"));
+//		System.out.println("Read trajectories");
+//		gamepad.getButtonY().whenPressed(new MotionProfileBuilder(5, Robot.drivetrain)
+//				.group(left, 2, 4.0 * Math.PI / 12.0/*0.31918*/, Robot.drivetrain.getLeft())
+//				.group(right, 2, 4.0 * Math.PI / 12.0/*0.31918*/, Robot.drivetrain.getRight()).build());
 		//gamepad.getButtonA().whenPressed(new ElevatorCommand());
 //		gamepad.getButtonY().whenPressed(new ElevatorCommand(1.0));
 		//gamepad.getButtonB().whenPressed(new ClosedLoopCommand(2000));
 //		gamepad.getButtonA().whenPressed(new IntakeCommand());
 //		gamepad.getButtonB().whenPressed(new EjectCommand());
-		gamepad.getButtonA().whenPressed(new DriveStraight());
+//		gamepad.getButtonA().whenPressed(new DriveStraight());
+		gamepad.getButtonA().whenPressed(new UpDown());
+		gamepad.getButtonB().whenPressed(new InOut());
+		gamepad.getButtonX().whilePressed(new VariableSpeedCommand(1.0, "Button X"));
+		gamepad.getButtonY().whilePressed(new VariableSpeedCommand(-1.0, "Button Y"));
+//		gamepad.getButtonX().whenPressed(new IntakeCommand());
+//		gamepad.getButtonY().whenPressed(new EjectCommand());
 		System.out.println("Built command");
 		// gamepad.getButtonY().whenPressed(new
 		// LoadMotionProfile(Robot.gearIntake.getOrientation(), traj, 10, 2, new

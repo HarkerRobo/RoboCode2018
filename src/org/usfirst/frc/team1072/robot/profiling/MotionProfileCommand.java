@@ -50,6 +50,7 @@ public class MotionProfileCommand extends Command {
 				// Clear any data from previous motion profiling
 				target.clearMotionProfileHasUnderrun(0);
 				target.clearMotionProfileTrajectories();
+				target.setIntegralAccumulator(0, 0, 0);
 				// Set the period, as well as a variety of status periods
 				// recommended to be half of the period
 				target.changeMotionControlFramePeriod(Math.max(1, period / 2));
@@ -67,6 +68,7 @@ public class MotionProfileCommand extends Command {
 					target.config_kI(groups[i].getProfileSlot(), groups[i].getI(), 0);
 				if(!Double.isNaN(groups[i].getD()))
 					target.config_kD(groups[i].getProfileSlot(), groups[i].getD(), 0);
+				target.selectProfileSlot(groups[i].getProfileSlot(), 0);
 			}
 		}
 		loadPoints();

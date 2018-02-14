@@ -9,7 +9,8 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
  */
 public enum Slot {
 	LEFT_VELOCITY(0, 0.7 * 1023.0 / 3000.0, 0, 0, 0, 0), RIGHT_VELOCITY(0, 0.7 * 1023.0 / 3000.0, 0, 0, 0, 0), LEFT_POSITION(1, 0, 0, 0, 0, 0),
-	RIGHT_POSITION(1, 0, 0, 0, 0, 0), LEFT_MOTION_PROFILE(2, 0.7 * 1023.0 / 3000.0, 0, 0, 0, 0), RIGHT_MOTION_PROFILE(2, 0.7 * 1023.0 / 3000.0, 0, 0, 0, 0),
+	RIGHT_POSITION(1, 0, 0, 0, 0, 0), LEFT_MOTION_PROFILE(2, 0.7 * 1023.0 / 3000.0, 0.04, 0.000006, 0, 4096),
+	RIGHT_MOTION_PROFILE(2, 0.65 * 1023.0 / 3000.0, 0.04, 0.000006, 0, 4096),
 	ELEVATOR_POSITION(0, 0, 0, 0, 0, 0), ELEVATOR_VELOCITY(1, 0, 0, 0, 0, 0);
 	private int slot, integralZone;
 	private double kF, kP, kI, kD;

@@ -12,13 +12,13 @@ import edu.wpi.first.wpilibj.command.TimedCommand;
 public class EjectCommand extends TimedCommand {
 	
 	public EjectCommand() {
-		super(10.0);
+		super(1.0);
 		requires(Robot.intake);
 	}
 	
 	// Called just before this Command runs the first time
 	protected void initialize() {
-		Robot.intake.set((talon) -> talon.set(ControlMode.PercentOutput, -0.5));
+		Robot.intake.set((talon) -> talon.set(ControlMode.PercentOutput, 1.0));
 	}
 	
 	// Called repeatedly when this Command is scheduled to run

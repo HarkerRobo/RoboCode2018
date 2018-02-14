@@ -11,6 +11,7 @@ import org.usfirst.frc.team1072.robot.Slot;
 import org.usfirst.frc.team1072.robot.commands.ArcadeDriveCommand;
 
 import com.ctre.phoenix.ErrorCode;
+import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
@@ -115,6 +116,9 @@ public class Drivetrain extends Subsystem {
 		}
 		// Select profile zero
 		set((talon) -> talon.selectProfileSlot(0, 0));
+		set((talon) -> talon.configAllowableClosedloopError(2, 0, TIMEOUT));
+//		set((talon) -> talon.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_10Ms, TIMEOUT));
+		
 		
 		// leftMaster.config_kF(0, Config.Drivetrain.Carpet.kF_LEFT, 0);
 		// rightMaster.config_kF(0, Config.Drivetrain.Carpet.kF_RIGHT, 0);

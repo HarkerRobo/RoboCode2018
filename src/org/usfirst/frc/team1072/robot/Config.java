@@ -135,6 +135,6 @@ public class Config {
 		/**
 		 * Controls whether current limiting is active
 		 */
-		public static final boolean ENABLE_CURRENT_LIMIT = true;
+		public static final boolean ENABLE_CURRENT_LIMIT = false;
 	}
 }

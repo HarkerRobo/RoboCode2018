@@ -31,7 +31,7 @@ public class ElevatorCommand extends Command {
 
     //Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	Robot.elevator.getMaster().set(ControlMode.Position, height);
+    		Robot.elevator.getMaster().set(ControlMode.Position, height);
     }
 
     //Make this return true when this Command no longer needs to run execute()
