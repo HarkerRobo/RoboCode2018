@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.command.Command;
 public class SetElevatorCommand extends Command {
 
     private final double height;
+    private boolean done;
     
 	/**
 	 * Initializes an elevator command
@@ -23,6 +24,7 @@ public class SetElevatorCommand extends Command {
     public SetElevatorCommand(double height) {
         requires(Robot.elevator);
         this.height = height*Config.Elevator.ENCODERTOFEET;
+        done = false;
     }
 
     //Called just before this Command runs the first time
@@ -33,11 +35,12 @@ public class SetElevatorCommand extends Command {
     //Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	Robot.elevator.getMaster().set(ControlMode.Position, height);
+    	done = true;
     }
 
     //Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return false;
+        return done;
         //Find a way to check if encoder is at desired position
     }
 
