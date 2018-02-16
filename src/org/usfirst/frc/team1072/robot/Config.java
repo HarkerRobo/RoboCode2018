@@ -53,7 +53,7 @@ public class Config {
 		/**
 		 * Seconds to ramp from neutral to full
 		 */
-		public static double RAMP_SPEED = 1.0;
+		public static double RAMP_SPEED = 0.3;
 		
 		public static class Carpet {
 			
@@ -69,7 +69,7 @@ public class Config {
 		/**
 		 * Default motor state (brake or coast)
 		 */
-		public static final NeutralMode NEUTRAL_MODE = NeutralMode.Coast;
+		public static final NeutralMode NEUTRAL_MODE = NeutralMode.Brake;
 		/**
 		 * Timeout (ms) for operations that set motor controller states
 		 */
@@ -86,12 +86,12 @@ public class Config {
 		/**
 		 * Controls whether current limiting is active
 		 */
-		public static final boolean ENABLE_CURRENT_LIMIT = true;
+		public static final boolean ENABLE_CURRENT_LIMIT = false;
 		/**
 		 * Normal state of the elevator limit switches
 		 */
-		public static final LimitSwitchNormal FORWARD_NORMAL = LimitSwitchNormal.NormallyOpen,
-				REVERSE_NORMAL = LimitSwitchNormal.NormallyOpen;
+		public static final LimitSwitchNormal FORWARD_NORMAL = LimitSwitchNormal.NormallyClosed,
+				REVERSE_NORMAL = LimitSwitchNormal.NormallyClosed;
 		/**
 		 * Controls encoder mode (absolute or relative)
 		 */
@@ -107,7 +107,7 @@ public class Config {
 		/**
 		 * Seconds to ramp from neutral to full
 		 */
-		public static double RAMP_SPEED = 1.0;
+		public static double RAMP_SPEED = 0.2;
 		/**
 		 * Ratio of Encoder counter to feet, need to test
 		 */

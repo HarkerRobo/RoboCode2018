@@ -9,16 +9,15 @@
 package org.usfirst.frc.team1072.robot;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Arrays;
 
 import org.usfirst.frc.team1072.harkerrobolib.wrappers.GamepadWrapper;
-import org.usfirst.frc.team1072.robot.commands.ClosedLoopCommand;
 import org.usfirst.frc.team1072.robot.commands.DriveStraight;
 import org.usfirst.frc.team1072.robot.commands.EjectCommand;
 import org.usfirst.frc.team1072.robot.commands.ElevatorCommand;
 import org.usfirst.frc.team1072.robot.commands.InOut;
 import org.usfirst.frc.team1072.robot.commands.IntakeCommand;
-import org.usfirst.frc.team1072.robot.commands.RunMotionProfile;
 import org.usfirst.frc.team1072.robot.commands.UpDown;
 import org.usfirst.frc.team1072.robot.commands.VariableSpeedCommand;
 import org.usfirst.frc.team1072.robot.profiling.MotionProfileBuilder;
@@ -71,22 +70,29 @@ public class OI {
 		// gamepad.getButtonX().whenPressed(new ClosedLoopCommand(-3400.0));
 //		Trajectory traj = Pathfinder.readFromCSV(new File("/home/lvuser/path.csv"));
 //		System.out.println("Reading trajectories");
-//		Trajectory left = Pathfinder.readFromCSV(new File("/home/lvuser/leftPath4.csv")),
-//				right = Pathfinder.readFromCSV(new File("/home/lvuser/rightPath4.csv"));
+		try {
+			Trajectory left = readTrajectory("/home/lvuser/paths/leftPath7.csv"),
+					right = readTrajectory("/home/lvuser/paths/rightPath7.csv");
+			gamepad.getButtonA().whenPressed(new MotionProfileBuilder(5, Robot.drivetrain)
+			.group(left, 2, 4.0 * Math.PI / 12.0/*0.31918*/, Robot.drivetrain.getLeft())
+			.group(right, 2, 4.0 * Math.PI / 12.0/*0.31918*/, Robot.drivetrain.getRight()).build());
+		} catch (FileNotFoundException e) {
+			System.err.println("Failed to read trajectory");
+		}
+		//96.5 inches = 8.0417 feet = 31387 ticks = 7.66284 rotations -> 1.0494412 ft/rot
 //		System.out.println("Read trajectories");
-//		gamepad.getButtonY().whenPressed(new MotionProfileBuilder(5, Robot.drivetrain)
-//				.group(left, 2, 4.0 * Math.PI / 12.0/*0.31918*/, Robot.drivetrain.getLeft())
-//				.group(right, 2, 4.0 * Math.PI / 12.0/*0.31918*/, Robot.drivetrain.getRight()).build());
 		//gamepad.getButtonA().whenPressed(new ElevatorCommand());
 //		gamepad.getButtonY().whenPressed(new ElevatorCommand(1.0));
 		//gamepad.getButtonB().whenPressed(new ClosedLoopCommand(2000));
 //		gamepad.getButtonA().whenPressed(new IntakeCommand());
 //		gamepad.getButtonB().whenPressed(new EjectCommand());
-//		gamepad.getButtonA().whenPressed(new DriveStraight());
+		gamepad.getButtonB().whenPressed(new DriveStraight());
+		/*
 		gamepad.getButtonA().whenPressed(new UpDown());
 		gamepad.getButtonB().whenPressed(new InOut());
 		gamepad.getButtonX().whilePressed(new VariableSpeedCommand(1.0, "Button X"));
 		gamepad.getButtonY().whilePressed(new VariableSpeedCommand(-1.0, "Button Y"));
+		*/
 //		gamepad.getButtonX().whenPressed(new IntakeCommand());
 //		gamepad.getButtonY().whenPressed(new EjectCommand());
 		System.out.println("Built command");
@@ -98,5 +104,24 @@ public class OI {
 		// MPSettings.ORIENTATION, 10));
 		// gamepad.getButtonY().whenPressed(new PathfinderCommand(traj));
 		// gamepad.getButtonY().whenPressed(new IntakeMotionProfileCommand());
+	}
+	
+	/**
+	 * 
+	 * @param filename
+	 * @return
+	 */
+	public static Trajectory readTrajectory(String filename) throws FileNotFoundException {
+		File f = new File(filename);
+		if(f.exists() && f.isFile() && filename.endsWith(".csv")) {
+			try {
+				return Pathfinder.readFromCSV(f);
+			} catch (Exception e) {
+				System.err.println("Pathfinder failed to read trajectory");
+			}
+		} else {
+			System.err.println("Trajectory does not exist or is not a csv file");
+		}
+		throw new FileNotFoundException("No valid csv file by that name");
 	}
 }
