@@ -56,10 +56,10 @@ public class OI {
 		
 		gamepad.getButtonBumperLeft().whenPressed(new SwitchCommand());
 		gamepad.getButtonBumperRight().whenPressed(new VaultCommand());
-		gamepad.getButtonA().whenPressed(new IntakeConfigurationCommand());
-		gamepad.getButtonB().whenPressed(new SetElevatorCommand());
-		gamepad.getButtonX().whenPressed(new SetElevatorCommand());
-		gamepad.getButtonY().whenPressed(new LiftIntakeCommand());
+		gamepad.getButtonX().whenPressed(new IntakeConfigurationCommand());
+		gamepad.getButtonA().whenPressed(new SetElevatorCommand());
+		gamepad.getButtonY().whenPressed(new ElevatorTop());
+		gamepad.getButtonB().whenPressed(new LiftIntakeCommand());
 		gamepad.getButtonStickRight().whenPressed(new SetElevatorCommand());
 		
 		
