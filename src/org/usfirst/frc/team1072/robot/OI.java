@@ -54,14 +54,13 @@ public class OI {
 	
 	public static void initializeCommandBindings() {
 		
-		gamepad.getButtonBumperLeft().whenPressed(new SwitchCommand());
-		gamepad.getButtonBumperRight().whenPressed(new VaultCommand());
-		gamepad.getButtonX().whenPressed(new IntakeConfigurationCommand());
-		gamepad.getButtonA().whenPressed(new SetElevatorCommand());
-		gamepad.getButtonY().whenPressed(new ElevatorTop());
+		gamepad.getButtonBumperLeft().whenPressed(new SetElevatorCommand(1.25)); //Elevator to switch position
+		gamepad.getButtonBumperRight().whenPressed(new LowerElevatorCommand()); //Elevator to vault position
+		gamepad.getButtonX().whenPressed(new IntakeExpansionCommand());
+		gamepad.getButtonA().whenPressed(new SetElevatorCommand(4.0));
+		gamepad.getButtonY().whenPressed(new RaiseElevatorCommand());
 		gamepad.getButtonB().whenPressed(new LiftIntakeCommand());
-		gamepad.getButtonStickRight().whenPressed(new SetElevatorCommand());
-		
+		gamepad.getButtonStickRight().whenPressed(new LowerElevatorCommand());
 		
 		// gamepad.getButtonBumperLeft().whenPressed(new TestIntakeCommand());
 		// gamepad.getButtonBumperRight().whenPressed(new EjectCommand());
