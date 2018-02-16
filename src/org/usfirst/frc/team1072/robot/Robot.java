@@ -8,10 +8,15 @@
 
 package org.usfirst.frc.team1072.robot;
 
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import jaci.pathfinder.Trajectory;
 
+import java.io.FileNotFoundException;
+
+import org.usfirst.frc.team1072.robot.profiling.MotionProfileBuilder;
 import org.usfirst.frc.team1072.robot.subsystems.Drivetrain;
 import org.usfirst.frc.team1072.robot.subsystems.Elevator;
 import org.usfirst.frc.team1072.robot.subsystems.Intake;
@@ -30,12 +35,22 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
  * project.
  */
 public class Robot extends TimedRobot {
-	/**
-	 * Drivetrain singleton instance
-	 */
+	
 	public static final Drivetrain drivetrain = Drivetrain.getInstance();
 	public static final Elevator elevator = Elevator.getInstance();
 	public static final Intake intake = Intake.getInstance();
+	public static final Compressor compressor = new Compressor();
+	
+	public static enum Position {
+		LEFT, MID, RIGHT
+	}
+	
+	public static enum Goal {
+		SWITCH, SCALE, LINE
+	}
+	
+	public static final SmartEnum<Position> position = new SmartEnum<Position>(Position.MID);
+	public static final SmartEnum<Goal> goal = new SmartEnum<Goal>(Goal.SWITCH);
 	
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -43,6 +58,7 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void robotInit() {
+		compressor.setClosedLoopControl(true);
 		OI.initializeCommandBindings();
 	}
 	
@@ -56,6 +72,11 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("left encoder velocity", drivetrain.getLeft().getSelectedSensorVelocity(0));
 		SmartDashboard.putNumber("right encoder velocity", drivetrain.getRight().getSelectedSensorVelocity(0));
 		SmartDashboard.putNumber("Diff", drivetrain.getLeft().getSelectedSensorVelocity(0) - drivetrain.getRight().getSelectedSensorVelocity(0));
+		SmartDashboard.putNumber("Elevator position", elevator.getMaster().getSelectedSensorPosition(0));
+		SmartDashboard.putNumber("left current", intake.getLeftRoller().getOutputCurrent());
+		SmartDashboard.putNumber("right current", intake.getRightRoller().getOutputCurrent());
+		SmartDashboard.putNumber("left output", drivetrain.getLeft().getMotorOutputPercent());
+		SmartDashboard.putNumber("right output", drivetrain.getRight().getMotorOutputPercent());
 	}
 
 	/**
@@ -89,6 +110,15 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousInit() {
+		try {
+			Trajectory left = OI.readTrajectory("/home/lvuser/paths/leftPath5.csv"),
+					right = OI.readTrajectory("/home/lvuser/paths/rightPath5.csv");
+			new MotionProfileBuilder(5, Robot.drivetrain)
+			.group(left, 2, 4.0 * Math.PI / 12.0/*0.31918*/, Robot.drivetrain.getLeft())
+			.group(right, 2, 4.0 * Math.PI / 12.0/*0.31918*/, Robot.drivetrain.getRight()).build().start();;
+		} catch (FileNotFoundException e) {
+			System.err.println("Failed to read trajectory");
+		}
 		
 		/*
 		 * String autoSelected = SmartDashboard.getString("Auto Selector",

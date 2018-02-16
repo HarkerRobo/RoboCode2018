@@ -19,7 +19,8 @@ public class VariableSpeedCommand extends Command {
         requires(Robot.intake);
         this.def = def;
         this.name = name;
-        SmartDashboard.putNumber(name + " speed", def);
+        SmartDashboard.putNumber(name + " right speed", def);
+        SmartDashboard.putNumber(name + " left speed", def * 0.66);
     }
 
     // Called just before this Command runs the first time
@@ -28,7 +29,8 @@ public class VariableSpeedCommand extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    		Robot.intake.set((talon) -> talon.set(ControlMode.PercentOutput, SmartDashboard.getNumber(name + " speed", def)));
+    		Robot.intake.getRightRoller().set(ControlMode.PercentOutput, SmartDashboard.getNumber(name + " right speed", def));
+    		Robot.intake.getLeftRoller().set(ControlMode.PercentOutput, SmartDashboard.getNumber(name + " left speed", def));
     }
 
     // Make this return true when this Command no longer needs to run execute()

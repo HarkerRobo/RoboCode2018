@@ -20,7 +20,7 @@ public class Elevator extends Subsystem {
 	/**
 	 * Distance in encoder units from the top to the bottom of the elevator
 	 */
-	public static final int LENGTH = 0;
+	public static final int LENGTH = 140000;
 	
 	/**
 	 * Singleton instance
@@ -29,15 +29,15 @@ public class Elevator extends Subsystem {
 	/**
 	 * Control only this motor, the others will copy its movement
 	 */
-	private final TalonSRX master;
+	private TalonSRX master;
 	/**
 	 * Ignore these motors, they will simply follow the master
 	 */
-	private final VictorSPX follower1, follower2, follower3;
+	private VictorSPX follower1, follower2, follower3;
 	/**
 	 * Are all of the parts of this elevator functioning?
 	 */
-	private boolean encoderStatus, forwardLimitStatus, reverseLimitStatus, forwardSoftLimitStatus,
+	private boolean motorStatus, encoderStatus, forwardLimitStatus, reverseLimitStatus, forwardSoftLimitStatus,
 			reverseSoftLimitStatus, currentLimitStatus, voltageCompensationStatus, openRampStatus, closedRampStatus;
 	/**
 	 * minimum encoder value
@@ -48,54 +48,71 @@ public class Elevator extends Subsystem {
 	 * Initialize the elevator subsystem
 	 */
 	private Elevator() {
-		// Initialize hardware links
-		master = new TalonSRX(TALON);
-		follower1 = new VictorSPX(VICTOR_1);
-		follower2 = new VictorSPX(VICTOR_2);
-		follower3 = new VictorSPX(VICTOR_3);
-		// Set following
-		follower1.follow(master);
-		follower2.follow(master);
-		follower3.follow(master);
-		// Configure settings
-		master.setNeutralMode(NEUTRAL_MODE);
-		// Configure current limiting
-		if(currentLimitStatus = log(master.configContinuousCurrentLimit(CONTINUOUS_CURRENT_LIMIT, TIMEOUT),
-				"Failed to configure continuous current limit")
-				&& log(master.configPeakCurrentLimit(PEAK_CURRENT_LIMIT, TIMEOUT),
-						"Failed to configure peak current limit")
-				&& log(master.configPeakCurrentDuration(PEAK_CURRENT_DURATION, TIMEOUT),
-						"Failed to configure peak current duration")) {
-			master.enableCurrentLimit(ENABLE_CURRENT_LIMIT);
+		try {
+			// Initialize hardware links
+			master = new TalonSRX(TALON);
+			follower1 = new VictorSPX(VICTOR_1);
+			follower2 = new VictorSPX(VICTOR_2);
+			follower3 = new VictorSPX(VICTOR_3);
+			motorStatus = true;
+			// Set following
+			follower1.follow(master);
+			follower2.follow(master);
+			follower3.follow(master);
+			// Configure settings
+			master.setNeutralMode(NEUTRAL_MODE);
+			follower1.setNeutralMode(NEUTRAL_MODE);
+			follower2.setNeutralMode(NEUTRAL_MODE);
+			follower3.setNeutralMode(NEUTRAL_MODE);
+			// Configure current limiting
+			if(currentLimitStatus = log(master.configContinuousCurrentLimit(CONTINUOUS_CURRENT_LIMIT, TIMEOUT),
+					"Failed to configure continuous current limit")
+					&& log(master.configPeakCurrentLimit(PEAK_CURRENT_LIMIT, TIMEOUT),
+							"Failed to configure peak current limit")
+					&& log(master.configPeakCurrentDuration(PEAK_CURRENT_DURATION, TIMEOUT),
+							"Failed to configure peak current duration")) {
+				master.enableCurrentLimit(ENABLE_CURRENT_LIMIT);
+			}
+			if(voltageCompensationStatus = log(master.configVoltageCompSaturation(10, TIMEOUT),
+					"Failed to configure voltage saturation")) {
+				master.enableVoltageCompensation(ENABLE_VOLTAGE_COMPENSATION);
+			}
+			// Configure output ranges
+			master.configNominalOutputForward(0, 0);
+			master.configNominalOutputReverse(0, 0);
+			master.configPeakOutputForward(1, 0);
+			master.configPeakOutputReverse(-1, 0);
+			// Configure ramping
+			openRampStatus = log(master.configOpenloopRamp(RAMP_SPEED, TIMEOUT), "Failed to configure open loop ramping");
+			closedRampStatus = log(master.configClosedloopRamp(RAMP_SPEED, TIMEOUT),
+					"Failed to configure closed loop ramping");
+			// Configure encoders
+			encoderStatus = log(master.configSelectedFeedbackSensor(ENCODER_MODE, ENCODER, TIMEOUT), "Encoder not found")
+					&& log(master.getSensorCollection().getPulseWidthRiseToRiseUs() != 0, "No encoder readings");
+			master.setSensorPhase(true);
+			// Configure limit switches
+			if(!(forwardLimitStatus = false && log(master.configForwardLimitSwitchSource(FORWARD_SWITCH, FORWARD_NORMAL, TIMEOUT),
+					"Forward limit switch not found")) && encoderStatus)
+				log(master.configForwardSoftLimitThreshold(master.getSelectedSensorPosition(ENCODER) + LENGTH, TIMEOUT),
+						"Failed to configure forward soft limits");
+			System.out.println("Fwd: " + master.getSensorCollection().isFwdLimitSwitchClosed());
+	//		if(!(reverseLimitStatus = false && log(master.configReverseLimitSwitchSource(REVERSE_SWITCH, REVERSE_NORMAL, TIMEOUT),
+	//				"Reverse limit switch not found")) && encoderStatus) {
+	//			log(master.configReverseSoftLimitThreshold(master.getSelectedSensorPosition(ENCODER), TIMEOUT),
+	//					"Failed to configure reverse soft limits");
+	//		}
+	//		log(master.configForwardSoftLimitThreshold(master.getSelectedSensorPosition(ENCODER) + LENGTH, TIMEOUT),
+	//				"Failed to configure forward soft limits");
+	//		log(master.configReverseSoftLimitThreshold(master.getSelectedSensorPosition(ENCODER), TIMEOUT),
+	//				"Failed to configure reverse soft limits");
+	//		log(master.configForwardSoftLimitEnable(true, TIMEOUT), "Failed to enable forward soft limit");
+	//		log(master.configReverseSoftLimitEnable(true, TIMEOUT), "Failed to enable reverse soft limit");
+			master.overrideLimitSwitchesEnable(true);
+			master.overrideSoftLimitsEnable(true);
+			System.out.println("Rev: " + master.getSensorCollection().isRevLimitSwitchClosed());
+		} catch (Exception e) {
+			System.err.println("Elevator: Failed to initialize motors");
 		}
-		if(voltageCompensationStatus = log(master.configVoltageCompSaturation(10, TIMEOUT),
-				"Failed to configure voltage saturation")) {
-			master.enableVoltageCompensation(ENABLE_VOLTAGE_COMPENSATION);
-		}
-		// Configure output ranges
-		master.configNominalOutputForward(0, 0);
-		master.configNominalOutputReverse(0, 0);
-		master.configPeakOutputForward(1, 0);
-		master.configPeakOutputReverse(-1, 0);
-		// Configure ramping
-		openRampStatus = log(master.configOpenloopRamp(RAMP_SPEED, TIMEOUT), "Failed to configure open loop ramping");
-		closedRampStatus = log(master.configClosedloopRamp(RAMP_SPEED, TIMEOUT),
-				"Failed to configure closed loop ramping");
-		// Configure encoders
-		encoderStatus = log(master.configSelectedFeedbackSensor(ENCODER_MODE, ENCODER, TIMEOUT), "Encoder not found")
-				&& log(master.getSensorCollection().getPulseWidthRiseToRiseUs() != 0, "No encoder readings");
-		// Configure limit switches
-		if(!(forwardLimitStatus = log(master.configForwardLimitSwitchSource(FORWARD_SWITCH, FORWARD_NORMAL, TIMEOUT),
-				"Forward limit switch not found")) && encoderStatus)
-			log(master.configForwardSoftLimitThreshold(master.getSelectedSensorPosition(ENCODER) + LENGTH, TIMEOUT),
-					"Failed to configure forward soft limits");
-		System.out.println("Fwd: " + master.getSensorCollection().isFwdLimitSwitchClosed());
-		if(!(reverseLimitStatus = log(master.configReverseLimitSwitchSource(REVERSE_SWITCH, REVERSE_NORMAL, TIMEOUT),
-				"Reverse limit switch not found")) && encoderStatus) {
-			log(master.configReverseSoftLimitThreshold(master.getSelectedSensorPosition(ENCODER), TIMEOUT),
-					"Failed to configure reverse soft limits");
-		}
-		System.out.println("Rev: " + master.getSensorCollection().isRevLimitSwitchClosed());
 	}
 	
 	public boolean log(ErrorCode err, String value) {

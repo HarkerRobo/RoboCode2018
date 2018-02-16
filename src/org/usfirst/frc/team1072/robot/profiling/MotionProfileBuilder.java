@@ -53,8 +53,8 @@ public class MotionProfileBuilder {
 	 */
 	public MotionProfileBuilder group(Trajectory trajectory, int profileSlot, double distancePerRotation,
 			TalonSRX... targets) {
-		groups.add(new Group(trajectory, profileSlot, Double.NaN, Double.NaN, Double.NaN, Double.NaN, Double.NaN,
-				4096.0, distancePerRotation, targets));
+		groups.add(new Group(trajectory, profileSlot, Double.NaN, Double.NaN, Double.NaN, Double.NaN, -1, Double.NaN,
+				-1, 4096.0, distancePerRotation, targets));
 		return this;
 	}
 	
@@ -84,9 +84,10 @@ public class MotionProfileBuilder {
 	 * @return the builder
 	 */
 	public MotionProfileBuilder group(Trajectory trajectory, int profileSlot, double f, double p, double i, double d,
-			double deadband, double unitsPerRotation, double distancePerRotation, TalonSRX... targets) {
-		groups.add(new Group(trajectory, profileSlot, f, p, i, d, deadband, unitsPerRotation, distancePerRotation,
-				targets));
+			int integralZone, double maxIntegral, int allowableError, double unitsPerRotation,
+			double distancePerRotation, TalonSRX... targets) {
+		groups.add(new Group(trajectory, profileSlot, f, p, i, d, integralZone, maxIntegral, allowableError,
+				unitsPerRotation, distancePerRotation, targets));
 		return this;
 	}
 	
@@ -102,8 +103,8 @@ public class MotionProfileBuilder {
 	
 	static class Group {
 		private final Trajectory trajectory;
-		private final int profileSlot;
-		private final double F, P, I, D, deadband, unitsPerRotation, distancePerRotation;
+		private final int profileSlot, integralZone, allowableError;
+		private final double F, P, I, D, maxIntegral, unitsPerRotation, distancePerRotation;
 		private final TalonSRX[] targets;
 		
 		/**
@@ -128,8 +129,9 @@ public class MotionProfileBuilder {
 		 * @param targets
 		 *            the talons to run this trajectory on
 		 */
-		public Group(Trajectory trajectory, int profileSlot, double f, double p, double i, double d, double deadband,
-				double unitsPerRotation, double distancePerRotation, TalonSRX... targets) {
+		public Group(Trajectory trajectory, int profileSlot, double f, double p, double i, double d, int integralZone,
+				double maxIntegral, int allowableError, double unitsPerRotation, double distancePerRotation,
+				TalonSRX... targets) {
 			super();
 			this.trajectory = trajectory;
 			this.profileSlot = profileSlot;
@@ -137,7 +139,9 @@ public class MotionProfileBuilder {
 			P = p;
 			I = i;
 			D = d;
-			this.deadband = deadband;
+			this.integralZone = integralZone;
+			this.maxIntegral = maxIntegral;
+			this.allowableError = allowableError;
 			this.unitsPerRotation = unitsPerRotation;
 			this.distancePerRotation = distancePerRotation;
 			this.targets = targets;
@@ -186,10 +190,24 @@ public class MotionProfileBuilder {
 		}
 		
 		/**
-		 * @return the deadband
+		 * @return the integralZone
 		 */
-		public double getDeadband() {
-			return deadband;
+		public int getIntegralZone() {
+			return integralZone;
+		}
+		
+		/**
+		 * @return the allowableError
+		 */
+		public int getAllowableError() {
+			return allowableError;
+		}
+		
+		/**
+		 * @return the maxIntegral
+		 */
+		public double getMaxIntegral() {
+			return maxIntegral;
 		}
 		
 		/**

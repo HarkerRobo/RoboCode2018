@@ -2,6 +2,7 @@ package org.usfirst.frc.team1072.robot.profiling;
 
 import org.usfirst.frc.team1072.robot.profiling.MotionProfileBuilder.Group;
 
+import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motion.MotionProfileStatus;
 import com.ctre.phoenix.motion.SetValueMotionProfile;
 import com.ctre.phoenix.motion.TrajectoryPoint;
@@ -41,6 +42,7 @@ public class MotionProfileCommand extends Command {
 	
 	// Called just before this Command runs the first time
 	protected void initialize() {
+		System.err.println("Initializing MP Command");
 		status = new MotionProfileStatus();
 		for(int i = 0; i < groups.length; i++) {
 			statuses[i] = new Status(groups[i].getTargets().length);
@@ -48,18 +50,17 @@ public class MotionProfileCommand extends Command {
 				// Disable the motors so nothing happens while loading
 				target.set(ControlMode.MotionProfile, SetValueMotionProfile.Disable.value);
 				// Clear any data from previous motion profiling
-				target.clearMotionProfileHasUnderrun(0);
-				target.clearMotionProfileTrajectories();
-				target.setIntegralAccumulator(0, 0, 0);
+				log(target.clearMotionProfileHasUnderrun(1000), "Could not clear underrun");
+				log(target.clearMotionProfileTrajectories(), "Could not clear trajectories");
+				log(target.setIntegralAccumulator(0, 0, 1000), "Could not clear accumulator");
+				log(target.setSelectedSensorPosition(0, 0, 1000), "Could not clear position");
 				// Set the period, as well as a variety of status periods
 				// recommended to be half of the period
 				target.changeMotionControlFramePeriod(Math.max(1, period / 2));
-				target.configMotionProfileTrajectoryPeriod(period, 0);
-				target.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, Math.max(1, period / 2), 0);
+				log(target.configMotionProfileTrajectoryPeriod(period, 1000), "Could not configure period");
+				target.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, Math.max(1, period / 2), 1000);
 				// Each constant can be configured at the start of the command
 				// or preferably set in advance and then passed as NaN
-				if(!Double.isNaN(groups[i].getDeadband()))
-					target.configNeutralDeadband(groups[i].getDeadband(), 0);
 				if(!Double.isNaN(groups[i].getF()))
 					target.config_kF(groups[i].getProfileSlot(), groups[i].getF(), 0);
 				if(!Double.isNaN(groups[i].getP()))
@@ -68,7 +69,14 @@ public class MotionProfileCommand extends Command {
 					target.config_kI(groups[i].getProfileSlot(), groups[i].getI(), 0);
 				if(!Double.isNaN(groups[i].getD()))
 					target.config_kD(groups[i].getProfileSlot(), groups[i].getD(), 0);
+				if(groups[i].getIntegralZone() != -1)
+					target.config_IntegralZone(groups[i].getProfileSlot(), groups[i].getIntegralZone(), 0);
+				if(!Double.isNaN(groups[i].getMaxIntegral()))
+					target.configMaxIntegralAccumulator(groups[i].getProfileSlot(), groups[i].getMaxIntegral(), 0);
+				if(groups[i].getAllowableError() != -1)
+					target.configAllowableClosedloopError(groups[i].getProfileSlot(), groups[i].getAllowableError(), 0);
 				target.selectProfileSlot(groups[i].getProfileSlot(), 0);
+				target.processMotionProfileBuffer();
 			}
 		}
 		loadPoints();
@@ -78,6 +86,7 @@ public class MotionProfileCommand extends Command {
 		// Notify talons to process points, again half of the period
 		// (milliseconds -> seconds)
 		notifier.startPeriodic(period / 2000.0);
+		System.err.println("Finished initializing MP Command");
 	}
 	
 	// Called repeatedly when this Command is scheduled to run
@@ -87,6 +96,20 @@ public class MotionProfileCommand extends Command {
 	
 	// Make this return true when this Command no longer needs to run execute()
 	protected boolean isFinished() {
+		for(Group g : groups)
+			for(TalonSRX t : g.getTargets()) {
+				log(t.getMotionProfileStatus(status), "Could not get status");
+				if(status.hasUnderrun) {
+					disable();
+					System.err.println("Underrun!");
+					for(int i = 0; i < statuses.length; i++) {
+						for(int j = 0; j < statuses[i].loadNext.length; j++) {
+							System.err.println(statuses[i].loadNext[j] + "/" + groups[i].getTrajectory().length());
+						}
+					}
+					throw new RuntimeException("Underrun");
+				}
+			}
 		for(int i = 0; i < statuses.length; i++)
 			for(int j = 0; j < statuses[i].loadNext.length; j++)
 				if(statuses[i].loadNext[j] != groups[i].getTrajectory().length())
@@ -94,6 +117,10 @@ public class MotionProfileCommand extends Command {
 		for(Group g : groups)
 			for(TalonSRX t : g.getTargets()) {
 				t.getMotionProfileStatus(status);
+				if(status.hasUnderrun) {
+					System.err.println("Underrun!");
+					return true;
+				}
 				if(!status.activePointValid || !status.isLast)
 					return false;
 			}
@@ -139,6 +166,7 @@ public class MotionProfileCommand extends Command {
 							/ groups[i].getDistancePerRotation() * groups[i].getUnitsPerRotation();
 					tp.velocity = trajectory.segments[statuses[i].loadNext[j]].velocity
 							/ groups[i].getDistancePerRotation() * groups[i].getUnitsPerRotation() / 10.0;
+//					System.out.println(trajectory.segments[statuses[i].loadNext[j]].velocity + " ft/s -> " + tp.velocity + "u/100ms");
 					tp.headingDeg = trajectory.segments[statuses[i].loadNext[j]].heading * 180.0 / Math.PI;
 					tp.profileSlotSelect0 = groups[i].getProfileSlot();
 					tp.profileSlotSelect1 = 0;
@@ -180,5 +208,15 @@ public class MotionProfileCommand extends Command {
 		public Status(int numTalons) {
 			loadNext = new int[numTalons];
 		}
+	}
+	
+	public boolean log(ErrorCode err, String value) {
+		return log(err == ErrorCode.OK, value);
+	}
+	
+	public boolean log(boolean good, String value) {
+		if(!good)
+			System.err.println("MP: " + value);
+		return good;
 	}
 }
