@@ -111,7 +111,7 @@ public class Config {
 		/**
 		 * Ratio of Encoder counter to feet, need to test
 		 */
-		public static final int ENCODERTOFEET = 0;
+		public static final int ENCODERTOFEET = 1;
 	}
 	
 	public static class Intake {
