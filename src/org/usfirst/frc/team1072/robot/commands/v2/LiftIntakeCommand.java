@@ -19,15 +19,16 @@ public class LiftIntakeCommand extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    }
-
-    // Called repeatedly when this Command is scheduled to run
-    protected void execute() {
     	if (Robot.intake.getRaise().get() == DoubleSolenoid.Value.kOff) {
     		Robot.intake.getRaise().set(DoubleSolenoid.Value.kForward);
     	} else {
     		Robot.intake.getRaise().set(DoubleSolenoid.Value.kOff);
     	}
+    }
+
+    // Called repeatedly when this Command is scheduled to run
+    protected void execute() {
+    	
     	done = true;
     }
 
