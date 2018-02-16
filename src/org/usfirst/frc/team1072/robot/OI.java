@@ -8,22 +8,12 @@
 
 package org.usfirst.frc.team1072.robot;
 
+import org.usfirst.frc.team1072.robot.commands.v2.*;
+
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Arrays;
 
 import org.usfirst.frc.team1072.harkerrobolib.wrappers.GamepadWrapper;
-import org.usfirst.frc.team1072.robot.commands.DriveStraight;
-import org.usfirst.frc.team1072.robot.commands.EjectCommand;
-import org.usfirst.frc.team1072.robot.commands.ElevatorCommand;
-import org.usfirst.frc.team1072.robot.commands.InOut;
-import org.usfirst.frc.team1072.robot.commands.IntakeCommand;
-import org.usfirst.frc.team1072.robot.commands.UpDown;
-import org.usfirst.frc.team1072.robot.commands.VariableSpeedCommand;
-import org.usfirst.frc.team1072.robot.profiling.MotionProfileBuilder;
-import org.usfirst.frc.team1072.robot.profiling.MotionProfileCommand;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
 
@@ -63,6 +53,16 @@ public class OI {
 	public static final GamepadWrapper gamepad = new GamepadWrapper(0);
 	
 	public static void initializeCommandBindings() {
+		
+		gamepad.getButtonBumperLeft().whenPressed(new SwitchCommand());
+		gamepad.getButtonBumperRight().whenPressed(new VaultCommand());
+		gamepad.getButtonA().whenPressed(new IntakeConfigurationCommand());
+		gamepad.getButtonB().whenPressed(new SetElevatorCommand());
+		gamepad.getButtonX().whenPressed(new SetElevatorCommand());
+		gamepad.getButtonY().whenPressed(new LiftIntakeCommand());
+		gamepad.getButtonStickRight().whenPressed(new SetElevatorCommand());
+		
+		
 		// gamepad.getButtonBumperLeft().whenPressed(new TestIntakeCommand());
 		// gamepad.getButtonBumperRight().whenPressed(new EjectCommand());
 		// gamepad.getButtonA().whenPressed(new SlowRaiseCommand(3.0));
@@ -70,15 +70,15 @@ public class OI {
 		// gamepad.getButtonX().whenPressed(new ClosedLoopCommand(-3400.0));
 //		Trajectory traj = Pathfinder.readFromCSV(new File("/home/lvuser/path.csv"));
 //		System.out.println("Reading trajectories");
-		try {
-			Trajectory left = readTrajectory("/home/lvuser/paths/leftPath7.csv"),
-					right = readTrajectory("/home/lvuser/paths/rightPath7.csv");
-			gamepad.getButtonA().whenPressed(new MotionProfileBuilder(5, Robot.drivetrain)
-			.group(left, 2, 4.0 * Math.PI / 12.0/*0.31918*/, Robot.drivetrain.getLeft())
-			.group(right, 2, 4.0 * Math.PI / 12.0/*0.31918*/, Robot.drivetrain.getRight()).build());
-		} catch (FileNotFoundException e) {
-			System.err.println("Failed to read trajectory");
-		}
+//		try {
+//			Trajectory left = readTrajectory("/home/lvuser/paths/leftPath7.csv"),
+//					right = readTrajectory("/home/lvuser/paths/rightPath7.csv");
+//			gamepad.getButtonA().whenPressed(new MotionProfileBuilder(5, Robot.drivetrain)
+//			.group(left, 2, 4.0 * Math.PI / 12.0/*0.31918*/, Robot.drivetrain.getLeft())
+//			.group(right, 2, 4.0 * Math.PI / 12.0/*0.31918*/, Robot.drivetrain.getRight()).build());
+//		} catch (FileNotFoundException e) {
+//			System.err.println("Failed to read trajectory");
+//		}
 		//96.5 inches = 8.0417 feet = 31387 ticks = 7.66284 rotations -> 1.0494412 ft/rot
 //		System.out.println("Read trajectories");
 		//gamepad.getButtonA().whenPressed(new ElevatorCommand());
@@ -86,7 +86,7 @@ public class OI {
 		//gamepad.getButtonB().whenPressed(new ClosedLoopCommand(2000));
 //		gamepad.getButtonA().whenPressed(new IntakeCommand());
 //		gamepad.getButtonB().whenPressed(new EjectCommand());
-		gamepad.getButtonB().whenPressed(new DriveStraight());
+//		gamepad.getButtonB().whenPressed(new DriveStraight());
 		/*
 		gamepad.getButtonA().whenPressed(new UpDown());
 		gamepad.getButtonB().whenPressed(new InOut());
@@ -95,7 +95,7 @@ public class OI {
 		*/
 //		gamepad.getButtonX().whenPressed(new IntakeCommand());
 //		gamepad.getButtonY().whenPressed(new EjectCommand());
-		System.out.println("Built command");
+//		System.out.println("Built command");
 		// gamepad.getButtonY().whenPressed(new
 		// LoadMotionProfile(Robot.gearIntake.getOrientation(), traj, 10, 2, new
 		// RunMotionProfile(Robot.gearIntake.getOrientation(), 10)::start));
