@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class ArcadeDriveCommand extends Command {
 	
-	public static final double THRESHOLD = 0.15, MAX_SPEED = 5000;
+	public static final double THRESHOLD = 0.05, MAX_SPEED = 5000;
 
     public ArcadeDriveCommand() {
         requires(Robot.drivetrain);

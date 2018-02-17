@@ -20,7 +20,7 @@ public class Config {
 		/**
 		 * Default motor state (brake or coast)
 		 */
-		public static final NeutralMode NEUTRAL_MODE = NeutralMode.Brake;
+		public static final NeutralMode NEUTRAL_MODE = NeutralMode.Coast;
 		/**
 		 * Timeout (ms) for operations that set motor controller states
 		 */
@@ -90,7 +90,7 @@ public class Config {
 		/**
 		 * Normal state of the elevator limit switches
 		 */
-		public static final LimitSwitchNormal FORWARD_NORMAL = LimitSwitchNormal.NormallyClosed,
+		public static final LimitSwitchNormal FORWARD_NORMAL = LimitSwitchNormal.NormallyOpen,
 				REVERSE_NORMAL = LimitSwitchNormal.NormallyClosed;
 		/**
 		 * Controls encoder mode (absolute or relative)

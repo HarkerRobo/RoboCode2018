@@ -2,11 +2,13 @@ package org.usfirst.frc.team1072.robot.subsystems;
 
 import static org.usfirst.frc.team1072.robot.RobotMap.Elevator.*;
 
-import org.usfirst.frc.team1072.robot.commands.JoystickElevatorCommand;
+import org.usfirst.frc.team1072.robot.Slot;
+import org.usfirst.frc.team1072.robot.commands.v2.ElevatorDriveCommand;
 
 import static org.usfirst.frc.team1072.robot.Config.Elevator.*;
 
 import com.ctre.phoenix.ErrorCode;
+import com.ctre.phoenix.ParamEnum;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
@@ -21,6 +23,11 @@ public class Elevator extends Subsystem {
 	 * Distance in encoder units from the top to the bottom of the elevator
 	 */
 	public static final int LENGTH = 140000;
+	
+	/**
+	 * Space between soft and hard limits
+	 */
+	public static final int BUFFER = 10;
 	
 	/**
 	 * Singleton instance
@@ -38,7 +45,8 @@ public class Elevator extends Subsystem {
 	 * Are all of the parts of this elevator functioning?
 	 */
 	private boolean motorStatus, encoderStatus, forwardLimitStatus, reverseLimitStatus, forwardSoftLimitStatus,
-			reverseSoftLimitStatus, currentLimitStatus, voltageCompensationStatus, openRampStatus, closedRampStatus;
+			reverseSoftLimitStatus, currentLimitStatus, voltageCompensationStatus, openRampStatus, closedRampStatus,
+			velocityClosedStatus, positionClosedStatus, motionMagicStatus;
 	/**
 	 * minimum encoder value
 	 */
@@ -83,34 +91,41 @@ public class Elevator extends Subsystem {
 			master.configPeakOutputForward(1, 0);
 			master.configPeakOutputReverse(-1, 0);
 			// Configure ramping
-			openRampStatus = log(master.configOpenloopRamp(RAMP_SPEED, TIMEOUT), "Failed to configure open loop ramping");
+			openRampStatus = log(master.configOpenloopRamp(RAMP_SPEED, TIMEOUT),
+					"Failed to configure open loop ramping");
 			closedRampStatus = log(master.configClosedloopRamp(RAMP_SPEED, TIMEOUT),
 					"Failed to configure closed loop ramping");
 			// Configure encoders
-			encoderStatus = log(master.configSelectedFeedbackSensor(ENCODER_MODE, ENCODER, TIMEOUT), "Encoder not found")
+			encoderStatus = log(master.configSelectedFeedbackSensor(ENCODER_MODE, ENCODER, TIMEOUT),
+					"Encoder not found")
 					&& log(master.getSensorCollection().getPulseWidthRiseToRiseUs() != 0, "No encoder readings");
 			master.setSensorPhase(true);
 			// Configure limit switches
-			if(!(forwardLimitStatus = false && log(master.configForwardLimitSwitchSource(FORWARD_SWITCH, FORWARD_NORMAL, TIMEOUT),
-					"Forward limit switch not found")) && encoderStatus)
-				log(master.configForwardSoftLimitThreshold(master.getSelectedSensorPosition(ENCODER) + LENGTH, TIMEOUT),
-						"Failed to configure forward soft limits");
-			System.out.println("Fwd: " + master.getSensorCollection().isFwdLimitSwitchClosed());
-	//		if(!(reverseLimitStatus = false && log(master.configReverseLimitSwitchSource(REVERSE_SWITCH, REVERSE_NORMAL, TIMEOUT),
-	//				"Reverse limit switch not found")) && encoderStatus) {
-	//			log(master.configReverseSoftLimitThreshold(master.getSelectedSensorPosition(ENCODER), TIMEOUT),
-	//					"Failed to configure reverse soft limits");
-	//		}
-	//		log(master.configForwardSoftLimitThreshold(master.getSelectedSensorPosition(ENCODER) + LENGTH, TIMEOUT),
-	//				"Failed to configure forward soft limits");
-	//		log(master.configReverseSoftLimitThreshold(master.getSelectedSensorPosition(ENCODER), TIMEOUT),
-	//				"Failed to configure reverse soft limits");
-	//		log(master.configForwardSoftLimitEnable(true, TIMEOUT), "Failed to enable forward soft limit");
-	//		log(master.configReverseSoftLimitEnable(true, TIMEOUT), "Failed to enable reverse soft limit");
-			master.overrideLimitSwitchesEnable(true);
-			master.overrideSoftLimitsEnable(true);
-			System.out.println("Rev: " + master.getSensorCollection().isRevLimitSwitchClosed());
-		} catch (Exception e) {
+			forwardLimitStatus = log(master.configForwardLimitSwitchSource(FORWARD_SWITCH, FORWARD_NORMAL, TIMEOUT),
+					"Forward limit switch not found");
+			reverseLimitStatus = log(master.configReverseLimitSwitchSource(REVERSE_SWITCH, REVERSE_NORMAL, TIMEOUT),
+					"Reverse limit switch not found");
+			forwardSoftLimitStatus = log(master.configForwardSoftLimitEnable(false, TIMEOUT),
+					"Failed to disable forward soft limits") && encoderStatus
+					&& log(master.configForwardSoftLimitThreshold(LENGTH - BUFFER, TIMEOUT),
+							"Failed to configure forward soft limits");
+			reverseSoftLimitStatus = log(master.configReverseSoftLimitEnable(false, TIMEOUT),
+					"Failed to disable reverse soft limits") && encoderStatus
+					&& log(master.configReverseSoftLimitThreshold(BUFFER, TIMEOUT),
+							"Failed to configure reverse soft limits");
+			log(master.configSetParameter(ParamEnum.eClearPositionOnLimitR, 1, 0, 0, TIMEOUT),
+					"Failed to enable clearing encoder on limit");
+			// Load constants
+			if(!(velocityClosedStatus = false && Slot.ELEVATOR_VELOCITY.configure(master, TIMEOUT))) {
+				System.err.println("Elevator: Failed to configure velocity closed loop");
+			}
+			if(!(positionClosedStatus = false && Slot.ELEVATOR_POSITION.configure(master, TIMEOUT))) {
+				System.err.println("Elevator: Failed to configure velocity closed loop");
+			}
+			if(!(motionMagicStatus = false && Slot.ELEVATOR_POSITION.configure(master, TIMEOUT))) {
+				System.err.println("Elevator: Failed to configure velocity closed loop");
+			}
+		} catch(Exception e) {
 			System.err.println("Elevator: Failed to initialize motors");
 		}
 	}
@@ -133,7 +148,7 @@ public class Elevator extends Subsystem {
 	}
 	
 	public void initDefaultCommand() {
-		 setDefaultCommand(new JoystickElevatorCommand());
+		setDefaultCommand(new ElevatorDriveCommand());
 	}
 	
 	/**
@@ -297,5 +312,60 @@ public class Elevator extends Subsystem {
 	public void setClosedRampStatus(boolean closedRampStatus) {
 		this.closedRampStatus = closedRampStatus;
 	}
-	
+
+	/**
+	 * @return the motorStatus
+	 */
+	public boolean isMotorStatus() {
+		return motorStatus;
+	}
+
+	/**
+	 * @param motorStatus the motorStatus to set
+	 */
+	public void setMotorStatus(boolean motorStatus) {
+		this.motorStatus = motorStatus;
+	}
+
+	/**
+	 * @return the velocityClosedStatus
+	 */
+	public boolean isVelocityClosedStatus() {
+		return velocityClosedStatus;
+	}
+
+	/**
+	 * @param velocityClosedStatus the velocityClosedStatus to set
+	 */
+	public void setVelocityClosedStatus(boolean velocityClosedStatus) {
+		this.velocityClosedStatus = velocityClosedStatus;
+	}
+
+	/**
+	 * @return the positionClosedStatus
+	 */
+	public boolean isPositionClosedStatus() {
+		return positionClosedStatus;
+	}
+
+	/**
+	 * @param positionClosedStatus the positionClosedStatus to set
+	 */
+	public void setPositionClosedStatus(boolean positionClosedStatus) {
+		this.positionClosedStatus = positionClosedStatus;
+	}
+
+	/**
+	 * @return the motionMagicStatus
+	 */
+	public boolean isMotionMagicStatus() {
+		return motionMagicStatus;
+	}
+
+	/**
+	 * @param motionMagicStatus the motionMagicStatus to set
+	 */
+	public void setMotionMagicStatus(boolean motionMagicStatus) {
+		this.motionMagicStatus = motionMagicStatus;
+	}
 }

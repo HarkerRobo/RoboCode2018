@@ -16,10 +16,13 @@ public enum Slot {
 //	RIGHT_MOTION_PROFILE(2, 0.65 * 1023.0 / 3000.0, 0.04, 0.000006, 0, 4096, 0, 0), //Carpet
 //	LEFT_MOTION_PROFILE(0, 0.3 * 1023.0 / 1080.0, 0.065, 0.001, 0.00004, 200, 800, 10), //Floor
 //	RIGHT_MOTION_PROFILE(0, 0.3 * 1023.0 / 1100.0, 0.065, 0.001, 0.00004, 200, 800, 10), //Floor
-	LEFT_MOTION_PROFILE(0, 1.0 * 1023.0 / 4900.0, 0.085, 0.0015, 0.00004, 200, 800, 0), //Floor fast
-	RIGHT_MOTION_PROFILE(0, 1.0 * 1023.0 / 4800.0, 0.085, 0.0015, 0.00004, 200, 800, 0), //Floor fast
-	ELEVATOR_POSITION(0, 0, 0, 0, 0, 0, 0, 0),
-	ELEVATOR_VELOCITY(1, 0, 0, 0, 0, 0, 0, 0);
+//	LEFT_MOTION_PROFILE(0, 1.0 * 1023.0 / 4900.0, 0.085, 0.0015, 0.00004, 200, 800, 0), //Floor fast
+//	RIGHT_MOTION_PROFILE(0, 1.0 * 1023.0 / 4800.0, 0.085, 0.0015, 0.00004, 200, 800, 0), //Floor fast
+	LEFT_MOTION_PROFILE(0, 1.0 * 1023.0 / 4860.0, 0.2 * 1023.0 / 4860.0, 0 * 0.001 * 1023.0 / 4860.0, 0.0000, 5000, 500000, 50), //Floor fast
+	RIGHT_MOTION_PROFILE(0, 1.0 * 1023.0 / 4800.0, 0.2 * 1023.0 / 4800.0, 0 * 0.001 * 1023.0 / 4800.0, 0.0000, 5000, 500000, 50), //Floor fast
+	ELEVATOR_POSITION(2, 0, 0, 0, 0, 0, 0, 0),
+	ELEVATOR_VELOCITY(1, 0, 0, 0, 0, 0, 0, 0),
+	ELEVATOR_MOTION_MAGIC(0, 0, 0, 0, 0, 0, 0, 0);
 	private int slot, integralZone, allowableError;
 	private double kF, kP, kI, kD, maxIntegral;
 	

@@ -22,7 +22,7 @@ public class JoystickElevatorCommand extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    		Robot.elevator.getMaster().set(ControlMode.PercentOutput, OI.gamepad.getRightY());
+    		Robot.elevator.getMaster().set(ControlMode.PercentOutput, OI.gamepad.getRightY() * Math.abs(OI.gamepad.getRightY()));
     }
 
     // Make this return true when this Command no longer needs to run execute()

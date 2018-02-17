@@ -77,6 +77,8 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("right current", intake.getRightRoller().getOutputCurrent());
 		SmartDashboard.putNumber("left output", drivetrain.getLeft().getMotorOutputPercent());
 		SmartDashboard.putNumber("right output", drivetrain.getRight().getMotorOutputPercent());
+		SmartDashboard.putNumber("left error", drivetrain.getLeft().getClosedLoopError(0));
+		SmartDashboard.putNumber("right error", drivetrain.getRight().getClosedLoopError(0));
 	}
 
 	/**
@@ -114,8 +116,8 @@ public class Robot extends TimedRobot {
 			Trajectory left = OI.readTrajectory("/home/lvuser/paths/leftPath5.csv"),
 					right = OI.readTrajectory("/home/lvuser/paths/rightPath5.csv");
 			new MotionProfileBuilder(5, Robot.drivetrain)
-			.group(left, 2, 4.0 * Math.PI / 12.0/*0.31918*/, Robot.drivetrain.getLeft())
-			.group(right, 2, 4.0 * Math.PI / 12.0/*0.31918*/, Robot.drivetrain.getRight()).build().start();;
+			.group(left, 2, 4.0 * Math.PI / 12.0/*0.31918*/, 1.0, Robot.drivetrain.getLeft())
+			.group(right, 2, 4.0 * Math.PI / 12.0/*0.31918*/, 1.0, Robot.drivetrain.getRight()).build().start();;
 		} catch (FileNotFoundException e) {
 			System.err.println("Failed to read trajectory");
 		}

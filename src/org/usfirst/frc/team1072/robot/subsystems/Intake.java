@@ -5,6 +5,8 @@ import static org.usfirst.frc.team1072.robot.Config.Intake.*;
 
 import java.util.function.Consumer;
 
+import org.usfirst.frc.team1072.robot.commands.v2.IntakeCommand;
+
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -75,8 +77,7 @@ public class Intake extends Subsystem {
 	// here. Call these from Commands.
 	
 	public void initDefaultCommand() {
-		// Set the default command for a subsystem here.
-		// setDefaultCommand(new MySpecialCommand());
+		setDefaultCommand(new IntakeCommand());
 	}
 	
 	/**

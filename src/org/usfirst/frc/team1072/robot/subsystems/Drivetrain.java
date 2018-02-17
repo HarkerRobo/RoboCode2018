@@ -7,7 +7,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import org.usfirst.frc.team1072.robot.Slot;
-import org.usfirst.frc.team1072.robot.commands.ArcadeDriveCommand;
+import org.usfirst.frc.team1072.robot.commands.v2.ArcadeDriveCommand;
 
 import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -55,7 +55,11 @@ public class Drivetrain extends Subsystem {
 			leftFollower.follow(leftMaster);
 			rightFollower.follow(rightMaster);
 			// Configure settings (on both masters)
-			set((talon) -> talon.setNeutralMode(NEUTRAL_MODE));
+//			set((talon) -> talon.setNeutralMode(NEUTRAL_MODE));
+			leftMaster.setNeutralMode(NEUTRAL_MODE);
+			rightMaster.setNeutralMode(NEUTRAL_MODE);
+			leftFollower.setNeutralMode(NEUTRAL_MODE);
+			rightFollower.setNeutralMode(NEUTRAL_MODE);
 			// Configure current limiting
 			if(currentLimitStatus = ENABLE_CURRENT_LIMIT
 					&& log(leftMaster.configContinuousCurrentLimit(CONTINUOUS_CURRENT_LIMIT, TIMEOUT),
@@ -106,11 +110,11 @@ public class Drivetrain extends Subsystem {
 					&& log(rightMaster.getSensorCollection().getPulseWidthRiseToRiseUs() != 0,
 							"No right encoder readings");
 			// Load constants
-			if(!(velocityClosedStatus = Slot.LEFT_VELOCITY.configure(leftMaster, TIMEOUT)
+			if(!(velocityClosedStatus = false && Slot.LEFT_VELOCITY.configure(leftMaster, TIMEOUT)
 					&& Slot.RIGHT_VELOCITY.configure(rightMaster, TIMEOUT))) {
 				System.err.println("Drivetrain: Failed to configure velocity closed loop");
 			}
-			if(!(positionClosedStatus = Slot.LEFT_POSITION.configure(leftMaster, TIMEOUT)
+			if(!(positionClosedStatus = false && Slot.LEFT_POSITION.configure(leftMaster, TIMEOUT)
 					&& Slot.RIGHT_POSITION.configure(rightMaster, TIMEOUT))) {
 				System.err.println("Drivetrain: Failed to configure position closed loop");
 			}

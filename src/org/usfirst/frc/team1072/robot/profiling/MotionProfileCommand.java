@@ -21,11 +21,14 @@ import jaci.pathfinder.Trajectory;
  */
 public class MotionProfileCommand extends Command {
 	
+	public static final int MIN_POINTS = 128;
+	
 	private int period;
 	private Notifier notifier;
 	private Group[] groups;
 	private Status[] statuses;
 	private MotionProfileStatus status;
+	private boolean started;
 	
 	/**
 	 * Creates a new motion profile command (not intended for use, create a
@@ -44,6 +47,7 @@ public class MotionProfileCommand extends Command {
 	protected void initialize() {
 		System.err.println("Initializing MP Command");
 		status = new MotionProfileStatus();
+		started = false;
 		for(int i = 0; i < groups.length; i++) {
 			statuses[i] = new Status(groups[i].getTargets().length);
 			for(TalonSRX target : groups[i].getTargets()) {
@@ -80,9 +84,6 @@ public class MotionProfileCommand extends Command {
 			}
 		}
 		loadPoints();
-		for(Group g : groups)
-			for(TalonSRX target : g.getTargets())
-				target.set(ControlMode.MotionProfile, SetValueMotionProfile.Enable.value);
 		// Notify talons to process points, again half of the period
 		// (milliseconds -> seconds)
 		notifier.startPeriodic(period / 2000.0);
@@ -92,24 +93,29 @@ public class MotionProfileCommand extends Command {
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
 		loadPoints();
+		if(!started) {
+			boolean shouldStart = true;
+			for(Group g: groups) {
+				for(TalonSRX t: g.getTargets()) {
+					log(t.getMotionProfileStatus(status), "Could not get status");
+					shouldStart = shouldStart && status.btmBufferCnt >= MIN_POINTS;
+				}
+			}
+			if(shouldStart) {
+				started = true;
+				for(Group g : groups)
+					for(TalonSRX target : g.getTargets())
+						target.set(ControlMode.MotionProfile, SetValueMotionProfile.Enable.value);
+				System.out.println("Started MP Command");
+			}
+		}
 	}
 	
 	// Make this return true when this Command no longer needs to run execute()
 	protected boolean isFinished() {
-		for(Group g : groups)
-			for(TalonSRX t : g.getTargets()) {
-				log(t.getMotionProfileStatus(status), "Could not get status");
-				if(status.hasUnderrun) {
-					disable();
-					System.err.println("Underrun!");
-					for(int i = 0; i < statuses.length; i++) {
-						for(int j = 0; j < statuses[i].loadNext.length; j++) {
-							System.err.println(statuses[i].loadNext[j] + "/" + groups[i].getTrajectory().length());
-						}
-					}
-					throw new RuntimeException("Underrun");
-				}
-			}
+		if(!started) {
+			return false;
+		}
 		for(int i = 0; i < statuses.length; i++)
 			for(int j = 0; j < statuses[i].loadNext.length; j++)
 				if(statuses[i].loadNext[j] != groups[i].getTrajectory().length())
@@ -119,7 +125,6 @@ public class MotionProfileCommand extends Command {
 				t.getMotionProfileStatus(status);
 				if(status.hasUnderrun) {
 					System.err.println("Underrun!");
-					return true;
 				}
 				if(!status.activePointValid || !status.isLast)
 					return false;
@@ -163,10 +168,9 @@ public class MotionProfileCommand extends Command {
 					// trajectory point
 					TrajectoryPoint tp = new TrajectoryPoint();
 					tp.position = trajectory.segments[statuses[i].loadNext[j]].position
-							/ groups[i].getDistancePerRotation() * groups[i].getUnitsPerRotation();
+							/ groups[i].getDistancePerRotation() * groups[i].getUnitsPerRotation() * groups[i].getEncoderFailureMeme();
 					tp.velocity = trajectory.segments[statuses[i].loadNext[j]].velocity
 							/ groups[i].getDistancePerRotation() * groups[i].getUnitsPerRotation() / 10.0;
-//					System.out.println(trajectory.segments[statuses[i].loadNext[j]].velocity + " ft/s -> " + tp.velocity + "u/100ms");
 					tp.headingDeg = trajectory.segments[statuses[i].loadNext[j]].heading * 180.0 / Math.PI;
 					tp.profileSlotSelect0 = groups[i].getProfileSlot();
 					tp.profileSlotSelect1 = 0;

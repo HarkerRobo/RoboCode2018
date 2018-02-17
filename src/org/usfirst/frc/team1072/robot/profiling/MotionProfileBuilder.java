@@ -52,9 +52,9 @@ public class MotionProfileBuilder {
 	 * @return the builder
 	 */
 	public MotionProfileBuilder group(Trajectory trajectory, int profileSlot, double distancePerRotation,
-			TalonSRX... targets) {
+			double encoderFailureMeme, TalonSRX... targets) {
 		groups.add(new Group(trajectory, profileSlot, Double.NaN, Double.NaN, Double.NaN, Double.NaN, -1, Double.NaN,
-				-1, 4096.0, distancePerRotation, targets));
+				-1, 4096.0, distancePerRotation, encoderFailureMeme, targets));
 		return this;
 	}
 	
@@ -85,9 +85,9 @@ public class MotionProfileBuilder {
 	 */
 	public MotionProfileBuilder group(Trajectory trajectory, int profileSlot, double f, double p, double i, double d,
 			int integralZone, double maxIntegral, int allowableError, double unitsPerRotation,
-			double distancePerRotation, TalonSRX... targets) {
+			double encoderFailureMeme, double distancePerRotation, TalonSRX... targets) {
 		groups.add(new Group(trajectory, profileSlot, f, p, i, d, integralZone, maxIntegral, allowableError,
-				unitsPerRotation, distancePerRotation, targets));
+				unitsPerRotation, distancePerRotation, encoderFailureMeme, targets));
 		return this;
 	}
 	
@@ -104,7 +104,7 @@ public class MotionProfileBuilder {
 	static class Group {
 		private final Trajectory trajectory;
 		private final int profileSlot, integralZone, allowableError;
-		private final double F, P, I, D, maxIntegral, unitsPerRotation, distancePerRotation;
+		private final double F, P, I, D, maxIntegral, unitsPerRotation, distancePerRotation, encoderFailureMeme;
 		private final TalonSRX[] targets;
 		
 		/**
@@ -131,7 +131,7 @@ public class MotionProfileBuilder {
 		 */
 		public Group(Trajectory trajectory, int profileSlot, double f, double p, double i, double d, int integralZone,
 				double maxIntegral, int allowableError, double unitsPerRotation, double distancePerRotation,
-				TalonSRX... targets) {
+				double encoderFailureMeme, TalonSRX... targets) {
 			super();
 			this.trajectory = trajectory;
 			this.profileSlot = profileSlot;
@@ -144,6 +144,7 @@ public class MotionProfileBuilder {
 			this.allowableError = allowableError;
 			this.unitsPerRotation = unitsPerRotation;
 			this.distancePerRotation = distancePerRotation;
+			this.encoderFailureMeme = encoderFailureMeme;
 			this.targets = targets;
 		}
 		
@@ -224,6 +225,13 @@ public class MotionProfileBuilder {
 			return distancePerRotation;
 		}
 		
+		/**
+		 * @return the encoderFailureMeme
+		 */
+		public double getEncoderFailureMeme() {
+			return encoderFailureMeme;
+		}
+
 		/**
 		 * @return the targets
 		 */
