@@ -16,6 +16,7 @@ import jaci.pathfinder.Trajectory;
 
 import java.io.FileNotFoundException;
 
+import org.usfirst.frc.team1072.robot.commands.v2.ZeroElevatorCommand;
 import org.usfirst.frc.team1072.robot.profiling.MotionProfileBuilder;
 import org.usfirst.frc.team1072.robot.subsystems.Drivetrain;
 import org.usfirst.frc.team1072.robot.subsystems.Elevator;
@@ -40,6 +41,8 @@ public class Robot extends TimedRobot {
 	public static final Elevator elevator = Elevator.getInstance();
 	public static final Intake intake = Intake.getInstance();
 	public static final Compressor compressor = new Compressor();
+	
+	private double minEncoder = Double.MAX_VALUE, maxEncoder = Double.MIN_VALUE;
 	
 	public static enum Position {
 		LEFT, MID, RIGHT
@@ -79,6 +82,12 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("right output", drivetrain.getRight().getMotorOutputPercent());
 		SmartDashboard.putNumber("left error", drivetrain.getLeft().getClosedLoopError(0));
 		SmartDashboard.putNumber("right error", drivetrain.getRight().getClosedLoopError(0));
+		SmartDashboard.putNumber("elevator output", elevator.getMaster().getOutputCurrent());
+		maxEncoder = Math.max(maxEncoder, elevator.getMaster().getSelectedSensorPosition(0));
+		minEncoder = Math.min(minEncoder, elevator.getMaster().getSelectedSensorPosition(0));
+		SmartDashboard.putNumber("elevator max", maxEncoder);
+		SmartDashboard.putNumber("elevator min", minEncoder);
+		SmartDashboard.putNumber("elevator speed", elevator.getMaster().getSelectedSensorVelocity(0));
 	}
 
 	/**
@@ -112,6 +121,7 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousInit() {
+		new ZeroElevatorCommand().start();
 		try {
 			Trajectory left = OI.readTrajectory("/home/lvuser/paths/leftPath5.csv"),
 					right = OI.readTrajectory("/home/lvuser/paths/rightPath5.csv");
@@ -142,6 +152,7 @@ public class Robot extends TimedRobot {
 	
 	@Override
 	public void teleopInit() {
+		new ZeroElevatorCommand().start();
 		// This makes sure that the autonomous stops running when
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove

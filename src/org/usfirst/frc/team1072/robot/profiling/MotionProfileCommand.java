@@ -150,7 +150,7 @@ public class MotionProfileCommand extends Command {
 		notifier.stop();
 		for(Group g : groups)
 			for(TalonSRX target : g.getTargets())
-				target.set(ControlMode.Disabled, 0);
+				target.set(ControlMode.PercentOutput, 0);
 	}
 	
 	/**

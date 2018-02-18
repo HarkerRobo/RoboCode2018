@@ -24,7 +24,7 @@ public class Config {
 		/**
 		 * Timeout (ms) for operations that set motor controller states
 		 */
-		public static final int TIMEOUT = 100;
+		public static final int TIMEOUT = 10;
 		/**
 		 * Maximum standard current per motor (A)
 		 */
@@ -73,25 +73,25 @@ public class Config {
 		/**
 		 * Timeout (ms) for operations that set motor controller states
 		 */
-		public static final int TIMEOUT = 100;
+		public static final int TIMEOUT = 10;
 		/**
 		 * Maximum standard current per motor (A)
 		 */
-		public static final int CONTINUOUS_CURRENT_LIMIT = 10;
+		public static final int CONTINUOUS_CURRENT_LIMIT = 15;
 		/**
 		 * A motor may deviate to currents up to peak current limit (A), for a
 		 * short peak current duration of time (ms)
 		 */
-		public static final int PEAK_CURRENT_LIMIT = 15, PEAK_CURRENT_DURATION = 100;
+		public static final int PEAK_CURRENT_LIMIT = 20, PEAK_CURRENT_DURATION = 50;
 		/**
 		 * Controls whether current limiting is active
 		 */
-		public static final boolean ENABLE_CURRENT_LIMIT = false;
+		public static final boolean ENABLE_CURRENT_LIMIT = true;
 		/**
 		 * Normal state of the elevator limit switches
 		 */
 		public static final LimitSwitchNormal FORWARD_NORMAL = LimitSwitchNormal.NormallyOpen,
-				REVERSE_NORMAL = LimitSwitchNormal.NormallyClosed;
+				REVERSE_NORMAL = LimitSwitchNormal.NormallyOpen;
 		/**
 		 * Controls encoder mode (absolute or relative)
 		 */
@@ -122,7 +122,7 @@ public class Config {
 		/**
 		 * Timeout (ms) for operations that set motor controller states
 		 */
-		public static final int TIMEOUT = 0;
+		public static final int TIMEOUT = 10;
 		/**
 		 * Maximum standard current per motor (A)
 		 */

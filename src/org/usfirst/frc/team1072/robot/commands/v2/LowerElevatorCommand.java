@@ -19,9 +19,9 @@ public class LowerElevatorCommand extends InstantCommand {
 	
 	// Called just before this Command runs the first time
 	protected void initialize() {
-		if(Robot.elevator.isMotionMagicStatus()) {
+		if(Robot.elevator.isMotionMagicStatus() && Robot.elevator.isEncoderStatus()) {
 			Robot.elevator.getMaster().set(ControlMode.MotionMagic, 0);
-		} else if(Robot.elevator.isPositionClosedStatus()) {
+		} else if(Robot.elevator.isPositionClosedStatus() && Robot.elevator.isEncoderStatus()) {
 			Robot.elevator.getMaster().set(ControlMode.Position, 0);
 		} else {
 			Robot.elevator.getMaster().set(ControlMode.PercentOutput, OPEN_LOOP_SPEED);

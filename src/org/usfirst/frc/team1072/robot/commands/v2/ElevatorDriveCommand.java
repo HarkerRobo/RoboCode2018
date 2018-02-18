@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class ElevatorDriveCommand extends Command {
 	
-	public static final double THRESHOLD = 0.15;
+	public static final double THRESHOLD = 0.10;
 	
 	private boolean started;
 
@@ -30,7 +30,7 @@ public class ElevatorDriveCommand extends Command {
     			started = true;
     		}
     		if(started) {
-    			Robot.elevator.getMaster().set(ControlMode.PercentOutput, OI.gamepad.getRightY() * 0.9 + 0.1);
+    			Robot.elevator.getMaster().set(ControlMode.PercentOutput, Math.abs(OI.gamepad.getRightY()) > THRESHOLD ? OI.gamepad.getRightY() * 0.985 + 0.115 : 0.115);
     		}
     }
 

@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class ZeroElevatorCommand extends Command {
 	
-	public static final double STALL_CURRENT = 30;
+	public static final double STALL_CURRENT = 5;
 	
 	public static final double SPEED = -0.3;
 	
@@ -33,6 +33,7 @@ public class ZeroElevatorCommand extends Command {
 			return true;
 		} else if(Robot.elevator.getMaster().getOutputCurrent() > STALL_CURRENT) {
 			Robot.elevator.getMaster().setSelectedSensorPosition(0, 0, 0);
+			return true;
 		}
 		return false;
 	}

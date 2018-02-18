@@ -56,13 +56,15 @@ public class OI {
 	
 	public static void initializeCommandBindings() {
 		
-//		gamepad.getButtonBumperLeft().whenPressed(new SetElevatorCommand(1.25)); //Elevator to switch position
-//		gamepad.getButtonBumperRight().whenPressed(new LowerElevatorCommand()); //Elevator to vault position
+		gamepad.getButtonBumperLeft().whenPressed(new SetElevatorCommand(1.25 + 13.0/12.0)); //Elevator to switch position
+		gamepad.getButtonBumperRight().whenPressed(new SetElevatorCommand(2.0/12.0)); //Elevator to vault position
 		gamepad.getButtonX().whenPressed(new IntakeExpansionCommand());
-//		gamepad.getButtonA().whenPressed(new SetElevatorCommand(4.0));
+		gamepad.getButtonA().whenPressed(new SetElevatorCommand(4.0 + 13.0/12.0));
 		gamepad.getButtonY().whenPressed(new RaiseElevatorCommand());
 		gamepad.getButtonB().whenPressed(new LiftIntakeCommand());
 		gamepad.getButtonStickRight().whenPressed(new LowerElevatorCommand());
+		gamepad.getButtonStart().whenPressed(new JiggleCommand());
+		gamepad.getButtonSelect().whenPressed(new ZeroElevatorCommand());
 		
 		// gamepad.getButtonBumperLeft().whenPressed(new TestIntakeCommand());
 		// gamepad.getButtonBumperRight().whenPressed(new EjectCommand());
@@ -72,15 +74,15 @@ public class OI {
 //		Trajectory traj = Pathfinder.readFromCSV(new File("/home/lvuser/path.csv"));
 //		System.out.println("Reading trajectories");
 //		SmartDashboard.putData(new ZeroEncoders());
-//		try {
-//			Trajectory left = readTrajectory("/home/lvuser/paths/leftPath10.csv"),
-//					right = readTrajectory("/home/lvuser/paths/rightPath10.csv");
-//			gamepad.getButtonA().whenPressed(new MotionProfileBuilder(10, Robot.drivetrain)
-//			.group(left, Slot.LEFT_MOTION_PROFILE.getSlot(), 4.0 * Math.PI / 12.0/*0.31918*/, 0.949, Robot.drivetrain.getLeft())
-//			.group(left, Slot.RIGHT_MOTION_PROFILE.getSlot(), 4.0 * Math.PI / 12.0/*0.31918*/, 1.0, Robot.drivetrain.getRight()).build());
-//		} catch (FileNotFoundException e) {
-//			System.err.println("Failed to read trajectory");
-//		}
+		try {
+			Trajectory left = readTrajectory("/home/lvuser/paths/leftPath10.csv"),
+					right = readTrajectory("/home/lvuser/paths/rightPath10.csv");
+			gamepad.getButtonA().whenPressed(new MotionProfileBuilder(10, Robot.drivetrain)
+			.group(left, Slot.LEFT_MOTION_PROFILE.getSlot(), 4.0 * Math.PI / 12.0/*0.31918*/, 0.949, Robot.drivetrain.getLeft())
+			.group(left, Slot.RIGHT_MOTION_PROFILE.getSlot(), 4.0 * Math.PI / 12.0/*0.31918*/, 1.0, Robot.drivetrain.getRight()).build());
+		} catch (FileNotFoundException e) {
+			System.err.println("Failed to read trajectory");
+		}
 		//96.5 inches = 8.0417 feet = 31387 ticks = 7.66284 rotations -> 1.0494412 ft/rot
 //		System.out.println("Read trajectories");
 		//gamepad.getButtonA().whenPressed(new ElevatorCommand());

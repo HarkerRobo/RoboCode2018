@@ -22,12 +22,12 @@ public class Elevator extends Subsystem {
 	/**
 	 * Distance in encoder units from the top to the bottom of the elevator
 	 */
-	public static final int LENGTH = 140000;
+	public static final int LENGTH = 1400000;
 	
 	/**
 	 * Space between soft and hard limits
 	 */
-	public static final int BUFFER = 10;
+	public static final int BUFFER = 200;
 	
 	/**
 	 * Singleton instance
@@ -113,6 +113,8 @@ public class Elevator extends Subsystem {
 					"Failed to disable reverse soft limits") && encoderStatus
 					&& log(master.configReverseSoftLimitThreshold(BUFFER, TIMEOUT),
 							"Failed to configure reverse soft limits");
+			master.overrideLimitSwitchesEnable(true);
+			master.overrideSoftLimitsEnable(true);
 			log(master.configSetParameter(ParamEnum.eClearPositionOnLimitR, 1, 0, 0, TIMEOUT),
 					"Failed to enable clearing encoder on limit");
 			// Load constants
@@ -120,10 +122,10 @@ public class Elevator extends Subsystem {
 				System.err.println("Elevator: Failed to configure velocity closed loop");
 			}
 			if(!(positionClosedStatus = false && Slot.ELEVATOR_POSITION.configure(master, TIMEOUT))) {
-				System.err.println("Elevator: Failed to configure velocity closed loop");
+				System.err.println("Elevator: Failed to configure position closed loop");
 			}
-			if(!(motionMagicStatus = false && Slot.ELEVATOR_POSITION.configure(master, TIMEOUT))) {
-				System.err.println("Elevator: Failed to configure velocity closed loop");
+			if(!(motionMagicStatus = false && Slot.ELEVATOR_MOTION_MAGIC.configure(master, TIMEOUT))) {
+				System.err.println("Elevator: Failed to configure motion magic");
 			}
 		} catch(Exception e) {
 			System.err.println("Elevator: Failed to initialize motors");

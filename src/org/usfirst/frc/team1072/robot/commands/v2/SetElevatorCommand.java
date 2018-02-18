@@ -8,14 +8,14 @@ import org.usfirst.frc.team1072.robot.subsystems.Elevator;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.InstantCommand;
 
 /**
  * Command to move the elevator to a specific height
  */
-public class SetElevatorCommand extends Command {
+public class SetElevatorCommand extends InstantCommand {
 
     private final double height;
-    private boolean done;
     
 	/**
 	 * Initializes an elevator command
@@ -23,32 +23,15 @@ public class SetElevatorCommand extends Command {
 	 */
     public SetElevatorCommand(double height) {
         requires(Robot.elevator);
-        this.height = height*Config.Elevator.ENCODERTOFEET;
-        done = false;
+        this.height = height * Config.Elevator.ENCODERTOFEET;
     }
 
     //Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.elevator.getMaster().set(ControlMode.Position, height);
-    }
-
-    //Called repeatedly when this Command is scheduled to run
-    protected void execute() {
-    	done = true;
-    }
-
-    //Make this return true when this Command no longer needs to run execute()
-    protected boolean isFinished() {
-        return done;
-        //Find a way to check if encoder is at desired position
-    }
-
-    //Called once after isFinished returns true
-    protected void end() {
-    }
-
-    //Called when another command which requires one or more of the same
-    //subsystems is scheduled to run
-    protected void interrupted() {
+    		if(Robot.elevator.isMotionMagicStatus() && Robot.elevator.isEncoderStatus()) {
+    			Robot.elevator.getMaster().set(ControlMode.MotionMagic, height);
+    		} else if(Robot.elevator.isPositionClosedStatus() && Robot.elevator.isEncoderStatus()) {
+    			Robot.elevator.getMaster().set(ControlMode.Position, height);
+    		}
     }
 }

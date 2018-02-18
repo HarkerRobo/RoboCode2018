@@ -1,5 +1,12 @@
 package org.usfirst.frc.team1072.robot;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+
 import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
@@ -7,24 +14,61 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
  * @author joel
  *
  */
-public enum Slot {
-	LEFT_VELOCITY(2, 0.7 * 1023.0 / 3000.0, 0, 0, 0, 0, 0, 0),
-	RIGHT_VELOCITY(2, 0.7 * 1023.0 / 3000.0, 0, 0, 0, 0, 0,0),
-	LEFT_POSITION(1, 0, 0, 0, 0, 0, 0, 0),
-	RIGHT_POSITION(1, 0, 0, 0, 0, 0, 0, 0),
+public class Slot {
+	public static Slot LEFT_VELOCITY = new Slot(2, 0.7 * 1023.0 / 3000.0, 0, 0, 0, 0, 0, 0),
+	RIGHT_VELOCITY = new Slot(2, 0.7 * 1023.0 / 3000.0, 0, 0, 0, 0, 0,0),
+	LEFT_POSITION = new EmptySlot(),
+	RIGHT_POSITION = new EmptySlot(),
 //	LEFT_MOTION_PROFILE(2, 0.7 * 1023.0 / 3000.0, 0.04, 0.000006, 0, 4096, 0, 0), //Carpet
 //	RIGHT_MOTION_PROFILE(2, 0.65 * 1023.0 / 3000.0, 0.04, 0.000006, 0, 4096, 0, 0), //Carpet
 //	LEFT_MOTION_PROFILE(0, 0.3 * 1023.0 / 1080.0, 0.065, 0.001, 0.00004, 200, 800, 10), //Floor
 //	RIGHT_MOTION_PROFILE(0, 0.3 * 1023.0 / 1100.0, 0.065, 0.001, 0.00004, 200, 800, 10), //Floor
 //	LEFT_MOTION_PROFILE(0, 1.0 * 1023.0 / 4900.0, 0.085, 0.0015, 0.00004, 200, 800, 0), //Floor fast
 //	RIGHT_MOTION_PROFILE(0, 1.0 * 1023.0 / 4800.0, 0.085, 0.0015, 0.00004, 200, 800, 0), //Floor fast
-	LEFT_MOTION_PROFILE(0, 1.0 * 1023.0 / 4860.0, 0.2 * 1023.0 / 4860.0, 0 * 0.001 * 1023.0 / 4860.0, 0.0000, 5000, 500000, 50), //Floor fast
-	RIGHT_MOTION_PROFILE(0, 1.0 * 1023.0 / 4800.0, 0.2 * 1023.0 / 4800.0, 0 * 0.001 * 1023.0 / 4800.0, 0.0000, 5000, 500000, 50), //Floor fast
-	ELEVATOR_POSITION(2, 0, 0, 0, 0, 0, 0, 0),
-	ELEVATOR_VELOCITY(1, 0, 0, 0, 0, 0, 0, 0),
-	ELEVATOR_MOTION_MAGIC(0, 0, 0, 0, 0, 0, 0, 0);
+	LEFT_MOTION_PROFILE = new Slot(0, 1.0 * 1023.0 / 4860.0, 0.2 * 1023.0 / 4860.0, 0 * 0.001 * 1023.0 / 4860.0, 0.0000, 5000, 500000, 50), //Floor fast - off-season
+	RIGHT_MOTION_PROFILE = new Slot(0, 1.0 * 1023.0 / 4800.0, 0.2 * 1023.0 / 4800.0, 0 * 0.001 * 1023.0 / 4800.0, 0.0000, 5000, 500000, 50), //Floor fast - off-season
+	ELEVATOR_POSITION = new EmptySlot(),
+	ELEVATOR_VELOCITY = new EmptySlot(),
+	ELEVATOR_MOTION_MAGIC = new EmptySlot();
 	private int slot, integralZone, allowableError;
 	private double kF, kP, kI, kD, maxIntegral;
+	
+	public static final Slot read(int slot, String filename) {
+		File file = new File("/home/lvuser/tuning/" + filename + ".txt");
+		if(file.exists() && file.isFile())
+			try {
+				BufferedReader br = new BufferedReader(new FileReader(file));
+				double kF = Double.parseDouble(br.readLine());
+				double kP = Double.parseDouble(br.readLine());
+				double kI = Double.parseDouble(br.readLine());
+				double kD = Double.parseDouble(br.readLine());
+				int integralZone = Integer.parseInt(br.readLine());
+				double maxIntegral = Double.parseDouble(br.readLine());
+				int allowableError = Integer.parseInt(br.readLine());
+				br.close();
+				return new Slot(slot, kF, kP, kI, kD, integralZone, maxIntegral, allowableError);
+			} catch(FileNotFoundException e) {
+				e.printStackTrace();
+			} catch(NumberFormatException e) {
+				e.printStackTrace();
+			} catch(IOException e) {
+				e.printStackTrace();
+			}
+		return new EmptySlot();
+	}
+	
+	public static void write(Slot slot, String filename) throws FileNotFoundException {
+		PrintWriter pw = new PrintWriter("/home/lvuser/tuning/" + filename + ".txt");
+		pw.println(slot.kF);
+		pw.println(slot.kP);
+		pw.println(slot.kI);
+		pw.println(slot.kD);
+		pw.println(slot.integralZone);
+		pw.println(slot.maxIntegral);
+		pw.println(slot.allowableError);
+		pw.flush();
+		pw.close();
+	}
 	
 	/**
 	 * @param slot
@@ -109,5 +153,19 @@ public enum Slot {
 	 */
 	public double getMaxIntegral() {
 		return maxIntegral;
+	}
+	
+	static class EmptySlot extends Slot {
+		public EmptySlot() {
+			super(0, 0, 0, 0, 0, 0, 0, 0);
+		}
+
+		/* (non-Javadoc)
+		 * @see org.usfirst.frc.team1072.robot.Slot#configure(com.ctre.phoenix.motorcontrol.can.TalonSRX, int)
+		 */
+		@Override
+		public boolean configure(TalonSRX talon, int TIMEOUT) {
+			return false;
+		}
 	}
 }
