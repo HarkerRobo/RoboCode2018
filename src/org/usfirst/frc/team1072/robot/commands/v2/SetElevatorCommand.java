@@ -2,6 +2,7 @@ package org.usfirst.frc.team1072.robot.commands.v2;
 
 import org.usfirst.frc.team1072.robot.Robot;
 import org.usfirst.frc.team1072.robot.RobotMap;
+import org.usfirst.frc.team1072.robot.Slot;
 import org.usfirst.frc.team1072.robot.Config;
 import org.usfirst.frc.team1072.robot.subsystems.Elevator;
 
@@ -23,14 +24,17 @@ public class SetElevatorCommand extends InstantCommand {
 	 */
     public SetElevatorCommand(double height) {
         requires(Robot.elevator);
-        this.height = height * Config.Elevator.ENCODERTOFEET;
+        this.height = height * Elevator.FEET_TO_ENCODER;
     }
 
     //Called just before this Command runs the first time
     protected void initialize() {
+    		Robot.elevator.getMaster().setIntegralAccumulator(0, 0, 0);
     		if(Robot.elevator.isMotionMagicStatus() && Robot.elevator.isEncoderStatus()) {
+    			Robot.elevator.getMaster().selectProfileSlot(Slot.ELEVATOR_MOTION_MAGIC.getSlot(), 0);
     			Robot.elevator.getMaster().set(ControlMode.MotionMagic, height);
     		} else if(Robot.elevator.isPositionClosedStatus() && Robot.elevator.isEncoderStatus()) {
+    			Robot.elevator.getMaster().selectProfileSlot(Slot.ELEVATOR_POSITION.getSlot(), 0);
     			Robot.elevator.getMaster().set(ControlMode.Position, height);
     		}
     }

@@ -8,6 +8,8 @@
 
 package org.usfirst.frc.team1072.robot;
 
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -63,6 +65,8 @@ public class Robot extends TimedRobot {
 	public void robotInit() {
 		compressor.setClosedLoopControl(true);
 		OI.initializeCommandBindings();
+		UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
+		cam.setResolution(640, 480);
 	}
 	
 	/* (non-Javadoc)
@@ -70,24 +74,26 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void robotPeriodic() {
-		SmartDashboard.putNumber("left encoder", drivetrain.getLeft().getSelectedSensorPosition(0));
-		SmartDashboard.putNumber("right encoder", drivetrain.getRight().getSelectedSensorPosition(0));
-		SmartDashboard.putNumber("left encoder velocity", drivetrain.getLeft().getSelectedSensorVelocity(0));
-		SmartDashboard.putNumber("right encoder velocity", drivetrain.getRight().getSelectedSensorVelocity(0));
-		SmartDashboard.putNumber("Diff", drivetrain.getLeft().getSelectedSensorVelocity(0) - drivetrain.getRight().getSelectedSensorVelocity(0));
-		SmartDashboard.putNumber("Elevator position", elevator.getMaster().getSelectedSensorPosition(0));
-		SmartDashboard.putNumber("left current", intake.getLeftRoller().getOutputCurrent());
-		SmartDashboard.putNumber("right current", intake.getRightRoller().getOutputCurrent());
-		SmartDashboard.putNumber("left output", drivetrain.getLeft().getMotorOutputPercent());
-		SmartDashboard.putNumber("right output", drivetrain.getRight().getMotorOutputPercent());
-		SmartDashboard.putNumber("left error", drivetrain.getLeft().getClosedLoopError(0));
-		SmartDashboard.putNumber("right error", drivetrain.getRight().getClosedLoopError(0));
-		SmartDashboard.putNumber("elevator output", elevator.getMaster().getOutputCurrent());
-		maxEncoder = Math.max(maxEncoder, elevator.getMaster().getSelectedSensorPosition(0));
-		minEncoder = Math.min(minEncoder, elevator.getMaster().getSelectedSensorPosition(0));
-		SmartDashboard.putNumber("elevator max", maxEncoder);
-		SmartDashboard.putNumber("elevator min", minEncoder);
-		SmartDashboard.putNumber("elevator speed", elevator.getMaster().getSelectedSensorVelocity(0));
+//		SmartDashboard.putNumber("left encoder", drivetrain.getLeft().getSelectedSensorPosition(0));
+//		SmartDashboard.putNumber("right encoder", drivetrain.getRight().getSelectedSensorPosition(0));
+//		SmartDashboard.putNumber("left encoder velocity", drivetrain.getLeft().getSelectedSensorVelocity(0));
+//		SmartDashboard.putNumber("right encoder velocity", drivetrain.getRight().getSelectedSensorVelocity(0));
+//		SmartDashboard.putNumber("Diff", drivetrain.getLeft().getSelectedSensorVelocity(0) - drivetrain.getRight().getSelectedSensorVelocity(0));
+//		SmartDashboard.putNumber("Elevator position", elevator.getMaster().getSelectedSensorPosition(0));
+//		SmartDashboard.putNumber("left current", intake.getLeftRoller().getOutputCurrent());
+//		SmartDashboard.putNumber("right current", intake.getRightRoller().getOutputCurrent());
+//		SmartDashboard.putNumber("left output", drivetrain.getLeft().getMotorOutputPercent());
+//		SmartDashboard.putNumber("right output", drivetrain.getRight().getMotorOutputPercent());
+//		SmartDashboard.putNumber("left error", drivetrain.getLeft().getClosedLoopError(0));
+//		SmartDashboard.putNumber("right error", drivetrain.getRight().getClosedLoopError(0));
+//		SmartDashboard.putNumber("elevator output", elevator.getMaster().getOutputCurrent());
+//		maxEncoder = Math.max(maxEncoder, elevator.getMaster().getSelectedSensorPosition(0));
+//		minEncoder = Math.min(minEncoder, elevator.getMaster().getSelectedSensorPosition(0));
+//		SmartDashboard.putNumber("elevator max", maxEncoder);
+//		SmartDashboard.putNumber("elevator min", minEncoder);
+//		SmartDashboard.putNumber("elevator speed", elevator.getMaster().getSelectedSensorVelocity(0));
+//		SmartDashboard.putNumber("elevator error", elevator.getMaster().getClosedLoopError(0));
+//		SmartDashboard.putNumber("elevator accumulator", elevator.getMaster().getIntegralAccumulator(0));
 	}
 
 	/**
@@ -97,9 +103,11 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void disabledInit() {
-		Robot.drivetrain.set((talon) -> talon.set(ControlMode.Disabled, 0));
-//		gearIntake.getOrientation().set(ControlMode.Disabled, 0);
-//		gearIntake.getRollers().set(ControlMode.Disabled, 0);
+		drivetrain.set((talon) -> talon.set(ControlMode.Disabled, 0));
+		elevator.getMaster().set(ControlMode.Disabled, 0);
+		intake.set((talon) -> talon.set(ControlMode.Disabled, 0));
+		elevator.getMaster().configForwardSoftLimitEnable(false, 0);
+		elevator.getMaster().configReverseSoftLimitEnable(false, 0);
 	}
 	
 	@Override

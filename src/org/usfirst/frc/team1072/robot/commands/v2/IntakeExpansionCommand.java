@@ -18,10 +18,10 @@ public class IntakeExpansionCommand extends InstantCommand {
 	
 	// Called just before this Command runs the first time
 	protected void initialize() {
-		if(Robot.intake.getRaise().get() != defaultLift) {
-			Robot.intake.getRaise().set(defaultLift);
+		if(Robot.intake.getExpansion().get() != defaultLift) {
+			Robot.intake.getExpansion().set(defaultLift);
 		} else {
-			Robot.intake.getRaise().set(defaultLift == DoubleSolenoid.Value.kForward ? DoubleSolenoid.Value.kReverse : DoubleSolenoid.Value.kForward);
+			Robot.intake.getExpansion().set(defaultLift == DoubleSolenoid.Value.kForward ? DoubleSolenoid.Value.kReverse : DoubleSolenoid.Value.kForward);
 		}
 	}
 }

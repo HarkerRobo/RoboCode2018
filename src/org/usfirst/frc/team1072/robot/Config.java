@@ -77,12 +77,12 @@ public class Config {
 		/**
 		 * Maximum standard current per motor (A)
 		 */
-		public static final int CONTINUOUS_CURRENT_LIMIT = 15;
+		public static final int CONTINUOUS_CURRENT_LIMIT = 10;
 		/**
 		 * A motor may deviate to currents up to peak current limit (A), for a
 		 * short peak current duration of time (ms)
 		 */
-		public static final int PEAK_CURRENT_LIMIT = 20, PEAK_CURRENT_DURATION = 50;
+		public static final int PEAK_CURRENT_LIMIT = 15, PEAK_CURRENT_DURATION = 50;
 		/**
 		 * Controls whether current limiting is active
 		 */
@@ -112,6 +112,10 @@ public class Config {
 		 * Ratio of Encoder counter to feet, need to test
 		 */
 		public static final int ENCODERTOFEET = 1;
+		/**
+		 * Motion magic constants
+		 */
+		public static final int CRUISE_SPEED = 4000/*4 * (int) org.usfirst.frc.team1072.robot.subsystems.Elevator.FEET_TO_ENCODER / 10*/, MAX_ACCELERATION = 1200/*2 * (int) org.usfirst.frc.team1072.robot.subsystems.Elevator.FEET_TO_ENCODER / 10*/;
 	}
 	
 	public static class Intake {

@@ -5,6 +5,7 @@ import org.usfirst.frc.team1072.robot.Robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
@@ -12,8 +13,8 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class IntakeCommand extends Command {
 	
-	public static final double INTAKE_LEFT = -0.5, INTAKE_RIGHT = -0.65;
-	public static final double OUTTAKE_LEFT = 0.7, OUTTAKE_RIGHT = 0.7;
+	public static final double INTAKE_LEFT = 0.4, INTAKE_RIGHT = 0.65;
+	public static final double OUTTAKE_LEFT = -0.5, OUTTAKE_RIGHT = -0.5;
 
     public IntakeCommand() {
         requires(Robot.intake);
@@ -25,10 +26,12 @@ public class IntakeCommand extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    		if(OI.gamepad.getLeftTriggerPressed()) {
+    		if(OI.gamepad.getRightTriggerPressed()) {
+    			if(Robot.intake.getRaise().get() != Value.kForward)
+    				Robot.intake.getRaise().set(Value.kForward);
     			Robot.intake.getLeftRoller().set(ControlMode.PercentOutput, INTAKE_LEFT);
     			Robot.intake.getRightRoller().set(ControlMode.PercentOutput, INTAKE_RIGHT);
-    		} else if (OI.gamepad.getRightTriggerPressed()) {
+    		} else if (OI.gamepad.getLeftTriggerPressed()) {
     			Robot.intake.getLeftRoller().set(ControlMode.PercentOutput, OUTTAKE_LEFT);
     			Robot.intake.getRightRoller().set(ControlMode.PercentOutput, OUTTAKE_RIGHT);
     		} else {

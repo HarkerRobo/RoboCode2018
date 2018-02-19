@@ -20,14 +20,21 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class Elevator extends Subsystem {
 	
 	/**
+	 * Min and max height in feet, by middle of metal bar
+	 */
+	public static final double MIN = 8.0 / 12.0, MAX = 7.0 + 1.5 / 12.0;
+	/**
 	 * Distance in encoder units from the top to the bottom of the elevator
 	 */
-	public static final int LENGTH = 1400000;
-	
+	public static final int LENGTH = 35860;
+	/**
+	 * feet to encoder values
+	 */
+	public static final double FEET_TO_ENCODER = LENGTH / (MAX - MIN);
 	/**
 	 * Space between soft and hard limits
 	 */
-	public static final int BUFFER = 200;
+	public static final int BUFFER = 300;
 	
 	/**
 	 * Singleton instance
@@ -113,18 +120,20 @@ public class Elevator extends Subsystem {
 					"Failed to disable reverse soft limits") && encoderStatus
 					&& log(master.configReverseSoftLimitThreshold(BUFFER, TIMEOUT),
 							"Failed to configure reverse soft limits");
-			master.overrideLimitSwitchesEnable(true);
-			master.overrideSoftLimitsEnable(true);
 			log(master.configSetParameter(ParamEnum.eClearPositionOnLimitR, 1, 0, 0, TIMEOUT),
 					"Failed to enable clearing encoder on limit");
 			// Load constants
 			if(!(velocityClosedStatus = false && Slot.ELEVATOR_VELOCITY.configure(master, TIMEOUT))) {
 				System.err.println("Elevator: Failed to configure velocity closed loop");
 			}
-			if(!(positionClosedStatus = false && Slot.ELEVATOR_POSITION.configure(master, TIMEOUT))) {
+			if(!(positionClosedStatus = Slot.ELEVATOR_POSITION.configure(master, TIMEOUT))) {
 				System.err.println("Elevator: Failed to configure position closed loop");
 			}
-			if(!(motionMagicStatus = false && Slot.ELEVATOR_MOTION_MAGIC.configure(master, TIMEOUT))) {
+			if(!(motionMagicStatus = Slot.ELEVATOR_MOTION_MAGIC.configure(master, TIMEOUT))
+					&& log(master.configMotionCruiseVelocity(CRUISE_SPEED, TIMEOUT),
+							"Failed to configure cruise velocity")
+					&& log(master.configMotionAcceleration(MAX_ACCELERATION, TIMEOUT),
+							"Failed to configure motion magic acceleration")) {
 				System.err.println("Elevator: Failed to configure motion magic");
 			}
 		} catch(Exception e) {
@@ -314,58 +323,62 @@ public class Elevator extends Subsystem {
 	public void setClosedRampStatus(boolean closedRampStatus) {
 		this.closedRampStatus = closedRampStatus;
 	}
-
+	
 	/**
 	 * @return the motorStatus
 	 */
 	public boolean isMotorStatus() {
 		return motorStatus;
 	}
-
+	
 	/**
-	 * @param motorStatus the motorStatus to set
+	 * @param motorStatus
+	 *            the motorStatus to set
 	 */
 	public void setMotorStatus(boolean motorStatus) {
 		this.motorStatus = motorStatus;
 	}
-
+	
 	/**
 	 * @return the velocityClosedStatus
 	 */
 	public boolean isVelocityClosedStatus() {
 		return velocityClosedStatus;
 	}
-
+	
 	/**
-	 * @param velocityClosedStatus the velocityClosedStatus to set
+	 * @param velocityClosedStatus
+	 *            the velocityClosedStatus to set
 	 */
 	public void setVelocityClosedStatus(boolean velocityClosedStatus) {
 		this.velocityClosedStatus = velocityClosedStatus;
 	}
-
+	
 	/**
 	 * @return the positionClosedStatus
 	 */
 	public boolean isPositionClosedStatus() {
 		return positionClosedStatus;
 	}
-
+	
 	/**
-	 * @param positionClosedStatus the positionClosedStatus to set
+	 * @param positionClosedStatus
+	 *            the positionClosedStatus to set
 	 */
 	public void setPositionClosedStatus(boolean positionClosedStatus) {
 		this.positionClosedStatus = positionClosedStatus;
 	}
-
+	
 	/**
 	 * @return the motionMagicStatus
 	 */
 	public boolean isMotionMagicStatus() {
 		return motionMagicStatus;
 	}
-
+	
 	/**
-	 * @param motionMagicStatus the motionMagicStatus to set
+	 * @param motionMagicStatus
+	 *            the motionMagicStatus to set
 	 */
 	public void setMotionMagicStatus(boolean motionMagicStatus) {
 		this.motionMagicStatus = motionMagicStatus;
