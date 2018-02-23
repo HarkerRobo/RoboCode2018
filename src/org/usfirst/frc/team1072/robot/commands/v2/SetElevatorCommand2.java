@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.command.InstantCommand;
 /**
  * Command to move the elevator to a specific height
  */
-public class SetElevatorCommand extends InstantCommand {
+public class SetElevatorCommand2 extends InstantCommand {
 
     private final double height;
     
@@ -22,7 +22,7 @@ public class SetElevatorCommand extends InstantCommand {
 	 * Initializes an elevator command
 	 * @param height height (in feet) above the default position
 	 */
-    public SetElevatorCommand(double height) {
+    public SetElevatorCommand2(double height) {
         requires(Robot.elevator);
         this.height = height * Elevator.FEET_TO_ENCODER;
     }
@@ -34,7 +34,7 @@ public class SetElevatorCommand extends InstantCommand {
     			Robot.elevator.getMaster().selectProfileSlot(Slot.ELEVATOR_MOTION_MAGIC.getSlot(), 0);
     			Robot.elevator.getMaster().set(ControlMode.MotionMagic, height);
     		} else if(Robot.elevator.isPositionClosedStatus() && Robot.elevator.isEncoderStatus()) {
-    			Robot.elevator.getMaster().selectProfileSlot(Slot.ELEVATOR_POSITION.getSlot(), 0);
+    			Robot.elevator.getMaster().selectProfileSlot(Slot.ELEVATOR_SMALL_POSITION.getSlot(), 0);
     			Robot.elevator.getMaster().set(ControlMode.Position, height);
     		}
     }

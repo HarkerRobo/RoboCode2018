@@ -129,6 +129,9 @@ public class Elevator extends Subsystem {
 			if(!(positionClosedStatus = Slot.ELEVATOR_POSITION.configure(master, TIMEOUT))) {
 				System.err.println("Elevator: Failed to configure position closed loop");
 			}
+			if(!(Slot.ELEVATOR_SMALL_POSITION.configure(master, TIMEOUT))) {
+				System.err.println("Elevator: Failed to configure position closed loop");
+			}
 			if(!(motionMagicStatus = Slot.ELEVATOR_MOTION_MAGIC.configure(master, TIMEOUT))
 					&& log(master.configMotionCruiseVelocity(CRUISE_SPEED, TIMEOUT),
 							"Failed to configure cruise velocity")

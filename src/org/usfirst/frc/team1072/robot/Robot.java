@@ -65,8 +65,8 @@ public class Robot extends TimedRobot {
 	public void robotInit() {
 		compressor.setClosedLoopControl(true);
 		OI.initializeCommandBindings();
-		UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
-		cam.setResolution(640, 480);
+//		UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
+//		cam.setResolution(640, 480);
 	}
 	
 	/* (non-Javadoc)

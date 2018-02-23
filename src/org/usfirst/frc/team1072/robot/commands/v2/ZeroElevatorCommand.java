@@ -6,6 +6,7 @@ import org.usfirst.frc.team1072.robot.Robot;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
@@ -24,6 +25,7 @@ public class ZeroElevatorCommand extends Command {
 	// Called just before this Command runs the first time
 	protected void initialize() {
 		Robot.elevator.getMaster().set(ControlMode.PercentOutput, SPEED);
+		Robot.intake.getExpansion().set(Value.kForward);
 	}
 	
 	// Make this return true when this Command no longer needs to run execute()

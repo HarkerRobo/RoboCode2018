@@ -1,19 +1,27 @@
 package org.usfirst.frc.team1072.robot.commands.v2;
 
+import org.usfirst.frc.team1072.robot.Robot;
+import org.usfirst.frc.team1072.robot.subsystems.Elevator;
+
+import com.ctre.phoenix.motorcontrol.ControlMode;
+
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
  */
-public class VaultCommand extends RaiseEjectCommand {
+public class SmallRaiseCommand extends Command {
+	
+	public static final double DIST = 0.4 * Elevator.FEET_TO_ENCODER;
 
-    public VaultCommand() {
-        // Use requires() here to declare subsystem dependencies
-        // eg. requires(chassis);
+    public SmallRaiseCommand() {
+        requires(Robot.elevator);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
+    		Robot.elevator.getMaster().set(ControlMode.PercentOutput, 0.3);
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -22,11 +30,13 @@ public class VaultCommand extends RaiseEjectCommand {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return false;
+        return Robot.elevator.getMaster().getSelectedSensorPosition(0) > DIST;
     }
 
     // Called once after isFinished returns true
     protected void end() {
+    		Robot.elevator.getMaster().set(ControlMode.PercentOutput, 0.11);
+    		Robot.intake.getExpansion().set(Value.kReverse);
     }
 
     // Called when another command which requires one or more of the same

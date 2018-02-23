@@ -13,8 +13,12 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class IntakeCommand extends Command {
 	
-	public static final double INTAKE_LEFT = 0.4, INTAKE_RIGHT = 0.65;
-	public static final double OUTTAKE_LEFT = -0.5, OUTTAKE_RIGHT = -0.5;
+	public static final double INTAKE_LEFT = 0.8, INTAKE_RIGHT = 1.0;
+	public static final double OUTTAKE_LEFT = -0.6, OUTTAKE_RIGHT = -0.6;
+	public static final double SLOW_OUTTAKE_LEFT = -0.4, SLOW_OUTTAKE_RIGHT = -0.4;
+	public static final double SLOW_HEIGHT = 25000;
+	
+	private boolean outtaking;
 
     public IntakeCommand() {
         requires(Robot.intake);
@@ -32,9 +36,19 @@ public class IntakeCommand extends Command {
     			Robot.intake.getLeftRoller().set(ControlMode.PercentOutput, INTAKE_LEFT);
     			Robot.intake.getRightRoller().set(ControlMode.PercentOutput, INTAKE_RIGHT);
     		} else if (OI.gamepad.getLeftTriggerPressed()) {
-    			Robot.intake.getLeftRoller().set(ControlMode.PercentOutput, OUTTAKE_LEFT);
-    			Robot.intake.getRightRoller().set(ControlMode.PercentOutput, OUTTAKE_RIGHT);
+    			outtaking = true;
+    			if(Robot.elevator.getMaster().getSelectedSensorPosition(0) > SLOW_HEIGHT) {
+    				Robot.intake.getLeftRoller().set(ControlMode.PercentOutput, SLOW_OUTTAKE_LEFT);
+    				Robot.intake.getRightRoller().set(ControlMode.PercentOutput, SLOW_OUTTAKE_RIGHT);
+    			} else {
+    				Robot.intake.getLeftRoller().set(ControlMode.PercentOutput, OUTTAKE_LEFT);
+    				Robot.intake.getRightRoller().set(ControlMode.PercentOutput, OUTTAKE_RIGHT);
+    			}
     		} else {
+    			if(outtaking) {
+    				outtaking = false;
+    				Robot.intake.getExpansion().set(Value.kForward);
+    			}
     			Robot.intake.getLeftRoller().set(ControlMode.Disabled, 0);
     			Robot.intake.getRightRoller().set(ControlMode.Disabled, 0);
     		}

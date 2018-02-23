@@ -11,6 +11,7 @@ package org.usfirst.frc.team1072.robot;
 import org.usfirst.frc.team1072.robot.commands.v2.*;
 import org.usfirst.frc.team1072.robot.profiling.MotionProfileBuilder;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -54,20 +55,28 @@ public class OI {
 	
 	public static final GamepadWrapper gamepad = new GamepadWrapper(0);
 	
+	public static final GamepadWrapper operator = new GamepadWrapper(1, GamepadWrapper.SETTING_LOGITECH);
+	
 	public static void initializeCommandBindings() {
 		
 		
 		// Standard controls
 		gamepad.getButtonBumperLeft().whenPressed(new SetElevatorCommand(2.00)); //Elevator to switch position
-		gamepad.getButtonBumperRight().whenPressed(new SetElevatorCommand(4.0/12.0)); //Elevator to vault position
+		gamepad.getButtonBumperRight().whenPressed(new SetElevatorCommand2(4.0/12.0)); //Elevator to vault position
 		gamepad.getButtonX().whenPressed(new IntakeExpansionCommand());
 		gamepad.getButtonA().whenPressed(new SetElevatorCommand(4.25));
 		gamepad.getButtonY().whenPressed(new RaiseElevatorCommand());
 		gamepad.getButtonB().whenPressed(new LiftIntakeCommand());
 		gamepad.getButtonStickRight().whenPressed(new LowerElevatorCommand());
-		gamepad.getButtonStart().whenPressed(new JiggleCommand());
+		gamepad.getButtonStart().whilePressed(new JiggleCommand());
 		gamepad.getButtonSelect().whenPressed(new ZeroElevatorCommand());
 		
+		operator.getButtonBumperLeft().whilePressed(new OperatorIntakeCommand());
+		operator.getButtonBumperRight().whilePressed(new OperatorOuttakeCommand());
+		operator.getButtonY().whenPressed(new SetSolenoidCommand(Robot.intake.getRaise(), Value.kReverse));
+		operator.getButtonA().whenPressed(new SetSolenoidCommand(Robot.intake.getRaise(), Value.kForward));
+		operator.getButtonX().whenPressed(new SetSolenoidCommand(Robot.intake.getExpansion(), Value.kReverse));
+		operator.getButtonB().whenPressed(new SetSolenoidCommand(Robot.intake.getExpansion(), Value.kForward));
 		
 		// gamepad.getButtonBumperLeft().whenPressed(new TestIntakeCommand());
 		// gamepad.getButtonBumperRight().whenPressed(new EjectCommand());
@@ -81,7 +90,7 @@ public class OI {
 //			Trajectory left = readTrajectory("/home/lvuser/paths/leftPath10.csv"),
 //					right = readTrajectory("/home/lvuser/paths/rightPath10.csv");
 //			gamepad.getButtonA().whenPressed(new MotionProfileBuilder(10, Robot.drivetrain)
-//			.group(left, Slot.LEFT_MOTION_PROFILE.getSlot(), 4.0 * Math.PI / 12.0/*0.31918*/, 1.0, Robot.drivetrain.getLeft())
+//			.group(left, Slot.LEFT_MOTION_PROFILE.getSlot(), 4.0 * Math.PI / 12.0/*0.31918*/, 0.945, Robot.drivetrain.getLeft())
 //			.group(left, Slot.RIGHT_MOTION_PROFILE.getSlot(), 4.0 * Math.PI / 12.0/*0.31918*/, 1.0, Robot.drivetrain.getRight()).build());
 //		} catch (FileNotFoundException e) {
 //			System.err.println("Failed to read trajectory");

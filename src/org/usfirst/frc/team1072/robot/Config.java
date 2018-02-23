@@ -107,7 +107,7 @@ public class Config {
 		/**
 		 * Seconds to ramp from neutral to full
 		 */
-		public static double RAMP_SPEED = 0.2;
+		public static double RAMP_SPEED = 0.4;
 		/**
 		 * Ratio of Encoder counter to feet, need to test
 		 */
