@@ -13,9 +13,10 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class IntakeCommand extends Command {
 	
-	public static final double INTAKE_LEFT = 0.8, INTAKE_RIGHT = 1.0;
-	public static final double OUTTAKE_LEFT = -0.6, OUTTAKE_RIGHT = -0.6;
-	public static final double SLOW_OUTTAKE_LEFT = -0.4, SLOW_OUTTAKE_RIGHT = -0.4;
+	public static final int inSign = -1;
+	public static final double INTAKE_LEFT = inSign * 0.8, INTAKE_RIGHT = inSign * 1.0;
+	public static final double OUTTAKE_LEFT = -inSign * 0.6, OUTTAKE_RIGHT = -inSign * 0.6;
+	public static final double SLOW_OUTTAKE_LEFT = -inSign * 0.4, SLOW_OUTTAKE_RIGHT = -inSign * 0.4;
 	public static final double SLOW_HEIGHT = 25000;
 	
 	private boolean outtaking;
