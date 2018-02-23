@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.command.InstantCommand;
  */
 public class IntakeExpansionCommand extends Command {
 	
-	public static final DoubleSolenoid.Value defaultLift = DoubleSolenoid.Value.kForward;
+	public static final DoubleSolenoid.Value defaultLift = DoubleSolenoid.Value.kReverse;
 	
 	public IntakeExpansionCommand() {
 		requires(Robot.intake);
@@ -20,17 +20,13 @@ public class IntakeExpansionCommand extends Command {
 	
 	// Called just before this Command runs the first time
 	protected void initialize() {
-		if(false){//Robot.intake.getExpansion().get() != defaultLift) {
-			System.out.println("current " + Robot.intake.getExpansion().get().toString());
-			if(Robot.elevator.getMaster().getSelectedSensorPosition(0) > SmallRaiseCommand.DIST) {
-				System.out.println("setting to default");
+		if(Robot.intake.getExpansion().get() != defaultLift) {
+			if(true || Robot.elevator.getMaster().getSelectedSensorPosition(0) > SmallRaiseCommand.DIST) {
 				Robot.intake.getExpansion().set(defaultLift);
 			} else {
-				System.out.println("raising");
 				new SmallRaiseCommand().start();
 			}
 		} else  {
-			System.out.println("setting to opposite");
 			Robot.intake.getExpansion().set(defaultLift == DoubleSolenoid.Value.kForward ? DoubleSolenoid.Value.kReverse : DoubleSolenoid.Value.kForward);
 		}
 	}
