@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class ElevatorDriveCommand extends Command {
 	
-	public static final double THRESHOLD = 0.15;
+	public static final double START_THRESHOLD = 0.3, THRESHOLD = 0.15;
 	
 	public static final int MANUAL_CURRENT_LIMIT = 5, MANUAL_CURRENT_PEAK = 10, MANUAL_CURRENT_PEAK_LENGTH = 50;
 	
@@ -32,7 +32,7 @@ public class ElevatorDriveCommand extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    		if(!started && Math.abs(OI.gamepad.getRightY()) > THRESHOLD) {
+    		if(!started && Math.abs(OI.gamepad.getRightY()) > START_THRESHOLD) {
     			started = true;
     			Robot.elevator.getMaster().configContinuousCurrentLimit(MANUAL_CURRENT_LIMIT, 0);
     			Robot.elevator.getMaster().configPeakCurrentLimit(MANUAL_CURRENT_PEAK, 0);
