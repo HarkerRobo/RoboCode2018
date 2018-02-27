@@ -54,18 +54,19 @@ public class RobotMap {
 		 * On each side of the intake, a solenoid can extend to shrink the
 		 * intake area
 		 */
-		public static final int EXPANSION_SOLENOID_A = 0, EXPANSION_SOLENOID_B = 2, RAISING_SOLENOID_A = 1, RAISING_SOLENOID_B = 3;
+		public static final int EXPANSION_SOLENOID_A = 0, EXPANSION_SOLENOID_B = 2, RAISING_SOLENOID_A = 1,
+				RAISING_SOLENOID_B = 3;
 	}
 	
-//	public static class GearIntake {
-//		/**
-//		 * Compliant wheels bring gears into the intake
-//		 */
-//		public static final int ROLLERS = 7;
-//		/**
-//		 * one talon controls whether the gear is being held upright or intaking
-//		 * from the floor
-//		 */
-//		public static final int ORIENTATION = 1;
-//	}
+	// public static class GearIntake {
+	// /**
+	// * Compliant wheels bring gears into the intake
+	// */
+	// public static final int ROLLERS = 7;
+	// /**
+	// * one talon controls whether the gear is being held upright or intaking
+	// * from the floor
+	// */
+	// public static final int ORIENTATION = 1;
+	// }
 }

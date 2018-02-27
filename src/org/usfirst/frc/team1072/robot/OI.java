@@ -10,6 +10,7 @@ package org.usfirst.frc.team1072.robot;
 
 import org.usfirst.frc.team1072.robot.commands.v2.*;
 import org.usfirst.frc.team1072.robot.profiling.MotionProfileBuilder;
+import org.usfirst.frc.team1072.robot.subsystems.Elevator;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
@@ -59,60 +60,77 @@ public class OI {
 	
 	public static void initializeCommandBindings() {
 		
-		
 		// Standard controls
-		gamepad.getButtonBumperLeft().whenPressed(new SetElevatorCommand(2.00)); //Elevator to switch position
-		gamepad.getButtonBumperRight().whenPressed(new SetElevatorCommand2(4.0/12.0)); //Elevator to vault position
-		gamepad.getButtonX().whenPressed(new IntakeExpansionCommand());
-		gamepad.getButtonA().whenPressed(new SetElevatorCommand(4.25));
-		gamepad.getButtonY().whenPressed(new RaiseElevatorCommand());
-		gamepad.getButtonB().whenPressed(new LiftIntakeCommand());
-		gamepad.getButtonStickRight().whenPressed(new LowerElevatorCommand());
-		gamepad.getButtonStart().whilePressed(new JiggleCommand());
-		gamepad.getButtonSelect().whenPressed(new ZeroElevatorCommand());
 		
-		operator.getButtonBumperLeft().whilePressed(new OperatorIntakeCommand());
-		operator.getButtonBumperRight().whilePressed(new OperatorOuttakeCommand());
-		operator.getButtonY().whenPressed(new SetSolenoidCommand(Robot.intake.getRaise(), Value.kReverse));
-		operator.getButtonA().whenPressed(new SetSolenoidCommand(Robot.intake.getRaise(), Value.kForward));
-		operator.getButtonX().whenPressed(new SetSolenoidCommand(Robot.intake.getExpansion(), Value.kReverse));
-		operator.getButtonB().whenPressed(new SetSolenoidCommand(Robot.intake.getExpansion(), Value.kForward));
+//		gamepad.getButtonBumperLeft().whenPressed(new SetElevatorCommand(2.00)); // Elevator
+//																					// to
+//																					// switch
+//																					// position
+//		gamepad.getButtonBumperRight().whenPressed(new SetElevatorCommand2(4.0 / 12.0)); // Elevator
+//																							// to
+//																							// vault
+//																							// position
+//		gamepad.getButtonX().whenPressed(new IntakeExpansionCommand());
+//		gamepad.getButtonA().whenPressed(new SetElevatorCommand(4.25));
+//		gamepad.getButtonY().whenPressed(new RaiseElevatorCommand());
+//		gamepad.getButtonB().whenPressed(new LiftIntakeCommand());
+//		gamepad.getButtonStickRight().whenPressed(new LowerElevatorCommand());
+//		gamepad.getButtonStart().whilePressed(new JiggleCommand());
+//		gamepad.getButtonSelect().whenPressed(new ZeroElevatorCommand());
+//		
+//		operator.getButtonBumperLeft().whilePressed(new OperatorIntakeCommand());
+//		operator.getButtonBumperRight().whilePressed(new OperatorOuttakeCommand());
+//		operator.getButtonY().whenPressed(new SetSolenoidCommand(Robot.intake.getRaise(), Value.kReverse));
+//		operator.getButtonA().whenPressed(new SetSolenoidCommand(Robot.intake.getRaise(), Value.kForward));
+//		operator.getButtonX().whenPressed(new SetSolenoidCommand(Robot.intake.getExpansion(), Value.kReverse));
+//		operator.getButtonB().whenPressed(new SetSolenoidCommand(Robot.intake.getExpansion(), Value.kForward));
 		
 		// gamepad.getButtonBumperLeft().whenPressed(new TestIntakeCommand());
 		// gamepad.getButtonBumperRight().whenPressed(new EjectCommand());
 		// gamepad.getButtonA().whenPressed(new SlowRaiseCommand(3.0));
 		// gamepad.getButtonB().whenPressed(new ClosedLoopCommand(1920.0));
 		// gamepad.getButtonX().whenPressed(new ClosedLoopCommand(-3400.0));
-//		Trajectory traj = Pathfinder.readFromCSV(new File("/home/lvuser/path.csv"));
-//		System.out.println("Reading trajectories");
-//		SmartDashboard.putData(new ZeroEncoders());
-//		try {
-//			Trajectory left = readTrajectory("/home/lvuser/paths/leftPath10.csv"),
-//					right = readTrajectory("/home/lvuser/paths/rightPath10.csv");
-//			gamepad.getButtonA().whenPressed(new MotionProfileBuilder(10, Robot.drivetrain)
-//			.group(left, Slot.LEFT_MOTION_PROFILE.getSlot(), 4.0 * Math.PI / 12.0/*0.31918*/, 0.945, Robot.drivetrain.getLeft())
-//			.group(left, Slot.RIGHT_MOTION_PROFILE.getSlot(), 4.0 * Math.PI / 12.0/*0.31918*/, 1.0, Robot.drivetrain.getRight()).build());
-//		} catch (FileNotFoundException e) {
-//			System.err.println("Failed to read trajectory");
-//		}
-//		gamepad.getButtonA().whenPressed(new SetElevatorCommand(20000));
-		//96.5 inches = 8.0417 feet = 31387 ticks = 7.66284 rotations -> 1.0494412 ft/rot
-//		System.out.println("Read trajectories");
-		//gamepad.getButtonA().whenPressed(new ElevatorCommand());
-//		gamepad.getButtonY().whenPressed(new ElevatorCommand(1.0));
-		//gamepad.getButtonB().whenPressed(new ClosedLoopCommand(2000));
-//		gamepad.getButtonA().whenPressed(new IntakeCommand());
-//		gamepad.getButtonB().whenPressed(new EjectCommand());
-//		gamepad.getButtonB().whenPressed(new DriveStraight());
-//		
-//		gamepad.getButtonA().whenPressed(new UpDown());
-//		gamepad.getButtonB().whenPressed(new InOut());
-//		gamepad.getButtonX().whilePressed(new VariableSpeedCommand(1.0, "Button X"));
-//		gamepad.getButtonY().whilePressed(new VariableSpeedCommand(-1.0, "Button Y"));
+		// Trajectory traj = Pathfinder.readFromCSV(new
+		// File("/home/lvuser/path.csv"));
+		// System.out.println("Reading trajectories");
+		// SmartDashboard.putData(new ZeroEncoders());
+		try {
+			Trajectory left = readTrajectory("/home/lvuser/paths/leftPath11.csv"),
+					right = readTrajectory("/home/lvuser/paths/rightPath11.csv");
+			gamepad.getButtonA()
+					.whenPressed(
+							new AutonomousCommand(
+									new MotionProfileBuilder(10, Robot.drivetrain)
+											.group(left, Slot.LEFT_MOTION_PROFILE.getSlot(), 4.0 * Math.PI
+													/ 12.0/* 0.31918 */, 0.945, Robot.drivetrain.getLeft())
+											.group(right, Slot.RIGHT_MOTION_PROFILE.getSlot(), 4.0 * Math.PI
+													/ 12.0/* 0.31918 */, 1.0, Robot.drivetrain.getRight())
+											.build(),
+									new SetElevatorCommand(2.0)));
+		} catch(FileNotFoundException e) {
+			System.err.println("Failed to read trajectory");
+		}
+		// gamepad.getButtonA().whenPressed(new SetElevatorCommand(20000));
+		// 96.5 inches = 8.0417 feet = 31387 ticks = 7.66284 rotations ->
+		// 1.0494412 ft/rot
+		// System.out.println("Read trajectories");
+		// gamepad.getButtonA().whenPressed(new ElevatorCommand());
+		// gamepad.getButtonY().whenPressed(new ElevatorCommand(1.0));
+		// gamepad.getButtonB().whenPressed(new ClosedLoopCommand(2000));
+		// gamepad.getButtonA().whenPressed(new IntakeCommand());
+		// gamepad.getButtonB().whenPressed(new EjectCommand());
+		// gamepad.getButtonB().whenPressed(new DriveStraight());
+		//
+		// gamepad.getButtonA().whenPressed(new UpDown());
+		// gamepad.getButtonB().whenPressed(new InOut());
+		// gamepad.getButtonX().whilePressed(new VariableSpeedCommand(1.0,
+		// "Button X"));
+		// gamepad.getButtonY().whilePressed(new VariableSpeedCommand(-1.0,
+		// "Button Y"));
 		
-//		gamepad.getButtonX().whenPressed(new IntakeCommand());
-//		gamepad.getButtonY().whenPressed(new EjectCommand());
-//		System.out.println("Built command");
+		// gamepad.getButtonX().whenPressed(new IntakeCommand());
+		// gamepad.getButtonY().whenPressed(new EjectCommand());
+		// System.out.println("Built command");
 		// gamepad.getButtonY().whenPressed(new
 		// LoadMotionProfile(Robot.gearIntake.getOrientation(), traj, 10, 2, new
 		// RunMotionProfile(Robot.gearIntake.getOrientation(), 10)::start));
@@ -133,7 +151,7 @@ public class OI {
 		if(f.exists() && f.isFile() && filename.endsWith(".csv")) {
 			try {
 				return Pathfinder.readFromCSV(f);
-			} catch (Exception e) {
+			} catch(Exception e) {
 				System.err.println("Pathfinder failed to read trajectory");
 			}
 		} else {

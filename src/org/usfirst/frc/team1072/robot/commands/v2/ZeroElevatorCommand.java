@@ -43,8 +43,10 @@ public class ZeroElevatorCommand extends Command {
 	// Called once after isFinished returns true
 	protected void end() {
 		Robot.elevator.getMaster().set(ControlMode.Disabled, 0);
-		Robot.elevator.getMaster().configForwardSoftLimitEnable(true, 0);
-		Robot.elevator.getMaster().configReverseSoftLimitEnable(true, 0);
+		if(Robot.elevator.isEncoderStatus()) {
+			Robot.elevator.getMaster().configForwardSoftLimitEnable(true, 0);
+			Robot.elevator.getMaster().configReverseSoftLimitEnable(true, 0);
+		}
 	}
 	
 	// Called when another command which requires one or more of the same

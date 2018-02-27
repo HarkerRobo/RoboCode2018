@@ -39,6 +39,8 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
  */
 public class Robot extends TimedRobot {
 	
+	public static final boolean IS_COMP = false;
+	
 	public static final Drivetrain drivetrain = Drivetrain.getInstance();
 	public static final Elevator elevator = Elevator.getInstance();
 	public static final Intake intake = Intake.getInstance();
@@ -79,7 +81,7 @@ public class Robot extends TimedRobot {
 //		SmartDashboard.putNumber("left encoder velocity", drivetrain.getLeft().getSelectedSensorVelocity(0));
 //		SmartDashboard.putNumber("right encoder velocity", drivetrain.getRight().getSelectedSensorVelocity(0));
 //		SmartDashboard.putNumber("Diff", drivetrain.getLeft().getSelectedSensorVelocity(0) - drivetrain.getRight().getSelectedSensorVelocity(0));
-//		SmartDashboard.putNumber("Elevator position", elevator.getMaster().getSelectedSensorPosition(0));
+		SmartDashboard.putNumber("Elevator position", elevator.getMaster().getSelectedSensorPosition(0));
 //		SmartDashboard.putNumber("left current", intake.getLeftRoller().getOutputCurrent());
 //		SmartDashboard.putNumber("right current", intake.getRightRoller().getOutputCurrent());
 //		SmartDashboard.putNumber("left output", drivetrain.getLeft().getMotorOutputPercent());
@@ -131,11 +133,11 @@ public class Robot extends TimedRobot {
 	public void autonomousInit() {
 		new ZeroElevatorCommand().start();
 		try {
-			Trajectory left = OI.readTrajectory("/home/lvuser/paths/leftPath5.csv"),
-					right = OI.readTrajectory("/home/lvuser/paths/rightPath5.csv");
-			new MotionProfileBuilder(5, Robot.drivetrain)
-			.group(left, 2, 4.0 * Math.PI / 12.0/*0.31918*/, 1.0, Robot.drivetrain.getLeft())
-			.group(right, 2, 4.0 * Math.PI / 12.0/*0.31918*/, 1.0, Robot.drivetrain.getRight()).build().start();;
+			Trajectory left = OI.readTrajectory("/home/lvuser/paths/leftPath10.csv"),
+					right = OI.readTrajectory("/home/lvuser/paths/rightPath10.csv");
+			new MotionProfileBuilder(10, Robot.drivetrain)
+			.group(left, Slot.LEFT_MOTION_PROFILE.getSlot(), 4.0 * Math.PI / 12.0/*0.31918*/, 0.945, Robot.drivetrain.getLeft())
+			.group(left, Slot.RIGHT_MOTION_PROFILE.getSlot(), 4.0 * Math.PI / 12.0/*0.31918*/, 1.0, Robot.drivetrain.getRight()).build().start();
 		} catch (FileNotFoundException e) {
 			System.err.println("Failed to read trajectory");
 		}

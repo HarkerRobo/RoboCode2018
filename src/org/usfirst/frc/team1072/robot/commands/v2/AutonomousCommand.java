@@ -15,9 +15,9 @@ import edu.wpi.first.wpilibj.command.TimedCommand;
 public class AutonomousCommand extends CommandGroup {
 
     public AutonomousCommand(MotionProfileCommand mainProfile, SetElevatorCommand elevate) {
-        addSequential(mainProfile);
         addSequential(elevate);
-        addSequential(new SetSolenoidCommand(Robot.intake.getRaise(), Value.kForward));
+        addSequential(mainProfile);
+//        addSequential(new SetSolenoidCommand(Robot.intake.getRaise(), Value.kForward));
         addSequential(new AutonomousReleaseCommand());
     }
     
@@ -27,14 +27,14 @@ public class AutonomousCommand extends CommandGroup {
 		 * @param timeout
 		 */
 		public AutonomousReleaseCommand() {
-			super(0.5);
+			super(2.0);
 			requires(Robot.intake);
 		}
     		
 		@Override
 		public void initialize() {
-			Robot.intake.getLeftRoller().set(ControlMode.PercentOutput, -0.4);
-			Robot.intake.getRightRoller().set(ControlMode.PercentOutput, -0.4);
+			Robot.intake.getLeftRoller().set(ControlMode.PercentOutput, 0.5);
+			Robot.intake.getRightRoller().set(ControlMode.PercentOutput, 0.5);
 		}
 		
 		@Override

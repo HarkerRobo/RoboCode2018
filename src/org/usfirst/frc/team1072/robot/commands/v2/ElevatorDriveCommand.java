@@ -42,12 +42,15 @@ public class ElevatorDriveCommand extends Command {
     		}
     		if(started) {
     			double speed = OI.gamepad.getRightY();
-    			speed = Math.min(speed, (Elevator.LENGTH - Robot.elevator.getMaster().getSelectedSensorPosition(0)) / 12000.0);
-    			speed = Math.max(speed, -Robot.elevator.getMaster().getSelectedSensorPosition(0) / 12000.0);
     			if(Robot.elevator.isVelocityClosedStatus() && Robot.elevator.isEncoderStatus()) {
+        			speed = Math.min(speed, (Elevator.LENGTH - Robot.elevator.getMaster().getSelectedSensorPosition(0)) / 12000.0);
+        			speed = Math.max(speed, -Robot.elevator.getMaster().getSelectedSensorPosition(0) / 12000.0);
     				Robot.elevator.getMaster().set(ControlMode.Velocity, Math.abs(OI.gamepad.getRightY()) > THRESHOLD ? speed * 2000.0 : 0);
     			} else {
-    				Robot.elevator.getMaster().set(ControlMode.PercentOutput, Math.abs(OI.gamepad.getRightY()) > THRESHOLD ? speed * 0.89 + 0.11 : 0.11);
+    				if(Robot.IS_COMP)
+    					Robot.elevator.getMaster().set(ControlMode.PercentOutput, Math.abs(speed) > THRESHOLD ? speed * 0.89 + 0.11 : 0.11);
+    				else
+    					Robot.elevator.getMaster().set(ControlMode.PercentOutput, Math.abs(speed) > THRESHOLD ? speed * 0.92 + 0.08 : 0.08);
     			}
     		}
     }

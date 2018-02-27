@@ -2,6 +2,7 @@ package org.usfirst.frc.team1072.robot.subsystems;
 
 import static org.usfirst.frc.team1072.robot.RobotMap.Elevator.*;
 
+import org.usfirst.frc.team1072.robot.Robot;
 import org.usfirst.frc.team1072.robot.Slot;
 import org.usfirst.frc.team1072.robot.commands.v2.ElevatorDriveCommand;
 
@@ -79,19 +80,6 @@ public class Elevator extends Subsystem {
 			follower1.setNeutralMode(NEUTRAL_MODE);
 			follower2.setNeutralMode(NEUTRAL_MODE);
 			follower3.setNeutralMode(NEUTRAL_MODE);
-			// Configure current limiting
-			if(currentLimitStatus = log(master.configContinuousCurrentLimit(CONTINUOUS_CURRENT_LIMIT, TIMEOUT),
-					"Failed to configure continuous current limit")
-					&& log(master.configPeakCurrentLimit(PEAK_CURRENT_LIMIT, TIMEOUT),
-							"Failed to configure peak current limit")
-					&& log(master.configPeakCurrentDuration(PEAK_CURRENT_DURATION, TIMEOUT),
-							"Failed to configure peak current duration")) {
-				master.enableCurrentLimit(ENABLE_CURRENT_LIMIT);
-			}
-			if(voltageCompensationStatus = log(master.configVoltageCompSaturation(10, TIMEOUT),
-					"Failed to configure voltage saturation")) {
-				master.enableVoltageCompensation(ENABLE_VOLTAGE_COMPENSATION);
-			}
 			// Configure output ranges
 			master.configNominalOutputForward(0, 0);
 			master.configNominalOutputReverse(0, 0);
@@ -106,7 +94,31 @@ public class Elevator extends Subsystem {
 			encoderStatus = log(master.configSelectedFeedbackSensor(ENCODER_MODE, ENCODER, TIMEOUT),
 					"Encoder not found")
 					&& log(master.getSensorCollection().getPulseWidthRiseToRiseUs() != 0, "No encoder readings");
-			master.setSensorPhase(true);
+			master.setSensorPhase(Robot.IS_COMP);
+			// Configure current limiting
+			if(encoderStatus) {
+				if(currentLimitStatus = log(master.configContinuousCurrentLimit(CONTINUOUS_CURRENT_LIMIT, TIMEOUT),
+						"Failed to configure continuous current limit")
+						&& log(master.configPeakCurrentLimit(PEAK_CURRENT_LIMIT, TIMEOUT),
+								"Failed to configure peak current limit")
+						&& log(master.configPeakCurrentDuration(PEAK_CURRENT_DURATION, TIMEOUT),
+								"Failed to configure peak current duration")) {
+					master.enableCurrentLimit(ENABLE_CURRENT_LIMIT);
+				}
+			} else {
+				if(currentLimitStatus = log(master.configContinuousCurrentLimit(BAD_ENCODER_CONTINUOUS_CURRENT_LIMIT, TIMEOUT),
+						"Failed to configure continuous current limit")
+						&& log(master.configPeakCurrentLimit(BAD_ENCODER_PEAK_CURRENT_LIMIT, TIMEOUT),
+								"Failed to configure peak current limit")
+						&& log(master.configPeakCurrentDuration(PEAK_CURRENT_DURATION, TIMEOUT),
+								"Failed to configure peak current duration")) {
+					master.enableCurrentLimit(ENABLE_CURRENT_LIMIT);
+				}
+			}
+			if(voltageCompensationStatus = log(master.configVoltageCompSaturation(10, TIMEOUT),
+					"Failed to configure voltage saturation")) {
+				master.enableVoltageCompensation(ENABLE_VOLTAGE_COMPENSATION);
+			}
 			// Configure limit switches
 			forwardLimitStatus = log(master.configForwardLimitSwitchSource(FORWARD_SWITCH, FORWARD_NORMAL, TIMEOUT),
 					"Forward limit switch not found");
