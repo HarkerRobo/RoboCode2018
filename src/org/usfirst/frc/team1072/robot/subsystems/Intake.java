@@ -5,11 +5,13 @@ import static org.usfirst.frc.team1072.robot.Config.Intake.*;
 
 import java.util.function.Consumer;
 
+import org.usfirst.frc.team1072.robot.Robot;
 import org.usfirst.frc.team1072.robot.commands.v2.IntakeCommand;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
@@ -120,5 +122,21 @@ public class Intake extends Subsystem {
 			instance = new Intake();
 		}
 		return instance;
+	}
+	
+	public void close() {
+		expansion.set(Robot.IS_COMP ? Value.kReverse : Value.kForward);
+	}
+	
+	public void open() {
+		expansion.set(Robot.IS_COMP ? Value.kForward : Value.kReverse);
+	}
+	
+	public void raise() {
+		raise.set(Value.kReverse);
+	}
+	
+	public void lower() {
+		raise.set(Value.kForward);
 	}
 }

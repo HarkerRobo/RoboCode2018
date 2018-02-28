@@ -23,7 +23,7 @@ public class LowerElevatorCommand extends InstantCommand {
 	// Called just before this Command runs the first time
 	protected void initialize() {
 //		Robot.elevator.getMaster().setIntegralAccumulator(0, 0, 0);
-		Robot.intake.getExpansion().set(Value.kForward);
+		Robot.intake.open();
 		if(Robot.elevator.isMotionMagicStatus() && Robot.elevator.isEncoderStatus()) {
 			Robot.elevator.getMaster().selectProfileSlot(Slot.ELEVATOR_MOTION_MAGIC.getSlot(), 0);
 			Robot.elevator.getMaster().set(ControlMode.MotionMagic, Elevator.BUFFER);

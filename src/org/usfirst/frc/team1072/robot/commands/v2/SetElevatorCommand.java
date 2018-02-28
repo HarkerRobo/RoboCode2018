@@ -34,6 +34,7 @@ public class SetElevatorCommand extends InstantCommand {
     			Robot.elevator.getMaster().selectProfileSlot(Slot.ELEVATOR_MOTION_MAGIC.getSlot(), 0);
     			Robot.elevator.getMaster().set(ControlMode.MotionMagic, height);
     		} else if(Robot.elevator.isPositionClosedStatus() && Robot.elevator.isEncoderStatus()) {
+    			System.out.println("Setting elevator closed loop");
     			Robot.elevator.getMaster().selectProfileSlot(Slot.ELEVATOR_POSITION.getSlot(), 0);
     			Robot.elevator.getMaster().set(ControlMode.Position, height);
     		}

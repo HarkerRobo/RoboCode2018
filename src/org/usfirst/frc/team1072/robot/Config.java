@@ -20,7 +20,7 @@ public class Config {
 		/**
 		 * Default motor state (brake or coast)
 		 */
-		public static final NeutralMode NEUTRAL_MODE = NeutralMode.Coast;
+		public static final NeutralMode NEUTRAL_MODE = NeutralMode.Brake;
 		/**
 		 * Timeout (ms) for operations that set motor controller states
 		 */

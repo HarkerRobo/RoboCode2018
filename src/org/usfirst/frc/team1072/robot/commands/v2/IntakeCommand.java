@@ -32,8 +32,7 @@ public class IntakeCommand extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     		if(OI.gamepad.getRightTriggerPressed()) {
-    			if(Robot.intake.getRaise().get() != Value.kForward)
-    				Robot.intake.getRaise().set(Value.kForward);
+    			Robot.intake.open();
     			Robot.intake.getLeftRoller().set(ControlMode.PercentOutput, INTAKE_LEFT);
     			Robot.intake.getRightRoller().set(ControlMode.PercentOutput, INTAKE_RIGHT);
     		} else if (OI.gamepad.getLeftTriggerPressed()) {
@@ -48,7 +47,7 @@ public class IntakeCommand extends Command {
     		} else {
     			if(outtaking) {
     				outtaking = false;
-    				Robot.intake.getExpansion().set(Value.kForward);
+    				Robot.intake.open();
     			}
     			Robot.intake.getLeftRoller().set(ControlMode.Disabled, 0);
     			Robot.intake.getRightRoller().set(ControlMode.Disabled, 0);

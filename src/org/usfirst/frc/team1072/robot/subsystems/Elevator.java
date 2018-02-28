@@ -27,7 +27,7 @@ public class Elevator extends Subsystem {
 	/**
 	 * Distance in encoder units from the top to the bottom of the elevator
 	 */
-	public static final int LENGTH = 35860;
+	public static final int LENGTH = Robot.IS_COMP ? 35860 : 34860;
 	/**
 	 * feet to encoder values
 	 */
@@ -35,7 +35,7 @@ public class Elevator extends Subsystem {
 	/**
 	 * Space between soft and hard limits
 	 */
-	public static final int BUFFER = 300;
+	public static final int BUFFER = 200;
 	
 	/**
 	 * Singleton instance

@@ -110,6 +110,8 @@ public class Robot extends TimedRobot {
 		intake.set((talon) -> talon.set(ControlMode.Disabled, 0));
 		elevator.getMaster().configForwardSoftLimitEnable(false, 0);
 		elevator.getMaster().configReverseSoftLimitEnable(false, 0);
+		intake.raise();
+		intake.close();
 	}
 	
 	@Override
@@ -132,15 +134,15 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousInit() {
 		new ZeroElevatorCommand().start();
-		try {
-			Trajectory left = OI.readTrajectory("/home/lvuser/paths/leftPath10.csv"),
-					right = OI.readTrajectory("/home/lvuser/paths/rightPath10.csv");
-			new MotionProfileBuilder(10, Robot.drivetrain)
-			.group(left, Slot.LEFT_MOTION_PROFILE.getSlot(), 4.0 * Math.PI / 12.0/*0.31918*/, 0.945, Robot.drivetrain.getLeft())
-			.group(left, Slot.RIGHT_MOTION_PROFILE.getSlot(), 4.0 * Math.PI / 12.0/*0.31918*/, 1.0, Robot.drivetrain.getRight()).build().start();
-		} catch (FileNotFoundException e) {
-			System.err.println("Failed to read trajectory");
-		}
+//		try {
+//			Trajectory left = OI.readTrajectory("/home/lvuser/paths/leftPath10.csv"),
+//					right = OI.readTrajectory("/home/lvuser/paths/rightPath10.csv");
+//			new MotionProfileBuilder(10, Robot.drivetrain)
+//			.group(left, Slot.LEFT_MOTION_PROFILE.getSlot(), 4.0 * Math.PI / 12.0/*0.31918*/, 0.945, Robot.drivetrain.getLeft())
+//			.group(left, Slot.RIGHT_MOTION_PROFILE.getSlot(), 4.0 * Math.PI / 12.0/*0.31918*/, 1.0, Robot.drivetrain.getRight()).build().start();
+//		} catch (FileNotFoundException e) {
+//			System.err.println("Failed to read trajectory");
+//		}
 		
 		/*
 		 * String autoSelected = SmartDashboard.getString("Auto Selector",
