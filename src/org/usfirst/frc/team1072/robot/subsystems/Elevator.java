@@ -135,7 +135,7 @@ public class Elevator extends Subsystem {
 			log(master.configSetParameter(ParamEnum.eClearPositionOnLimitR, 1, 0, 0, TIMEOUT),
 					"Failed to enable clearing encoder on limit");
 			// Load constants
-			if(!(velocityClosedStatus = false && Slot.ELEVATOR_VELOCITY.configure(master, TIMEOUT))) {
+			if(!(velocityClosedStatus = Slot.ELEVATOR_VELOCITY.configure(master, TIMEOUT))) {
 				System.err.println("Elevator: Failed to configure velocity closed loop");
 			}
 			if(!(positionClosedStatus = Slot.ELEVATOR_POSITION.configure(master, TIMEOUT))) {

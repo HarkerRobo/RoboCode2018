@@ -7,6 +7,7 @@ import org.usfirst.frc.team1072.robot.Slot;
 import org.usfirst.frc.team1072.robot.subsystems.Elevator;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
 
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -45,7 +46,7 @@ public class ElevatorDriveCommand extends Command {
     			speed = Math.min(speed, (Elevator.LENGTH - Robot.elevator.getMaster().getSelectedSensorPosition(0)) / 12000.0);
     			speed = Math.max(speed, -Robot.elevator.getMaster().getSelectedSensorPosition(0) / 12000.0);
     			if(Robot.elevator.isVelocityClosedStatus() && Robot.elevator.isEncoderStatus()) {
-    				Robot.elevator.getMaster().set(ControlMode.Velocity, Math.abs(OI.gamepad.getRightY()) > THRESHOLD ? speed * 2000.0 : 0);
+    				Robot.elevator.getMaster().set(ControlMode.Velocity, Math.abs(OI.gamepad.getRightY()) > THRESHOLD ? speed * 2000.0 : 0, DemandType.ArbitraryFeedForward, Robot.IS_COMP ? 0.11: 0.08);
     			} else {
     				if(Robot.IS_COMP)
     					Robot.elevator.getMaster().set(ControlMode.PercentOutput, Math.abs(OI.gamepad.getRightY()) > THRESHOLD ? speed * 0.89 + 0.11 : 0.11);

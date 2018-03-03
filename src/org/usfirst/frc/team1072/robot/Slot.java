@@ -33,7 +33,7 @@ public class Slot {
 	RIGHT_MOTION_PROFILE = new Slot(0, 1.0 * 1023.0 / 4600.0, 0.4 * 1023.0 / 4600.0, 0.0012 * 1023.0 / 4600.0, 0.003, 5000, 500000, 50), //Carpet fast - practice
 	ELEVATOR_POSITION = new Slot(0, 0, 0.07, 0.000024, 0.0001, 20000, 10000000, 0),
 	ELEVATOR_SMALL_POSITION = new Slot(2, 0, 0.14, 0.00002, 0.0001, 20000, 10000000, 0),
-	ELEVATOR_VELOCITY = new Slot(1, 1.0 * 1023.0 / 2500.0, 0.8 * 1023.0 / 2500.0, 0.002 * 1023.0 / 2500.0, 0.06 * 1023 / 2500, 3000, 750000000, 30),
+	ELEVATOR_VELOCITY = new Slot(1, 1.0 * 1023.0 / 2500.0, 0.6 * 1023.0 / 2500.0, 0.0005 * 1023.0 / 2500.0, 0.06 * 1023 / 2500, 3000, 7500000, 30),
 	ELEVATOR_MOTION_MAGIC = new EmptySlot(); //Slot(1, 1.0 * 1023.0 / 2000.0, 0.08, 0.0005, 0.001, 20000, 10000000, 0);
 	private int slot, integralZone, allowableError;
 	private double kF, kP, kI, kD, maxIntegral;

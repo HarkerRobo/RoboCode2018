@@ -7,6 +7,7 @@ import org.usfirst.frc.team1072.robot.Config;
 import org.usfirst.frc.team1072.robot.subsystems.Elevator;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
 
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
@@ -32,11 +33,11 @@ public class SetElevatorCommand extends InstantCommand {
 //    		Robot.elevator.getMaster().setIntegralAccumulator(0, 0, 0);
     		if(Robot.elevator.isMotionMagicStatus() && Robot.elevator.isEncoderStatus()) {
     			Robot.elevator.getMaster().selectProfileSlot(Slot.ELEVATOR_MOTION_MAGIC.getSlot(), 0);
-    			Robot.elevator.getMaster().set(ControlMode.MotionMagic, height);
+    			Robot.elevator.getMaster().set(ControlMode.MotionMagic, height, DemandType.ArbitraryFeedForward, Robot.IS_COMP ? 0.11: 0.08);
     		} else if(Robot.elevator.isPositionClosedStatus() && Robot.elevator.isEncoderStatus()) {
     			System.out.println("Setting elevator closed loop");
     			Robot.elevator.getMaster().selectProfileSlot(Slot.ELEVATOR_POSITION.getSlot(), 0);
-    			Robot.elevator.getMaster().set(ControlMode.Position, height);
+    			Robot.elevator.getMaster().set(ControlMode.Position, height, DemandType.ArbitraryFeedForward, Robot.IS_COMP ? 0.11: 0.08);
     		}
     }
 }
