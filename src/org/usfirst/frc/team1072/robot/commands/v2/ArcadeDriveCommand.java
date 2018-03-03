@@ -1,13 +1,12 @@
 package org.usfirst.frc.team1072.robot.commands.v2;
 
-import org.usfirst.frc.team1072.robot.OI;
-import org.usfirst.frc.team1072.robot.Robot;
-import org.usfirst.frc.team1072.robot.RobotMap;
-import org.usfirst.frc.team1072.robot.Slot;
+import org.usfirst.frc.team1072.robot.*;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
 import edu.wpi.first.wpilibj.command.Command;
+import org.usfirst.frc.team1072.robot.subsystems.Drivetrain;
+import org.usfirst.frc.team1072.robot.subsystems.Elevator;
 
 /**
  * Drive in either arcade or tank drive
@@ -16,7 +15,10 @@ public class ArcadeDriveCommand extends Command {
 	
 	public static final double THRESHOLD = 0.05, MAX_SPEED = 5000;
 
-    public ArcadeDriveCommand() {
+	private double MIN_ACC = 10; // in feet per seconds squared
+	private double TOP_MAX_SPEED = 0.2;
+
+	public ArcadeDriveCommand() {
         requires(Robot.drivetrain);
     }
 
@@ -31,6 +33,23 @@ public class ArcadeDriveCommand extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     		if(Robot.drivetrain.isMotorStatus()) {
+
+				double elevPos = Math.pow(Elevator.getInstance().getMaster().getSelectedSensorPosition(0) / ((double)Elevator.LENGTH), 2);
+				// elevPos 0 at bottom, 1 at top
+
+				double speedMod = elevPos * (TOP_MAX_SPEED - 1) + 1;
+
+				double TOP_MAX_SPEED_FEET = speedMod * 46000 / 4096.0 * 4.0 * Math.PI / 12.0; // in feet per seconds
+				double MIN_RAMP_TIME = TOP_MAX_SPEED_FEET / MIN_ACC;
+
+				System.out.println("MIN RAMP TIME " + MIN_RAMP_TIME);
+
+				double rampTime = Config.Drivetrain.RAMP_SPEED;
+				rampTime += (MIN_RAMP_TIME - rampTime) * elevPos;
+
+				Drivetrain.getInstance().getLeft().configOpenloopRamp(rampTime, 0);
+				Drivetrain.getInstance().getRight().configOpenloopRamp(rampTime, 0);
+
     			double x = OI.gamepad.getLeftX();
     			double y = OI.gamepad.getLeftY();
     			double k = Math.max(1.0, Math.max(Math.abs(y + x * x), Math.abs(y - x * x)));
@@ -44,8 +63,8 @@ public class ArcadeDriveCommand extends Command {
 	    			Robot.drivetrain.getLeft().set(ControlMode.Velocity, MAX_SPEED * left);
 	    			Robot.drivetrain.getRight().set(ControlMode.Velocity, MAX_SPEED * right);
 	    		} else {
-	    			Robot.drivetrain.getLeft().set(ControlMode.PercentOutput, left);
-	    			Robot.drivetrain.getRight().set(ControlMode.PercentOutput, right);
+	    			Robot.drivetrain.getLeft().set(ControlMode.PercentOutput, left * speedMod);
+	    			Robot.drivetrain.getRight().set(ControlMode.PercentOutput, right * speedMod);
 	    		}
     		}
     }
