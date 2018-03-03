@@ -34,15 +34,13 @@ public class ArcadeDriveCommand extends Command {
     protected void execute() {
     		if(Robot.drivetrain.isMotorStatus()) {
 
-				double elevPos = Math.pow(Elevator.getInstance().getMaster().getSelectedSensorPosition(0) / ((double)Elevator.LENGTH), 2);
+				double elevPos = Elevator.getInstance().getMaster().getSelectedSensorPosition(0) / ((double)Elevator.LENGTH);
 				// elevPos 0 at bottom, 1 at top
 
 				double speedMod = elevPos * (TOP_MAX_SPEED - 1) + 1;
 
 				double TOP_MAX_SPEED_FEET = speedMod * 46000 / 4096.0 * 4.0 * Math.PI / 12.0; // in feet per seconds
 				double MIN_RAMP_TIME = TOP_MAX_SPEED_FEET / MIN_ACC;
-
-				System.out.println("MIN RAMP TIME " + MIN_RAMP_TIME);
 
 				double rampTime = Config.Drivetrain.RAMP_SPEED;
 				rampTime += (MIN_RAMP_TIME - rampTime) * elevPos;
