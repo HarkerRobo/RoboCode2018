@@ -16,7 +16,7 @@ public class ArcadeDriveCommand extends Command {
 	public static final double THRESHOLD = 0.05, MAX_SPEED = 5000;
 
 	private double MIN_ACC = 10; // in feet per seconds squared
-	private double TOP_MAX_SPEED = 0.2;
+	private double TOP_MAX_SPEED = 0.4;
 
 	public ArcadeDriveCommand() {
         requires(Robot.drivetrain);
@@ -58,8 +58,8 @@ public class ArcadeDriveCommand extends Command {
     				right = 0;
     			}
 	    		if(Robot.drivetrain.isEncoderStatus() && Robot.drivetrain.isVelocityClosedStatus()) {
-	    			Robot.drivetrain.getLeft().set(ControlMode.Velocity, MAX_SPEED * left);
-	    			Robot.drivetrain.getRight().set(ControlMode.Velocity, MAX_SPEED * right);
+	    			Robot.drivetrain.getLeft().set(ControlMode.Velocity, MAX_SPEED * left * speedMod);
+	    			Robot.drivetrain.getRight().set(ControlMode.Velocity, MAX_SPEED * right * speedMod);
 	    		} else {
 	    			Robot.drivetrain.getLeft().set(ControlMode.PercentOutput, left * speedMod);
 	    			Robot.drivetrain.getRight().set(ControlMode.PercentOutput, right * speedMod);

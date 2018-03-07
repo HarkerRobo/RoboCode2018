@@ -21,6 +21,8 @@ public class LiftIntakeCommand extends InstantCommand {
 		if(Robot.intake.getRaise().get() != defaultLift) {
 			Robot.intake.getRaise().set(defaultLift);
 		} else {
+			if(Robot.elevator.getMaster().getSelectedSensorPosition(0) < SmallRaiseCommand.DIST)
+				Robot.intake.open();
 			Robot.intake.getRaise().set(defaultLift == DoubleSolenoid.Value.kForward ? DoubleSolenoid.Value.kReverse : DoubleSolenoid.Value.kForward);
 		}
 	}

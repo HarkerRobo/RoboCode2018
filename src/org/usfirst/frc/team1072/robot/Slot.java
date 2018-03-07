@@ -31,6 +31,8 @@ public class Slot {
 //	RIGHT_MOTION_PROFILE = new Slot(0, 1.0 * 1023.0 / 4600.0, 0.3 * 1023.0 / 4600.0, 0.0012 * 1023.0 / 4600.0, 0.003, 5000, 500000, 50), //Carpet fast - comp
 	LEFT_MOTION_PROFILE = new Slot(0, 1.0 * 1023.0 / 4600.0, 0.4 * 1023.0 / 4600.0, 0.0012 * 1023.0 / 4600.0, 0.003, 5000, 500000, 50), //Carpet fast - practice
 	RIGHT_MOTION_PROFILE = new Slot(0, 1.0 * 1023.0 / 4600.0, 0.4 * 1023.0 / 4600.0, 0.0012 * 1023.0 / 4600.0, 0.003, 5000, 500000, 50), //Carpet fast - practice
+//	LEFT_MOTION_PROFILE = new Slot(0, 1.0 * 1023.0 / 5200.0, 0.5 * 1023.0 / 5000.0, 0.0012 * 1023.0 / 5000.0, 0.0026, 5000, 500000, 10), //Floor new - practice
+//	RIGHT_MOTION_PROFILE = new Slot(0, 1.0 * 1023.0 / 5200.0, 0.6 * 1023.0 / 5000.0, 0.0012 * 1023.0 / 5000.0, 0.0026, 5000, 500000, 10), //Floor new - practice
 	ELEVATOR_POSITION = new Slot(0, 0, 0.07, 0.000024, 0.0001, 20000, 10000000, 0),
 	ELEVATOR_SMALL_POSITION = new Slot(2, 0, 0.14, 0.00002, 0.0001, 20000, 10000000, 0),
 	ELEVATOR_VELOCITY = new Slot(1, 1.0 * 1023.0 / 2500.0, 0.6 * 1023.0 / 2500.0, 0.0005 * 1023.0 / 2500.0, 0.06 * 1023 / 2500, 3000, 7500000, 30),

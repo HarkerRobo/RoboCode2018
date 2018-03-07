@@ -21,6 +21,11 @@ import jaci.pathfinder.Trajectory;
  */
 public class MotionProfileCommand extends Command {
 	
+	/*
+	 * Cut off the command when a certain number of points are still remaining to prevent drift, set to -1 to disable
+	 */
+	public static final int END_EARLY = 50;
+	
 	public static final int MIN_POINTS = 128;
 	
 	private int period;
@@ -126,6 +131,9 @@ public class MotionProfileCommand extends Command {
 				if(status.hasUnderrun) {
 					System.err.println("Underrun!");
 				}
+				if(status.btmBufferCnt + status.topBufferCnt < END_EARLY) {
+					return true;
+				}
 				if(!status.activePointValid || !status.isLast)
 					return false;
 			}
@@ -150,7 +158,7 @@ public class MotionProfileCommand extends Command {
 		notifier.stop();
 		for(Group g : groups)
 			for(TalonSRX target : g.getTargets())
-				target.set(ControlMode.MotionProfile, SetValueMotionProfile.Disable.value);
+				target.set(ControlMode.PercentOutput, 0);
 	}
 	
 	/**
@@ -164,8 +172,7 @@ public class MotionProfileCommand extends Command {
 				TalonSRX target = groups[i].getTargets()[j];
 				while(statuses[i].loadNext[j] < trajectory.segments.length
 						&& !target.isMotionProfileTopLevelBufferFull()) {
-					// Convert a Pathfinder trajectory segment to a Phoenix
-					// trajectory point
+					// Convert a Pathfinder trajectory segment to a Phoenix trajectory point
 					TrajectoryPoint tp = new TrajectoryPoint();
 					tp.position = trajectory.segments[statuses[i].loadNext[j]].position
 							/ groups[i].getDistancePerRotation() * groups[i].getUnitsPerRotation() * groups[i].getEncoderFailureMeme();
@@ -222,5 +229,47 @@ public class MotionProfileCommand extends Command {
 		if(!good)
 			System.err.println("MP: " + value);
 		return good;
+	}
+
+	/**
+	 * @return the period
+	 */
+	public int getPeriod() {
+		return period;
+	}
+
+	/**
+	 * @return the notifier
+	 */
+	public Notifier getNotifier() {
+		return notifier;
+	}
+
+	/**
+	 * @return the groups
+	 */
+	public Group[] getGroups() {
+		return groups;
+	}
+
+	/**
+	 * @return the statuses
+	 */
+	public Status[] getStatuses() {
+		return statuses;
+	}
+
+	/**
+	 * @return the status
+	 */
+	public MotionProfileStatus getStatus() {
+		return status;
+	}
+
+	/**
+	 * @return the started
+	 */
+	public boolean isStarted() {
+		return started;
 	}
 }

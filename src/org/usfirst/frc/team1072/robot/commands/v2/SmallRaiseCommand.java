@@ -4,6 +4,7 @@ import org.usfirst.frc.team1072.robot.Robot;
 import org.usfirst.frc.team1072.robot.subsystems.Elevator;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Command;
@@ -13,7 +14,7 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class SmallRaiseCommand extends Command {
 	
-	public static final double DIST = 0.4 * Elevator.FEET_TO_ENCODER;
+	public static final double DIST = 0.25 * Elevator.FEET_TO_ENCODER;
 
     public SmallRaiseCommand() {
         requires(Robot.elevator);
@@ -35,8 +36,8 @@ public class SmallRaiseCommand extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-    		Robot.elevator.getMaster().set(ControlMode.PercentOutput, 0.11);
-    		Robot.intake.getExpansion().set(Value.kReverse);
+    		Robot.elevator.getMaster().set(ControlMode.Velocity, 0, DemandType.ArbitraryFeedForward, Robot.IS_COMP ? 0.11: 0.08);
+    		Robot.intake.getExpansion().set(IntakeExpansionCommand.defaultLift);
     }
 
     // Called when another command which requires one or more of the same

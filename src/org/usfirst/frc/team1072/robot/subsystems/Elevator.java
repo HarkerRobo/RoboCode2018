@@ -27,7 +27,7 @@ public class Elevator extends Subsystem {
 	/**
 	 * Distance in encoder units from the top to the bottom of the elevator
 	 */
-	public static final int LENGTH = Robot.IS_COMP ? 35860 : 34860;
+	public static final int LENGTH = Robot.IS_COMP ? 35860 : 35100;
 	/**
 	 * feet to encoder values
 	 */

@@ -4,6 +4,7 @@ import org.usfirst.frc.team1072.robot.Robot;
 import org.usfirst.frc.team1072.robot.subsystems.Elevator;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 
@@ -12,7 +13,7 @@ import edu.wpi.first.wpilibj.command.InstantCommand;
  */
 public class IntakeExpansionCommand extends Command {
 	
-	public static final DoubleSolenoid.Value defaultLift = DoubleSolenoid.Value.kReverse;
+	public static final DoubleSolenoid.Value defaultLift = Robot.IS_COMP ? Value.kReverse : Value.kForward;
 	
 	public IntakeExpansionCommand() {
 		requires(Robot.intake);
@@ -21,7 +22,7 @@ public class IntakeExpansionCommand extends Command {
 	// Called just before this Command runs the first time
 	protected void initialize() {
 		if(Robot.intake.getExpansion().get() != defaultLift) {
-			if(true || Robot.elevator.getMaster().getSelectedSensorPosition(0) > SmallRaiseCommand.DIST) {
+			if(Robot.elevator.getMaster().getSelectedSensorPosition(0) > SmallRaiseCommand.DIST) {
 				Robot.intake.getExpansion().set(defaultLift);
 			} else {
 				new SmallRaiseCommand().start();

@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.command.TimedCommand;
 public class AutonomousCommand extends CommandGroup {
 
     public AutonomousCommand(MotionProfileCommand mainProfile, SetElevatorCommand elevate) {
-        addSequential(elevate);
+//        addSequential(elevate);
         addSequential(mainProfile);
 //        addSequential(new SetSolenoidCommand(Robot.intake.getRaise(), Value.kForward));
         addSequential(new AutonomousReleaseCommand());

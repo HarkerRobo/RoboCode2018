@@ -72,12 +72,28 @@ public class OI {
 		gamepad.getButtonStart().whilePressed(new JiggleCommand());
 		gamepad.getButtonSelect().whenPressed(new ZeroElevatorCommand());
 		
-		operator.getButtonBumperLeft().whilePressed(new OperatorIntakeCommand());
-		operator.getButtonBumperRight().whilePressed(new OperatorOuttakeCommand());
+//		operator.getButtonBumperLeft().whilePressed(new OperatorIntakeCommand());
+//		operator.getButtonBumperRight().whilePressed(new OperatorOuttakeCommand());
 		operator.getButtonY().whenPressed(new SetSolenoidCommand(Robot.intake.getRaise(), Value.kReverse));
-		operator.getButtonA().whenPressed(new SetSolenoidCommand(Robot.intake.getRaise(), Value.kForward));
-		operator.getButtonX().whenPressed(new SetSolenoidCommand(Robot.intake.getExpansion(), Value.kReverse));
-		operator.getButtonB().whenPressed(new SetSolenoidCommand(Robot.intake.getExpansion(), Value.kForward));
+		operator.getButtonA().whenPressed(new InstantCommand() {
+			@Override
+			public void initialize() {
+				if(Robot.elevator.getMaster().getSelectedSensorPosition(0) < SmallRaiseCommand.DIST)
+					Robot.intake.open();
+				Robot.intake.getRaise().set(Value.kForward);
+			}
+		});
+		operator.getButtonX().whenPressed(new InstantCommand() {
+			@Override
+			public void initialize() {
+				if(Robot.elevator.getMaster().getSelectedSensorPosition(0) > SmallRaiseCommand.DIST) {
+					Robot.intake.getExpansion().set(Value.kForward);
+				} else {
+					new SmallRaiseCommand().start();
+				}
+			}
+		});
+		operator.getButtonB().whenPressed(new SetSolenoidCommand(Robot.intake.getExpansion(), Value.kReverse));
 		
 		// gamepad.getButtonBumperLeft().whenPressed(new TestIntakeCommand());
 		// gamepad.getButtonBumperRight().whenPressed(new EjectCommand());
