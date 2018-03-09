@@ -39,6 +39,7 @@ public class AutonomousCommand extends CommandGroup {
 		
 		@Override
 		public void end() {
+			new AutonomousReleaseCommand();
 			Robot.intake.getLeftRoller().set(ControlMode.Disabled, 0);
 			Robot.intake.getRightRoller().set(ControlMode.Disabled, 0);
 		}

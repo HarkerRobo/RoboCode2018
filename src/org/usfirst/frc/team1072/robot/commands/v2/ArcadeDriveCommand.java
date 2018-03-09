@@ -3,6 +3,7 @@ package org.usfirst.frc.team1072.robot.commands.v2;
 import org.usfirst.frc.team1072.robot.*;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
 
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team1072.robot.subsystems.Drivetrain;
@@ -34,7 +35,7 @@ public class ArcadeDriveCommand extends Command {
     protected void execute() {
     		if(Robot.drivetrain.isMotorStatus()) {
 
-				double elevPos = Elevator.getInstance().getMaster().getSelectedSensorPosition(0) / ((double)Elevator.LENGTH);
+				double elevPos = Elevator.getInstance().getMaster().getSelectedSensorPosition(0) / ((double) Elevator.LENGTH);
 				// elevPos 0 at bottom, 1 at top
 
 				double speedMod = elevPos * (TOP_MAX_SPEED - 1) + 1;

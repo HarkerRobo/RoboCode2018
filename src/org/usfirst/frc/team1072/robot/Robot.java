@@ -83,13 +83,14 @@ public class Robot extends TimedRobot {
 //		SmartDashboard.putNumber("right encoder velocity", drivetrain.getRight().getSelectedSensorVelocity(0));
 //		SmartDashboard.putNumber("Diff", drivetrain.getLeft().getSelectedSensorVelocity(0) - drivetrain.getRight().getSelectedSensorVelocity(0));
 		SmartDashboard.putNumber("Elevator position", elevator.getMaster().getSelectedSensorPosition(0));
+		SmartDashboard.putNumber("Elevator velocity", elevator.getMaster().getSelectedSensorVelocity(0));
 //		SmartDashboard.putNumber("left current", intake.getLeftRoller().getOutputCurrent());
 //		SmartDashboard.putNumber("right current", intake.getRightRoller().getOutputCurrent());
 //		SmartDashboard.putNumber("left output", drivetrain.getLeft().getMotorOutputPercent());
 //		SmartDashboard.putNumber("right output", drivetrain.getRight().getMotorOutputPercent());
 //		SmartDashboard.putNumber("left error", drivetrain.getLeft().getClosedLoopError(0));
 //		SmartDashboard.putNumber("right error", drivetrain.getRight().getClosedLoopError(0));
-//		SmartDashboard.putNumber("elevator output", elevator.getMaster().getOutputCurrent());
+		SmartDashboard.putNumber("Elevator output current", elevator.getMaster().getOutputCurrent());
 //		maxEncoder = Math.max(maxEncoder, elevator.getMaster().getSelectedSensorPosition(0));
 //		minEncoder = Math.min(minEncoder, elevator.getMaster().getSelectedSensorPosition(0));
 //		SmartDashboard.putNumber("elevator max", maxEncoder);

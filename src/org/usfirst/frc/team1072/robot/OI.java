@@ -13,6 +13,7 @@ import org.usfirst.frc.team1072.robot.profiling.MotionProfileBuilder;
 import org.usfirst.frc.team1072.robot.subsystems.Elevator;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.command.InstantCommand;
 
 import java.io.File;
 import java.io.FileNotFoundException;

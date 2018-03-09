@@ -6,10 +6,15 @@ import static org.usfirst.frc.team1072.robot.Config.Drivetrain.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+import org.usfirst.frc.team1072.robot.Robot;
 import org.usfirst.frc.team1072.robot.Slot;
 import org.usfirst.frc.team1072.robot.commands.v2.ArcadeDriveCommand;
 
 import com.ctre.phoenix.ErrorCode;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
+import com.ctre.phoenix.motorcontrol.RemoteFeedbackDevice;
+import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
@@ -19,6 +24,13 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  * 4-Cim west coast drivetrain to move the robot
  */
 public class Drivetrain extends Subsystem {
+	
+	public static final double MAX_SPEED = 0;
+	
+	public static final int MAIN_PID = 0, AUX_PID = 1;
+	
+	public static final int GYRO_TALON = 0;
+	
 	/**
 	 * Singleton instance
 	 */
@@ -35,7 +47,8 @@ public class Drivetrain extends Subsystem {
 	 * Are all of the parts of this elevator functioning?
 	 */
 	private boolean motorStatus, encoderStatus, currentLimitStatus, voltageCompensationStatus, openRampStatus,
-			closedRampStatus, velocityClosedStatus, positionClosedStatus, motionProfileStatus;
+			closedRampStatus, velocityClosedStatus, positionClosedStatus, motionProfileStatus, antiTipStatus,
+			gyroStatus;
 	
 	/**
 	 * Initialize the drivetrain subsystem
@@ -55,7 +68,6 @@ public class Drivetrain extends Subsystem {
 			leftFollower.follow(leftMaster);
 			rightFollower.follow(rightMaster);
 			// Configure settings (on both masters)
-//			set((talon) -> talon.setNeutralMode(NEUTRAL_MODE));
 			leftMaster.setNeutralMode(NEUTRAL_MODE);
 			rightMaster.setNeutralMode(NEUTRAL_MODE);
 			leftFollower.setNeutralMode(NEUTRAL_MODE);
@@ -101,14 +113,22 @@ public class Drivetrain extends Subsystem {
 					&& log(rightMaster.configClosedloopRamp(RAMP_SPEED, TIMEOUT),
 							"Failed to configure right closed loop ramping");
 			// Configure encoders
-			encoderStatus = log(leftMaster.configSelectedFeedbackSensor(ENCODER_MODE, ENCODER, TIMEOUT),
+			encoderStatus = log(leftMaster.configSelectedFeedbackSensor(ENCODER_MODE, MAIN_PID, TIMEOUT),
 					"Left encoder not found")
-					&& log(rightMaster.configSelectedFeedbackSensor(ENCODER_MODE, ENCODER, TIMEOUT),
+					&& log(rightMaster.configSelectedFeedbackSensor(ENCODER_MODE, MAIN_PID, TIMEOUT),
 							"Right encoder not found")
 					&& log(leftMaster.getSensorCollection().getPulseWidthRiseToRiseUs() != 0,
 							"No left encoder readings")
 					&& log(rightMaster.getSensorCollection().getPulseWidthRiseToRiseUs() != 0,
 							"No right encoder readings");
+			gyroStatus = log(leftMaster.configRemoteFeedbackFilter(GYRO_TALON, RemoteSensorSource.GadgeteerPigeon_Pitch,
+					0, TIMEOUT), "Pigeon IMU not found")
+					&& log(rightMaster.configRemoteFeedbackFilter(GYRO_TALON, RemoteSensorSource.GadgeteerPigeon_Pitch,
+							0, TIMEOUT), "Pigeon IMU not found")
+					&& log(leftMaster.configSelectedFeedbackSensor(RemoteFeedbackDevice.RemoteSensor0, AUX_PID,
+							TIMEOUT), "Could not configure Pigeon IMU")
+					&& log(rightMaster.configSelectedFeedbackSensor(RemoteFeedbackDevice.RemoteSensor0, AUX_PID,
+							TIMEOUT), "Could not configure Pigeon IMU");
 			// Load constants
 			if(!(velocityClosedStatus = false && Slot.LEFT_VELOCITY.configure(leftMaster, TIMEOUT)
 					&& Slot.RIGHT_VELOCITY.configure(rightMaster, TIMEOUT))) {
@@ -129,20 +149,54 @@ public class Drivetrain extends Subsystem {
 		}
 	}
 	
+	public void set(double left, double right) {
+		if(encoderStatus && velocityClosedStatus) {
+			if(gyroStatus && antiTipStatus) {
+				leftMaster.set(ControlMode.Velocity, left * MAX_SPEED, DemandType.AuxPID, 0);
+				rightMaster.set(ControlMode.Velocity, right * MAX_SPEED, DemandType.AuxPID, 0);
+			} else {
+				leftMaster.set(ControlMode.Velocity, left * MAX_SPEED);
+				rightMaster.set(ControlMode.Velocity, right * MAX_SPEED);
+			}
+		} else {
+			if(gyroStatus && antiTipStatus) {
+				leftMaster.set(ControlMode.PercentOutput, left, DemandType.AuxPID, 0);
+				rightMaster.set(ControlMode.PercentOutput, right, DemandType.AuxPID, 0);
+			} else {
+				leftMaster.set(ControlMode.PercentOutput, left);
+				rightMaster.set(ControlMode.PercentOutput, right);
+			}
+		}
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see edu.wpi.first.wpilibj.command.Subsystem#periodic()
+	 */
+	@Override
+	public void periodic() {
+		if(encoderStatus
+				&& log(leftMaster.getSensorCollection().getPulseWidthRiseToRiseUs() != 0, "No left encoder readings")
+				&& log(rightMaster.getSensorCollection().getPulseWidthRiseToRiseUs() != 0, "No right encoder readings"))
+			encoderStatus = false;
+	}
+	
 	/**
 	 * @return the motorStatus
 	 */
 	public boolean isMotorStatus() {
 		return motorStatus;
 	}
-
+	
 	/**
-	 * @param motorStatus the motorStatus to set
+	 * @param motorStatus
+	 *            the motorStatus to set
 	 */
 	public void setMotorStatus(boolean motorStatus) {
 		this.motorStatus = motorStatus;
 	}
-
+	
 	/**
 	 * @return the encoderStatus
 	 */

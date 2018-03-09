@@ -75,6 +75,9 @@ public class Elevator extends Subsystem {
 			follower1.follow(master);
 			follower2.follow(master);
 			follower3.follow(master);
+			// Invert
+			if(!Robot.IS_COMP)
+				follower2.setInverted(true);
 			// Configure settings
 			master.setNeutralMode(NEUTRAL_MODE);
 			follower1.setNeutralMode(NEUTRAL_MODE);
@@ -106,7 +109,8 @@ public class Elevator extends Subsystem {
 					master.enableCurrentLimit(ENABLE_CURRENT_LIMIT);
 				}
 			} else {
-				if(currentLimitStatus = log(master.configContinuousCurrentLimit(BAD_ENCODER_CONTINUOUS_CURRENT_LIMIT, TIMEOUT),
+				if(currentLimitStatus = log(
+						master.configContinuousCurrentLimit(BAD_ENCODER_CONTINUOUS_CURRENT_LIMIT, TIMEOUT),
 						"Failed to configure continuous current limit")
 						&& log(master.configPeakCurrentLimit(BAD_ENCODER_PEAK_CURRENT_LIMIT, TIMEOUT),
 								"Failed to configure peak current limit")
@@ -154,6 +158,17 @@ public class Elevator extends Subsystem {
 		} catch(Exception e) {
 			System.err.println("Elevator: Failed to initialize motors");
 		}
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see edu.wpi.first.wpilibj.command.Subsystem#periodic()
+	 */
+	@Override
+	public void periodic() {
+		if(encoderStatus && !log(master.getSensorCollection().getPulseWidthRiseToRiseUs() != 0, "No encoder readings"))
+			encoderStatus = false;
 	}
 	
 	public boolean log(ErrorCode err, String value) {
