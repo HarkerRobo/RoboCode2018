@@ -48,7 +48,7 @@ public class Robot extends TimedRobot {
 	public static final Elevator elevator = Elevator.getInstance();
 	public static final Intake intake = Intake.getInstance();
 	public static final Compressor compressor = new Compressor();
-	public static final PigeonIMU pigeon = new PigeonIMU(RobotMap.PIGEON_IMU);
+	public static final PigeonIMU pigeon = new PigeonIMU(intake.getRightRoller());
 	
 	public static boolean falling = false;
 	
@@ -63,6 +63,8 @@ public class Robot extends TimedRobot {
 	public static final SmartEnum<Position> position = new SmartEnum<Position>(Position.MID);
 	public static final SmartEnum<Goal> goal = new SmartEnum<Goal>(Goal.SWITCH);
 	
+	double [] ypr;
+	
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -72,6 +74,7 @@ public class Robot extends TimedRobot {
 		
 		compressor.setClosedLoopControl(true);
 		OI.initializeCommandBindings();
+		 ypr = new double [3];
 	}
 	
 	/* (non-Javadoc)
@@ -79,7 +82,11 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void robotPeriodic() {
-
+		SmartDashboard.putNumber("pigeon heading", pigeon.getFusedHeading());
+		pigeon.getYawPitchRoll(ypr);
+		SmartDashboard.putNumber("pigeon yaw", ypr[0]);
+		SmartDashboard.putNumber("pigeon pitch", ypr[1]);
+		SmartDashboard.putNumber("pigeon roll", ypr[2]);
 	}
 
 	/**
