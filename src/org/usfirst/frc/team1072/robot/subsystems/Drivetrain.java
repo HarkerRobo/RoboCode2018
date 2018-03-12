@@ -131,7 +131,8 @@ public class Drivetrain extends Subsystem {
 							TIMEOUT), "Could not configure Pigeon IMU")
 					&& log(rightMaster.configSelectedFeedbackSensor(RemoteFeedbackDevice.RemoteSensor0, AUX_PID,
 							TIMEOUT), "Could not configure Pigeon IMU");
-			log(rightMaster.configAuxPIDPolarity(true, TIMEOUT), "Could not configure auxiliary PID polarity");
+			log(rightMaster.configAuxPIDPolarity(false, TIMEOUT), "Could not configure auxiliary PID polarity");
+			log(leftMaster.configAuxPIDPolarity(true, TIMEOUT), "Could not configure auxiliary PID polarity");
 			// Load constants
 			if(!(velocityClosedStatus = false && Slot.LEFT_VELOCITY.configure(leftMaster, TIMEOUT)
 					&& Slot.RIGHT_VELOCITY.configure(rightMaster, TIMEOUT))) {
@@ -147,6 +148,7 @@ public class Drivetrain extends Subsystem {
 			}
 			// Select profile zero
 			set((talon) -> talon.selectProfileSlot(0, 0));
+			set((talon) -> talon.selectProfileSlot(1, 1));
 		} catch(Exception e) {
 			System.err.println("Drivetrain: Failed to initialize motors");
 		}
