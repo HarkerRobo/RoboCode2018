@@ -58,6 +58,8 @@ public class RobotMap {
 				RAISING_SOLENOID_B = 3;
 	}
 	
+	public static final int PIGEON_IMU = 11;
+	
 	// public static class GearIntake {
 	// /**
 	// * Compliant wheels bring gears into the intake

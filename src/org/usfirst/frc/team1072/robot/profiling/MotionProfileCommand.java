@@ -57,7 +57,7 @@ public class MotionProfileCommand extends Command {
 			statuses[i] = new Status(groups[i].getTargets().length);
 			for(TalonSRX target : groups[i].getTargets()) {
 				// Disable the motors so nothing happens while loading
-				target.set(ControlMode.MotionProfile, SetValueMotionProfile.Disable.value);
+				target.set(ControlMode.MotionProfileArc, SetValueMotionProfile.Disable.value);
 				// Clear any data from previous motion profiling
 				log(target.clearMotionProfileHasUnderrun(1000), "Could not clear underrun");
 				log(target.clearMotionProfileTrajectories(), "Could not clear trajectories");
@@ -110,7 +110,7 @@ public class MotionProfileCommand extends Command {
 				started = true;
 				for(Group g : groups)
 					for(TalonSRX target : g.getTargets())
-						target.set(ControlMode.MotionProfile, SetValueMotionProfile.Enable.value);
+						target.set(ControlMode.MotionProfileArc, SetValueMotionProfile.Enable.value);
 				System.out.println("Started MP Command");
 			}
 		}

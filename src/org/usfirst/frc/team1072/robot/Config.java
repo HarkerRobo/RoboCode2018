@@ -16,15 +16,20 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
  * The Config keeps track of the initial states of any hardware on the robot
  */
 public class Config {
+	/**
+	 * Timeout (ms) for operations that set motor controller states
+	 */
+	public static int TIMEOUT = 10;
+	
 	public static class Drivetrain {
+		/**
+		 * Timeout (ms) for operations that set motor controller states
+		 */
+		public static int TIMEOUT = 10;
 		/**
 		 * Default motor state (brake or coast)
 		 */
 		public static final NeutralMode NEUTRAL_MODE = NeutralMode.Brake;
-		/**
-		 * Timeout (ms) for operations that set motor controller states
-		 */
-		public static final int TIMEOUT = 10;
 		/**
 		 * Maximum standard current per motor (A)
 		 */
@@ -67,13 +72,13 @@ public class Config {
 	
 	public static class Elevator {
 		/**
+		 * Timeout (ms) for operations that set motor controller states
+		 */
+		public static int TIMEOUT = 10;
+		/**
 		 * Default motor state (brake or coast)
 		 */
 		public static final NeutralMode NEUTRAL_MODE = NeutralMode.Brake;
-		/**
-		 * Timeout (ms) for operations that set motor controller states
-		 */
-		public static final int TIMEOUT = 10;
 		/**
 		 * Maximum standard current per motor (A)
 		 */
@@ -120,13 +125,13 @@ public class Config {
 	
 	public static class Intake {
 		/**
+		 * Timeout (ms) for operations that set motor controller states
+		 */
+		public static int TIMEOUT = 10;
+		/**
 		 * Default motor state (brake or coast)
 		 */
 		public static final NeutralMode NEUTRAL_MODE = NeutralMode.Coast;
-		/**
-		 * Timeout (ms) for operations that set motor controller states
-		 */
-		public static final int TIMEOUT = 10;
 		/**
 		 * Maximum standard current per motor (A)
 		 */

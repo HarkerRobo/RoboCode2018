@@ -29,6 +29,7 @@ import org.usfirst.frc.team1072.robot.subsystems.Intake;
 // import org.usfirst.frc.team1072.robot.subsystems.Intake;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.sensors.PigeonIMU;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -39,14 +40,17 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
  */
 public class Robot extends TimedRobot {
 	
+	public static int TIMEOUT;
+	
 	public static final boolean IS_COMP = false;
 	
 	public static final Drivetrain drivetrain = Drivetrain.getInstance();
 	public static final Elevator elevator = Elevator.getInstance();
 	public static final Intake intake = Intake.getInstance();
 	public static final Compressor compressor = new Compressor();
+	public static final PigeonIMU pigeon = new PigeonIMU(RobotMap.PIGEON_IMU);
 	
-	private double minEncoder = Double.MAX_VALUE, maxEncoder = Double.MIN_VALUE;
+	public static boolean falling = false;
 	
 	public static enum Position {
 		LEFT, MID, RIGHT
@@ -65,11 +69,9 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void robotInit() {
+		
 		compressor.setClosedLoopControl(true);
-//		compressor.stop();
 		OI.initializeCommandBindings();
-//		UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
-//		cam.setResolution(640, 480);
 	}
 	
 	/* (non-Javadoc)
@@ -77,27 +79,7 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void robotPeriodic() {
-//		SmartDashboard.putNumber("left encoder", drivetrain.getLeft().getSelectedSensorPosition(0));
-//		SmartDashboard.putNumber("right encoder", drivetrain.getRight().getSelectedSensorPosition(0));
-//		SmartDashboard.putNumber("left encoder velocity", drivetrain.getLeft().getSelectedSensorVelocity(0));
-//		SmartDashboard.putNumber("right encoder velocity", drivetrain.getRight().getSelectedSensorVelocity(0));
-//		SmartDashboard.putNumber("Diff", drivetrain.getLeft().getSelectedSensorVelocity(0) - drivetrain.getRight().getSelectedSensorVelocity(0));
-		SmartDashboard.putNumber("Elevator position", elevator.getMaster().getSelectedSensorPosition(0));
-		SmartDashboard.putNumber("Elevator velocity", elevator.getMaster().getSelectedSensorVelocity(0));
-//		SmartDashboard.putNumber("left current", intake.getLeftRoller().getOutputCurrent());
-//		SmartDashboard.putNumber("right current", intake.getRightRoller().getOutputCurrent());
-//		SmartDashboard.putNumber("left output", drivetrain.getLeft().getMotorOutputPercent());
-//		SmartDashboard.putNumber("right output", drivetrain.getRight().getMotorOutputPercent());
-//		SmartDashboard.putNumber("left error", drivetrain.getLeft().getClosedLoopError(0));
-//		SmartDashboard.putNumber("right error", drivetrain.getRight().getClosedLoopError(0));
-		SmartDashboard.putNumber("Elevator output current", elevator.getMaster().getOutputCurrent());
-//		maxEncoder = Math.max(maxEncoder, elevator.getMaster().getSelectedSensorPosition(0));
-//		minEncoder = Math.min(minEncoder, elevator.getMaster().getSelectedSensorPosition(0));
-//		SmartDashboard.putNumber("elevator max", maxEncoder);
-//		SmartDashboard.putNumber("elevator min", minEncoder);
-//		SmartDashboard.putNumber("elevator speed", elevator.getMaster().getSelectedSensorVelocity(0));
-//		SmartDashboard.putNumber("elevator error", elevator.getMaster().getClosedLoopError(0));
-//		SmartDashboard.putNumber("elevator accumulator", elevator.getMaster().getIntegralAccumulator(0));
+
 	}
 
 	/**
@@ -186,5 +168,9 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void testPeriodic() {
+	}
+	
+	public static void log(String line) {
+		
 	}
 }

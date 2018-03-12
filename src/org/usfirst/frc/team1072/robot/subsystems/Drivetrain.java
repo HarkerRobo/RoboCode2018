@@ -7,6 +7,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import org.usfirst.frc.team1072.robot.Robot;
+import org.usfirst.frc.team1072.robot.RobotMap;
 import org.usfirst.frc.team1072.robot.Slot;
 import org.usfirst.frc.team1072.robot.commands.v2.ArcadeDriveCommand;
 
@@ -47,8 +48,7 @@ public class Drivetrain extends Subsystem {
 	 * Are all of the parts of this elevator functioning?
 	 */
 	private boolean motorStatus, encoderStatus, currentLimitStatus, voltageCompensationStatus, openRampStatus,
-			closedRampStatus, velocityClosedStatus, positionClosedStatus, motionProfileStatus, antiTipStatus,
-			gyroStatus;
+			closedRampStatus, velocityClosedStatus, motionProfileStatus, pitchClosedStatus, yawClosedStatus, gyroStatus;
 	
 	/**
 	 * Initialize the drivetrain subsystem
@@ -121,21 +121,24 @@ public class Drivetrain extends Subsystem {
 							"No left encoder readings")
 					&& log(rightMaster.getSensorCollection().getPulseWidthRiseToRiseUs() != 0,
 							"No right encoder readings");
-			gyroStatus = log(leftMaster.configRemoteFeedbackFilter(GYRO_TALON, RemoteSensorSource.GadgeteerPigeon_Pitch,
+			rightMaster.configSelectedFeedbackCoefficient(0.945, MAIN_PID, TIMEOUT);
+			// Configure pigeon
+			gyroStatus = log(leftMaster.configRemoteFeedbackFilter(RobotMap.PIGEON_IMU, RemoteSensorSource.Pigeon_Pitch,
 					0, TIMEOUT), "Pigeon IMU not found")
-					&& log(rightMaster.configRemoteFeedbackFilter(GYRO_TALON, RemoteSensorSource.GadgeteerPigeon_Pitch,
+					&& log(rightMaster.configRemoteFeedbackFilter(RobotMap.PIGEON_IMU, RemoteSensorSource.Pigeon_Pitch,
 							0, TIMEOUT), "Pigeon IMU not found")
 					&& log(leftMaster.configSelectedFeedbackSensor(RemoteFeedbackDevice.RemoteSensor0, AUX_PID,
 							TIMEOUT), "Could not configure Pigeon IMU")
 					&& log(rightMaster.configSelectedFeedbackSensor(RemoteFeedbackDevice.RemoteSensor0, AUX_PID,
 							TIMEOUT), "Could not configure Pigeon IMU");
+			log(rightMaster.configAuxPIDPolarity(true, TIMEOUT), "Could not configure auxiliary PID polarity");
 			// Load constants
 			if(!(velocityClosedStatus = false && Slot.LEFT_VELOCITY.configure(leftMaster, TIMEOUT)
 					&& Slot.RIGHT_VELOCITY.configure(rightMaster, TIMEOUT))) {
 				System.err.println("Drivetrain: Failed to configure velocity closed loop");
 			}
-			if(!(positionClosedStatus = false && Slot.LEFT_POSITION.configure(leftMaster, TIMEOUT)
-					&& Slot.RIGHT_POSITION.configure(rightMaster, TIMEOUT))) {
+			if(!(yawClosedStatus = Slot.LEFT_YAW.configure(leftMaster, TIMEOUT)
+					&& Slot.RIGHT_YAW.configure(rightMaster, TIMEOUT))) {
 				System.err.println("Drivetrain: Failed to configure position closed loop");
 			}
 			if(!(motionProfileStatus = Slot.LEFT_MOTION_PROFILE.configure(leftMaster, TIMEOUT)
@@ -151,7 +154,7 @@ public class Drivetrain extends Subsystem {
 	
 	public void set(double left, double right) {
 		if(encoderStatus && velocityClosedStatus) {
-			if(gyroStatus && antiTipStatus) {
+			if(gyroStatus && pitchClosedStatus) {
 				leftMaster.set(ControlMode.Velocity, left * MAX_SPEED, DemandType.AuxPID, 0);
 				rightMaster.set(ControlMode.Velocity, right * MAX_SPEED, DemandType.AuxPID, 0);
 			} else {
@@ -159,7 +162,7 @@ public class Drivetrain extends Subsystem {
 				rightMaster.set(ControlMode.Velocity, right * MAX_SPEED);
 			}
 		} else {
-			if(gyroStatus && antiTipStatus) {
+			if(gyroStatus && pitchClosedStatus) {
 				leftMaster.set(ControlMode.PercentOutput, left, DemandType.AuxPID, 0);
 				rightMaster.set(ControlMode.PercentOutput, right, DemandType.AuxPID, 0);
 			} else {
@@ -288,21 +291,6 @@ public class Drivetrain extends Subsystem {
 	}
 	
 	/**
-	 * @return the positionClosedStatus
-	 */
-	public boolean isPositionClosedStatus() {
-		return positionClosedStatus;
-	}
-	
-	/**
-	 * @param positionClosedStatus
-	 *            the positionClosedStatus to set
-	 */
-	public void setPositionClosedStatus(boolean positionClosedStatus) {
-		this.positionClosedStatus = positionClosedStatus;
-	}
-	
-	/**
 	 * @return the motionProfileStatus
 	 */
 	public boolean isMotionProfileStatus() {
@@ -368,9 +356,36 @@ public class Drivetrain extends Subsystem {
 	
 	public void initDefaultCommand() {
 		setDefaultCommand(new ArcadeDriveCommand());
-		// setDefaultCommand(new TestDrive());
 	}
 	
+	/**
+	 * @return the pitchClosedStatus
+	 */
+	public boolean isPitchClosedStatus() {
+		return pitchClosedStatus;
+	}
+
+	/**
+	 * @param pitchClosedStatus the pitchClosedStatus to set
+	 */
+	public void setPitchClosedStatus(boolean pitchClosedStatus) {
+		this.pitchClosedStatus = pitchClosedStatus;
+	}
+
+	/**
+	 * @return the yawClosedStatus
+	 */
+	public boolean isYawClosedStatus() {
+		return yawClosedStatus;
+	}
+
+	/**
+	 * @param yawClosedStatus the yawClosedStatus to set
+	 */
+	public void setYawClosedStatus(boolean yawClosedStatus) {
+		this.yawClosedStatus = yawClosedStatus;
+	}
+
 	/**
 	 * Reference to the singleton instance
 	 * 
