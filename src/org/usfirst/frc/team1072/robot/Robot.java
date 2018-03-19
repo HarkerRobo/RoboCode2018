@@ -11,6 +11,7 @@ package org.usfirst.frc.team1072.robot;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -23,10 +24,6 @@ import org.usfirst.frc.team1072.robot.profiling.MotionProfileBuilder;
 import org.usfirst.frc.team1072.robot.subsystems.Drivetrain;
 import org.usfirst.frc.team1072.robot.subsystems.Elevator;
 import org.usfirst.frc.team1072.robot.subsystems.Intake;
-
-// import org.usfirst.frc.team1072.robot.subsystems.Drivetrain;
-// import org.usfirst.frc.team1072.robot.subsystems.Elevator;
-// import org.usfirst.frc.team1072.robot.subsystems.Intake;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.sensors.PigeonIMU;
@@ -60,10 +57,15 @@ public class Robot extends TimedRobot {
 		SWITCH, SCALE, LINE
 	}
 	
-	public static final SmartEnum<Position> position = new SmartEnum<Position>(Position.MID);
-	public static final SmartEnum<Goal> goal = new SmartEnum<Goal>(Goal.SWITCH);
+	public static String fieldLayout;
 	
-	double [] ypr;
+	public static Trajectory traj;
+	
+	public static SmartEnum<Position> position = new SmartEnum(Position.MID,"Starting Position of Robot.");
+	public static SmartEnum<Goal> RR = new SmartEnum(Goal.LINE,"If Switch and Scale both on RIGHT side of field.");
+	public static SmartEnum<Goal> LL = new SmartEnum(Goal.LINE,"If Switch and Scale both on LEFT side of field.");
+	public static SmartEnum<Goal> LR = new SmartEnum(Goal.LINE,"If Switch on LEFT and Scale on RIGHT side of field.");
+	public static SmartEnum<Goal> RL = new SmartEnum(Goal.LINE,"If Switch on RIGHT and Scale on LEFT side of field");
 	
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -71,10 +73,12 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void robotInit() {
-		
 		compressor.setClosedLoopControl(true);
 		OI.initializeCommandBindings();
-		 ypr = new double [3];
+		if (DriverStation.getInstance().getGameSpecificMessage() != null && DriverStation.getInstance().getGameSpecificMessage() != "") {
+			fieldLayout = DriverStation.getInstance().getGameSpecificMessage().substring(0,2);
+			chooseAuton();
+		}
 	}
 	
 	/* (non-Javadoc)
@@ -82,11 +86,10 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void robotPeriodic() {
-		SmartDashboard.putNumber("pigeon heading", pigeon.getFusedHeading());
-		pigeon.getYawPitchRoll(ypr);
-		SmartDashboard.putNumber("pigeon yaw", ypr[0]);
-		SmartDashboard.putNumber("pigeon pitch", ypr[1]);
-		SmartDashboard.putNumber("pigeon roll", ypr[2]);
+		if (DriverStation.getInstance().getGameSpecificMessage() != null && DriverStation.getInstance().getGameSpecificMessage().length() == 3) {
+			fieldLayout = DriverStation.getInstance().getGameSpecificMessage().substring(0,2);
+			chooseAuton();
+		}
 	}
 
 	/**
@@ -151,6 +154,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
+		chooseAuton();
 	}
 	
 	@Override
@@ -180,4 +184,150 @@ public class Robot extends TimedRobot {
 	public static void log(String line) {
 		
 	}
+	
+	static void chooseAuton() {
+		if (position.get().equals(Position.LEFT)) {
+			if (fieldLayout == "RR") {
+				if (RR.get().equals(Goal.SWITCH)) {
+					traj = OI.readTrajectory("/home/lvuser/pathsLeftToRightSwitchBack.csv"); //Or LeftToRightSwitchSide, depending on situation
+					return;
+				}
+				if (RR.get().equals(Goal.SCALE)) {
+					traj = OI.readTrajectory("/home/lvuser/paths/LeftToRightScale.csv");
+					return;
+				}
+				traj = OI.readTrajectory("/home/lvuser/paths/LeftLineCross.csv");
+			}
+			else if (fieldLayout == "LL") {
+				if (LL.get().equals(Goal.SWITCH)) {
+					traj = OI.readTrajectory("/home/lvuser/paths/LeftToLeftSwitchSide.csv"); //Or LeftToLeftSwitchFront, depending on situation
+					return;
+				}
+				if (LL.get().equals(Goal.SCALE)) {
+					traj = OI.readTrajectory("/home/lvuser/paths/LeftToLeftScale.csv");
+					return;
+				}
+				traj = OI.readTrajectory("/home/lvuser/paths/LeftLineCross.csv");
+			}
+			else if (fieldLayout == "LR") {
+				if (LR.get().equals(Goal.SWITCH)) {
+					traj = OI.readTrajectory("/home/lvuser/paths/LeftToLeftSwitchSide.csv"); //Or LeftToLeftSwitchFront, depending on situation
+					return;
+				}
+				if (LR.get().equals(Goal.SCALE)) {
+					traj = OI.readTrajectory("/home/lvuser/paths/LeftToRightScale.csv");
+					return;
+				}
+				traj = OI.readTrajectory("/home/lvuser/paths/LeftLineCross.csv");
+			}
+			else if (fieldLayout == "RL") {
+				if (RL.get().equals(Goal.SWITCH)) {
+					traj = OI.readTrajectory("/home/lvuser/pathsLeftToRightSwitchBack.csv"); //Or LeftToRightSwitchSide, depending on situation
+					return;
+				}
+				if (RL.get().equals(Goal.SCALE)) {
+					traj = OI.readTrajectory("/home/lvuser/paths/LeftToLeftScale.csv");
+					return;
+				}
+				traj = OI.readTrajectory("/home/lvuser/paths/LeftLineCross.csv");
+			}
+		}
+		else if (position.get().equals(Position.MID)) {
+			if (fieldLayout == "RR") {
+				if (RR.get().equals(Goal.SWITCH)) {
+					traj = OI.readTrajectory("/home/lvuser/paths/MidToRightSwitchFront.csv"); //Or LeftToRightSwitchSide, depending on situation
+					return;
+				}
+				if (RR.get().equals(Goal.SCALE)) {
+					traj = OI.readTrajectory("/home/lvuser/paths/MidToRightScale.csv");
+					return;
+				}
+				traj = OI.readTrajectory("/home/lvuser/paths/MidLineCross.csv");
+			}
+			else if (fieldLayout == "LL") {
+				if (LL.get().equals(Goal.SWITCH)) {
+					traj = OI.readTrajectory("/home/lvuser/paths/MidToLeftSwitchFront.csv"); //Or LeftToLeftSwitchBack, depending on situation
+					return;
+				}
+				if (LL.get().equals(Goal.SCALE)) {
+					traj = OI.readTrajectory("/home/lvuser/paths/MidToLeftScale.csv");
+					return;
+				}
+				traj = OI.readTrajectory("/home/lvuser/paths/MidLineCross.csv");
+			}
+			else if (fieldLayout == "LR") {
+				if (LR.get().equals(Goal.SWITCH)) {
+					traj = OI.readTrajectory("/home/lvuser/paths/MidToLeftSwitchFront.csv"); //Or LeftToLeftSwitchBack, depending on situation
+					return;
+				}
+				if (LR.get().equals(Goal.SCALE)) {
+					traj = OI.readTrajectory("/home/lvuser/paths/MidToRightScale.csv");
+					return;
+				}
+				traj = OI.readTrajectory("/home/lvuser/paths/MidLineCross.csv");
+			}
+			else if (fieldLayout == "RL") {
+				if (RL.get().equals(Goal.SWITCH)) {
+					traj = OI.readTrajectory("/home/lvuser/paths/MidToRightSwitchFront.csv"); //Or LeftToRightSwitchSide, depending on situation
+					return;
+				}
+				if (RL.get().equals(Goal.SCALE)) {
+					traj = OI.readTrajectory("/home/lvuser/paths/MidToLeftScale.csv");
+					return;
+				}
+				traj = OI.readTrajectory("/home/lvuser/paths/MidLineCross.csv");
+			}
+		}
+		else if (position.get().equals(Position.RIGHT)) {
+			if (fieldLayout == "RR") {
+				if (RR.get().equals(Goal.SWITCH)) {
+					traj = OI.readTrajectory("/home/lvuser/paths/RightToRightSwitchSide.csv"); //Or RightToRightSwitchBack, depending on situation
+					return;
+				}
+				if (RR.get().equals(Goal.SCALE)) {
+					traj = OI.readTrajectory("/home/lvuser/paths/RightToRightScale.csv");
+					return;
+				}
+				traj = OI.readTrajectory("/home/lvuser/paths/RightLineCross.csv");
+			}
+			else if (fieldLayout == "LL") {
+				if (LL.get().equals(Goal.SWITCH)) {
+					traj = OI.readTrajectory("/home/lvuser/paths/RightToLeftSwitchBack.csv"); //Or RightToLeftSwitchSide, depending on situation
+					return;
+				}
+				if (LL.get().equals(Goal.SCALE)) {
+					traj = OI.readTrajectory("/home/lvuser/paths/RightToLeftScale.csv");
+					return;
+				}
+				traj = OI.readTrajectory("/home/lvuser/paths/RightLineCross.csv");
+			}
+			else if (fieldLayout == "LR") {
+				if (LR.get().equals(Goal.SWITCH)) {
+					traj = OI.readTrajectory("/home/lvuser/paths/RightToLeftSwitchBack.csv"); //Or RightToLeftSwitchSide, depending on situation
+					return;
+				}
+				if (LR.get().equals(Goal.SCALE)) {
+					traj = OI.readTrajectory("/home/lvuser/paths/RightToRightScale.csv");
+					return;
+				}
+				traj = OI.readTrajectory("/home/lvuser/paths/RightLineCross.csv");
+				return;
+			}
+			else if (fieldLayout == "RL") {
+				if (RL.get().equals(Goal.SWITCH)) {
+					traj = OI.readTrajectory("/home/lvuser/paths/RightToRightSwitchSide.csv"); //Or RightToRightSwitchBack, depending on situation
+					return;
+				}
+				if (RL.get().equals(Goal.SCALE)) {
+					traj = OI.readTrajectory("/home/lvuser/paths/RightToLeftScale.csv");
+					return;
+				}
+				traj = OI.readTrajectory("/home/lvuser/paths/RightLineCross.csv");
+			}
+		}
+		else {
+			System.err.println("Choose an auton starting position!");
+		}
+	}
+	
 }
