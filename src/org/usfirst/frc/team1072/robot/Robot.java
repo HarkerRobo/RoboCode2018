@@ -11,13 +11,24 @@ package org.usfirst.frc.team1072.robot;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Notifier;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
 
+import org.usfirst.frc.team1072.robot.commands.CANTestingCommand;
+import org.usfirst.frc.team1072.robot.commands.v2.AutonomousCommand;
 import org.usfirst.frc.team1072.robot.commands.v2.ZeroElevatorCommand;
 import org.usfirst.frc.team1072.robot.profiling.MotionProfileBuilder;
 import org.usfirst.frc.team1072.robot.subsystems.Drivetrain;
@@ -44,24 +55,32 @@ public class Robot extends TimedRobot {
 	
 	public static final boolean IS_COMP = false;
 	
+	private String gameData = null;
+	
+	public static final PowerDistributionPanel pdp = new PowerDistributionPanel();
 	public static final Drivetrain drivetrain = Drivetrain.getInstance();
 	public static final Elevator elevator = Elevator.getInstance();
 	public static final Intake intake = Intake.getInstance();
 	public static final Compressor compressor = new Compressor();
 	public static final PigeonIMU pigeon = new PigeonIMU(intake.getRightRoller());
+	//Roll and Pitch are switched
+	//left is positive pitch, right is negative pitch, forwards is negative roll, backwards is negative roll
 	
 	public static boolean falling = false;
 	
 	public static enum Position {
-		LEFT, MID, RIGHT
+		LEFT, LEFT_SWITCH, MID, RIGHT_SWITCH, RIGHT
 	}
 	
 	public static enum Goal {
-		SWITCH, SCALE, LINE
+		SWITCH, SWITCH_SIDE, SCALE, LINE
 	}
 	
 	public static final SmartEnum<Position> position = new SmartEnum<Position>(Position.MID);
-	public static final SmartEnum<Goal> goal = new SmartEnum<Goal>(Goal.SWITCH);
+	public static final SmartEnum<Goal> LLL = new SmartEnum<Goal>(Goal.SWITCH, "LLL");
+	public static final SmartEnum<Goal> LRL = new SmartEnum<Goal>(Goal.SWITCH, "LRL");
+	public static final SmartEnum<Goal> RLR = new SmartEnum<Goal>(Goal.SWITCH, "RLR");
+	public static final SmartEnum<Goal> RRR = new SmartEnum<Goal>(Goal.SWITCH, "RRR");
 	
 	double [] ypr;
 	
@@ -71,10 +90,21 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void robotInit() {
-		
+		if(!SmartDashboard.containsKey("LLL Wait"))
+			SmartDashboard.putNumber("LLL Wait", 0.0);
+		if(!SmartDashboard.containsKey("LRL Wait"))
+			SmartDashboard.putNumber("LRL Wait", 0.0);
+		if(!SmartDashboard.containsKey("RLR Wait"))
+			SmartDashboard.putNumber("RLR Wait", 0.0);
+		if(!SmartDashboard.containsKey("RRR Wait"))
+			SmartDashboard.putNumber("RRR Wait", 0.0);
+		pigeon.configTemperatureCompensationEnable(true, 100);
+		pdp.clearStickyFaults();
 		compressor.setClosedLoopControl(true);
 		OI.initializeCommandBindings();
 		 ypr = new double [3];
+//		UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
+//		cam.setResolution(640, 480);
 	}
 	
 	/* (non-Javadoc)
@@ -82,11 +112,17 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void robotPeriodic() {
-		SmartDashboard.putNumber("pigeon heading", pigeon.getFusedHeading());
-		pigeon.getYawPitchRoll(ypr);
-		SmartDashboard.putNumber("pigeon yaw", ypr[0]);
-		SmartDashboard.putNumber("pigeon pitch", ypr[1]);
-		SmartDashboard.putNumber("pigeon roll", ypr[2]);
+		
+//		SmartDashboard.putNumber("pigeon heading", pigeon.getFusedHeading());
+//		pigeon.getYawPitchRoll(ypr);
+//		SmartDashboard.putNumber("pigeon yaw", ypr[0]);
+//		SmartDashboard.putNumber("pigeon pitch", ypr[1]);
+//		SmartDashboard.putNumber("pigeon roll", ypr[2]);
+//		SmartDashboard.putNumber("elevator current", elevator.getMaster().getOutputCurrent());
+//		SmartDashboard.putNumber("elevator speed", elevator.getMaster().getSelectedSensorVelocity(0));
+////		for(int i = 0; i < 4; i++) {
+//			SmartDashboard.putNumber("POV", OI.operator.getPOV());
+//		}
 	}
 
 	/**
@@ -124,7 +160,21 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		new ZeroElevatorCommand().start();
+		gameData = null;
+//		new ZeroElevatorCommand().start();
+//		try {
+//			Socket s = new Socket("10.10.72.84", 54);
+//			PrintWriter pw = new PrintWriter(s.getOutputStream());
+//			pw.println("match start!");
+//			pw.close();
+//			s.close();
+//		} catch(UnknownHostException e) {
+//			e.printStackTrace();
+//		} catch(IOException e) {
+//			e.printStackTrace();
+//		} catch(Exception e) {
+//			e.printStackTrace();
+//		}
 //		try {
 //			Trajectory left = OI.readTrajectory("/home/lvuser/paths/leftPath10.csv"),
 //					right = OI.readTrajectory("/home/lvuser/paths/rightPath10.csv");
@@ -151,11 +201,63 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
+		if(gameData == null || gameData.length() != 3) {
+			gameData = DriverStation.getInstance().getGameSpecificMessage();
+			if(gameData != null && gameData.length() == 3) {
+				String autonPath = "/home/lvuser/paths/";
+				switch(position.get()) {
+					case LEFT: autonPath += "Left"; break;
+					case LEFT_SWITCH: autonPath += "LeftSwitch"; break;
+					case MID: autonPath += "Mid"; break;
+					case RIGHT_SWITCH: autonPath += "RightSwitch"; break;
+					case RIGHT: autonPath += "Right"; break;
+					default: System.err.println("No autonomous position"); return;
+				}
+				autonPath += "To";
+				Goal goal;
+				double wait = SmartDashboard.getNumber(gameData + " Wait", 0.0);
+				double height = 0.0;
+				switch(gameData) {
+					case "LLL": goal = LLL.get(); break;
+					case "LRL": goal = LRL.get(); break;
+					case "RLR": goal = RLR.get(); break;
+					case "RRR": goal = RRR.get(); break;
+					default: System.err.println("Invalid game data"); return;
+				}
+				switch(goal) {
+					case SWITCH: autonPath += gameData.charAt(0) == 'L' ? "LeftSwitch" : "RightSwitch"; height = 1.6; break;
+					case SWITCH_SIDE: autonPath += gameData.charAt(0) == 'L' ? "LeftSwitchSide" : "RightSwitchSide"; height = 1.6; break;
+					case SCALE: autonPath += gameData.charAt(1) == 'L' ? "LeftScale" : "RightScale"; height = 6.4; break;
+					case LINE: autonPath += "Line"; break;
+					default: System.err.println("No autonomous goal"); return;
+				}
+				System.out.println("Running: " + autonPath);
+				String leftPath = autonPath + "_left_detailed.csv";
+				String rightPath = autonPath + "_right_detailed.csv";
+				try {
+					Trajectory left = readTrajectory(leftPath);
+					Trajectory right = readTrajectory(rightPath);
+					AutonomousCommand auton = new AutonomousCommand(
+							new MotionProfileBuilder(10, Robot.drivetrain)
+							.group(left, Slot.LEFT_MOTION_PROFILE.getSlot(), 4.0 * Math.PI
+									/ 12.0/* 0.31918 */, 1.0/*0.945*/, Robot.drivetrain.getLeft())
+							.group(right, Slot.RIGHT_MOTION_PROFILE.getSlot(), 4.0 * Math.PI
+									/ 12.0/* 0.31918 */, 1.0, Robot.drivetrain.getRight())
+							.build(),
+					height, wait);
+					auton.start();
+				} catch(FileNotFoundException e) {
+
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 	
 	@Override
 	public void teleopInit() {
-		new ZeroElevatorCommand().start();
+		pdp.clearStickyFaults();
+//		new ZeroElevatorCommand().start();
 		// This makes sure that the autonomous stops running when
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
@@ -175,9 +277,24 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void testPeriodic() {
+		
 	}
 	
 	public static void log(String line) {
-		
+		System.out.println(line);
+	}
+	
+	public static Trajectory readTrajectory(String filename) throws FileNotFoundException {
+		File f = new File(filename);
+		if(f.exists() && f.isFile() && filename.endsWith(".csv")) {
+			try {
+				return Pathfinder.readFromCSV(f);
+			} catch(Exception e) {
+				System.err.println("Pathfinder failed to read trajectory: " + filename);
+			}
+		} else {
+			System.err.println("Trajectory: " + filename + ", does not exist or is not a csv file");
+		}
+		throw new FileNotFoundException("No valid csv file by that name: " + filename);
 	}
 }

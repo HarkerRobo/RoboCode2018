@@ -82,12 +82,12 @@ public class Config {
 		/**
 		 * Maximum standard current per motor (A)
 		 */
-		public static final int CONTINUOUS_CURRENT_LIMIT = 10, BAD_ENCODER_CONTINUOUS_CURRENT_LIMIT = 5;
+		public static final int CONTINUOUS_CURRENT_LIMIT = 20, BAD_ENCODER_CONTINUOUS_CURRENT_LIMIT = 8;
 		/**
 		 * A motor may deviate to currents up to peak current limit (A), for a
 		 * short peak current duration of time (ms)
 		 */
-		public static final int PEAK_CURRENT_LIMIT = 15, PEAK_CURRENT_DURATION = 50, BAD_ENCODER_PEAK_CURRENT_LIMIT = 8;
+		public static final int PEAK_CURRENT_LIMIT = 30, PEAK_CURRENT_DURATION = 50, BAD_ENCODER_PEAK_CURRENT_LIMIT = 13;
 		/**
 		 * Controls whether current limiting is active
 		 */
@@ -120,7 +120,7 @@ public class Config {
 		/**
 		 * Motion magic constants
 		 */
-		public static final int CRUISE_SPEED = 4000/*4 * (int) org.usfirst.frc.team1072.robot.subsystems.Elevator.FEET_TO_ENCODER / 10*/, MAX_ACCELERATION = 1200/*2 * (int) org.usfirst.frc.team1072.robot.subsystems.Elevator.FEET_TO_ENCODER / 10*/;
+		public static final int CRUISE_SPEED = 3000/*4 * (int) org.usfirst.frc.team1072.robot.subsystems.Elevator.FEET_TO_ENCODER / 10*/, MAX_ACCELERATION = 120000/*2 * (int) org.usfirst.frc.team1072.robot.subsystems.Elevator.FEET_TO_ENCODER / 10*/;
 	}
 	
 	public static class Intake {

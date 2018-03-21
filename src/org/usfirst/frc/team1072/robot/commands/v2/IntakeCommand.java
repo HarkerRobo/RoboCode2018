@@ -49,8 +49,8 @@ public class IntakeCommand extends Command {
     				outtaking = false;
     				Robot.intake.open();
     			}
-    			Robot.intake.getLeftRoller().set(ControlMode.PercentOutput, OI.operator.getLeftY() * Math.abs(OI.operator.getLeftY()));
-    			Robot.intake.getRightRoller().set(ControlMode.PercentOutput, OI.operator.getRightY() * Math.abs(OI.operator.getRightY()));
+    			Robot.intake.getLeftRoller().set(ControlMode.PercentOutput, OI.operator.getLeftY() * Math.abs(OI.operator.getLeftY()) * 0.8);
+    			Robot.intake.getRightRoller().set(ControlMode.PercentOutput, OI.operator.getRightY() * Math.abs(OI.operator.getRightY()) * 0.8);
     		}
     }
 

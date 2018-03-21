@@ -101,7 +101,7 @@ public class MotionProfileBuilder {
 		return new MotionProfileCommand(period, groups.toArray(new Group[0]), required);
 	}
 	
-	static class Group {
+	public static class Group {
 		private final Trajectory trajectory;
 		private final int profileSlot, integralZone, allowableError;
 		private final double F, P, I, D, maxIntegral, unitsPerRotation, distancePerRotation, encoderFailureMeme;

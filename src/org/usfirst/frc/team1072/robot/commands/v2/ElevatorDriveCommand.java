@@ -8,6 +8,7 @@ import org.usfirst.frc.team1072.robot.subsystems.Elevator;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
+import com.ctre.phoenix.motorcontrol.StickyFaults;
 
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -21,6 +22,8 @@ public class ElevatorDriveCommand extends Command {
 	public static final int MANUAL_CURRENT_LIMIT = 5, MANUAL_CURRENT_PEAK = 10, MANUAL_CURRENT_PEAK_LENGTH = 50;
 	
 	private boolean started;
+	
+	private StickyFaults sticky = new StickyFaults();
 
     public ElevatorDriveCommand() {
         requires(Robot.elevator);
@@ -33,11 +36,12 @@ public class ElevatorDriveCommand extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    		if(!started && Math.abs(OI.gamepad.getRightY()) > START_THRESHOLD) {
+    		Robot.elevator.getMaster().getStickyFaults(sticky);
+    		if(!started && (Math.abs(OI.gamepad.getRightY()) > START_THRESHOLD) || sticky.ForwardLimitSwitch || sticky.ForwardSoftLimit) {
     			started = true;
-    			Robot.elevator.getMaster().configContinuousCurrentLimit(MANUAL_CURRENT_LIMIT, 0);
-    			Robot.elevator.getMaster().configPeakCurrentLimit(MANUAL_CURRENT_PEAK, 0);
-    			Robot.elevator.getMaster().configPeakCurrentDuration(MANUAL_CURRENT_PEAK_LENGTH, 0);
+//    			Robot.elevator.getMaster().configContinuousCurrentLimit(MANUAL_CURRENT_LIMIT, 0);
+//    			Robot.elevator.getMaster().configPeakCurrentLimit(MANUAL_CURRENT_PEAK, 0);
+//    			Robot.elevator.getMaster().configPeakCurrentDuration(MANUAL_CURRENT_PEAK_LENGTH, 0);
     			if(Robot.elevator.isVelocityClosedStatus() && Robot.elevator.isEncoderStatus())
     				Robot.elevator.getMaster().selectProfileSlot(Slot.ELEVATOR_VELOCITY.getSlot(), 0);
     		}

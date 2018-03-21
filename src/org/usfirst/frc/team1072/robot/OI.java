@@ -8,6 +8,7 @@
 
 package org.usfirst.frc.team1072.robot;
 
+import org.usfirst.frc.team1072.robot.commands.CANTestingCommand;
 import org.usfirst.frc.team1072.robot.commands.v2.*;
 import org.usfirst.frc.team1072.robot.profiling.MotionProfileBuilder;
 import org.usfirst.frc.team1072.robot.subsystems.Elevator;
@@ -18,7 +19,10 @@ import edu.wpi.first.wpilibj.command.InstantCommand;
 import java.io.File;
 import java.io.FileNotFoundException;
 
+import org.usfirst.frc.team1072.harkerrobolib.wrappers.DPadButtonWrapper;
 import org.usfirst.frc.team1072.harkerrobolib.wrappers.GamepadWrapper;
+import org.usfirst.frc.team1072.harkerrobolib.wrappers.JoystickButtonWrapper;
+
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
 
@@ -67,6 +71,7 @@ public class OI {
 		gamepad.getButtonBumperRight().whenPressed(new SetElevatorCommand2(4.0 / 12.0)); // Elevator to vault position
 		gamepad.getButtonX().whenPressed(new IntakeExpansionCommand());
 		gamepad.getButtonA().whenPressed(new SetElevatorCommand(4.5));
+//		gamepad.getButtonA().whenPressed(new CANTestingCommand());
 		gamepad.getButtonY().whenPressed(new RaiseElevatorCommand());
 		gamepad.getButtonB().whenPressed(new LiftIntakeCommand());
 		gamepad.getButtonStickRight().whenPressed(new LowerElevatorCommand());
@@ -75,8 +80,12 @@ public class OI {
 		
 //		operator.getButtonBumperLeft().whilePressed(new OperatorIntakeCommand());
 //		operator.getButtonBumperRight().whilePressed(new OperatorOuttakeCommand());
-		operator.getButtonY().whenPressed(new SetSolenoidCommand(Robot.intake.getRaise(), Value.kReverse));
-		operator.getButtonA().whenPressed(new InstantCommand() {
+		JoystickButtonWrapper leftTrigger = new JoystickButtonWrapper(operator, GamepadWrapper.LOGITECH_TRIGGER_LEFT);
+		JoystickButtonWrapper rightTrigger = new JoystickButtonWrapper(operator, GamepadWrapper.LOGITECH_TRIGGER_RIGHT);
+		DPadButtonWrapper dpadUp = new DPadButtonWrapper(operator, 0);
+		DPadButtonWrapper dpadDown = new DPadButtonWrapper(operator, 180);
+		dpadUp.whenPressed(new SetSolenoidCommand(Robot.intake.getRaise(), Value.kReverse));
+		dpadDown.whenPressed(new InstantCommand() {
 			@Override
 			public void initialize() {
 				if(Robot.elevator.getMaster().getSelectedSensorPosition(0) < SmallRaiseCommand.DIST)
@@ -84,7 +93,7 @@ public class OI {
 				Robot.intake.getRaise().set(Value.kForward);
 			}
 		});
-		operator.getButtonX().whenPressed(new InstantCommand() {
+		leftTrigger.whenPressed(new InstantCommand() {
 			@Override
 			public void initialize() {
 				if(Robot.elevator.getMaster().getSelectedSensorPosition(0) > SmallRaiseCommand.DIST) {
@@ -94,8 +103,9 @@ public class OI {
 				}
 			}
 		});
-		operator.getButtonB().whenPressed(new SetSolenoidCommand(Robot.intake.getExpansion(), Value.kReverse));
-		
+		rightTrigger.whenPressed(new SetSolenoidCommand(Robot.intake.getExpansion(), Value.kReverse));
+		operator.getButtonY().whilePressed(new ShootCommand());
+		operator.getButtonA().whilePressed(new WeirdEjecteyCommand());
 		// gamepad.getButtonBumperLeft().whenPressed(new TestIntakeCommand());
 		// gamepad.getButtonBumperRight().whenPressed(new EjectCommand());
 		// gamepad.getButtonA().whenPressed(new SlowRaiseCommand(3.0));
@@ -106,18 +116,18 @@ public class OI {
 		// System.out.println("Reading trajectories");
 		// SmartDashboard.putData(new ZeroEncoders());
 //		try {
-//			Trajectory left = readTrajectory("/home/lvuser/paths/leftPath11.csv"),
-//					right = readTrajectory("/home/lvuser/paths/rightPath11.csv");
+//			Trajectory left = readTrajectory("/home/lvuser/MidToLeftSwitchLeft.csv"),
+//					right = readTrajectory("/home/lvuser/MidToLeftSwitchRight.csv");
 //			gamepad.getButtonA()
 //					.whenPressed(
 //							new AutonomousCommand(
 //									new MotionProfileBuilder(10, Robot.drivetrain)
 //											.group(left, Slot.LEFT_MOTION_PROFILE.getSlot(), 4.0 * Math.PI
-//													/ 12.0/* 0.31918 */, 0.945, Robot.drivetrain.getLeft())
+//													/ 12.0/* 0.31918 */, 1.0/*0.945*/, Robot.drivetrain.getLeft())
 //											.group(right, Slot.RIGHT_MOTION_PROFILE.getSlot(), 4.0 * Math.PI
 //													/ 12.0/* 0.31918 */, 1.0, Robot.drivetrain.getRight())
 //											.build(),
-//									new SetElevatorCommand(2.0)));
+//									1.6));
 //		} catch(FileNotFoundException e) {
 //			System.err.println("Failed to read trajectory");
 //		}

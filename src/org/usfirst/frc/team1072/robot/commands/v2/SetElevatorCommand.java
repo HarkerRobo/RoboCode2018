@@ -30,12 +30,13 @@ public class SetElevatorCommand extends InstantCommand {
 
     //Called just before this Command runs the first time
     protected void initialize() {
+    		Robot.elevator.getMaster().clearStickyFaults(0);
 //    		Robot.elevator.getMaster().setIntegralAccumulator(0, 0, 0);
-    		if(Robot.elevator.isMotionMagicStatus() && Robot.elevator.isEncoderStatus()) {
+    		if(false && Robot.elevator.isMotionMagicStatus() && Robot.elevator.isEncoderStatus()) {
     			Robot.elevator.getMaster().selectProfileSlot(Slot.ELEVATOR_MOTION_MAGIC.getSlot(), 0);
     			Robot.elevator.getMaster().set(ControlMode.MotionMagic, height, DemandType.ArbitraryFeedForward, Robot.IS_COMP ? 0.11: 0.08);
-    		} else if(Robot.elevator.isPositionClosedStatus() && Robot.elevator.isEncoderStatus()) {
-    			System.out.println("Setting elevator closed loop");
+    		} else 
+    			if(Robot.elevator.isPositionClosedStatus() && Robot.elevator.isEncoderStatus()) {
     			Robot.elevator.getMaster().selectProfileSlot(Slot.ELEVATOR_POSITION.getSlot(), 0);
     			Robot.elevator.getMaster().set(ControlMode.Position, height, DemandType.ArbitraryFeedForward, Robot.IS_COMP ? 0.11: 0.08);
     		}

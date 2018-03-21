@@ -1,6 +1,5 @@
 package org.usfirst.frc.team1072.robot.profiling;
 
-import org.usfirst.frc.team1072.robot.Robot;
 import org.usfirst.frc.team1072.robot.profiling.MotionProfileBuilder.Group;
 
 import com.ctre.phoenix.ErrorCode;
@@ -9,7 +8,6 @@ import com.ctre.phoenix.motion.SetValueMotionProfile;
 import com.ctre.phoenix.motion.TrajectoryPoint;
 import com.ctre.phoenix.motion.TrajectoryPoint.TrajectoryDuration;
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
@@ -21,7 +19,7 @@ import jaci.pathfinder.Trajectory;
 /**
  * Runs motion profiles
  */
-public class MotionProfileCommand extends Command {
+public class MotionProfileArcCommand extends Command {
 	
 	/*
 	 * Cut off the command when a certain number of points are still remaining to prevent drift, set to -1 to disable
@@ -41,7 +39,7 @@ public class MotionProfileCommand extends Command {
 	 * Creates a new motion profile command (not intended for use, create a
 	 * builder instead)
 	 */
-	public MotionProfileCommand(int period, Group[] groups, Subsystem[] required) {
+	public MotionProfileArcCommand(int period, Group[] groups, Subsystem[] required) {
 		this.period = period;
 		this.groups = groups;
 		for(Subsystem s : required)
@@ -52,8 +50,6 @@ public class MotionProfileCommand extends Command {
 	
 	// Called just before this Command runs the first time
 	protected void initialize() {
-		Robot.pigeon.setYaw(0, 1000);
-		Robot.pigeon.setFusedHeading(0, 1000);
 		System.err.println("Initializing MP Command");
 		status = new MotionProfileStatus();
 		started = false;
@@ -63,17 +59,15 @@ public class MotionProfileCommand extends Command {
 				// Disable the motors so nothing happens while loading
 				target.set(ControlMode.MotionProfile, SetValueMotionProfile.Disable.value);
 				// Clear any data from previous motion profiling
-				target.getMotionProfileStatus(status);
-				if(status.hasUnderrun)
-					log(target.clearMotionProfileHasUnderrun(1000), "Could not clear underrun");
+				log(target.clearMotionProfileHasUnderrun(1000), "Could not clear underrun");
 				log(target.clearMotionProfileTrajectories(), "Could not clear trajectories");
 				log(target.setIntegralAccumulator(0, 0, 1000), "Could not clear accumulator");
 				log(target.setSelectedSensorPosition(0, 0, 1000), "Could not clear position");
 				// Set the period, as well as a variety of status periods
 				// recommended to be half of the period
 				target.changeMotionControlFramePeriod(Math.max(1, period / 2));
-				log(target.configMotionProfileTrajectoryPeriod(period, 10000), "Could not configure period");
-				target.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, Math.max(1, period / 2), 10000);
+				log(target.configMotionProfileTrajectoryPeriod(period, 1000), "Could not configure period");
+				target.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, Math.max(1, period / 2), 1000);
 				// Each constant can be configured at the start of the command
 				// or preferably set in advance and then passed as NaN
 				if(!Double.isNaN(groups[i].getF()))
@@ -164,7 +158,7 @@ public class MotionProfileCommand extends Command {
 		notifier.stop();
 		for(Group g : groups)
 			for(TalonSRX target : g.getTargets())
-				target.set(ControlMode.PercentOutput, 0, DemandType.AuxPID, 0);
+				target.set(ControlMode.PercentOutput, 0);
 	}
 	
 	/**
@@ -182,12 +176,11 @@ public class MotionProfileCommand extends Command {
 					TrajectoryPoint tp = new TrajectoryPoint();
 					tp.position = trajectory.segments[statuses[i].loadNext[j]].position
 							/ groups[i].getDistancePerRotation() * groups[i].getUnitsPerRotation() * groups[i].getEncoderFailureMeme();
-					tp.auxiliaryPos = trajectory.segments[statuses[i].loadNext[j]].heading * 180.0 * 16.0 / Math.PI;
 					tp.velocity = trajectory.segments[statuses[i].loadNext[j]].velocity
 							/ groups[i].getDistancePerRotation() * groups[i].getUnitsPerRotation() / 10.0;
-					tp.headingDeg = trajectory.segments[statuses[i].loadNext[j]].heading * 180.0 * 64.0 / Math.PI;
+					tp.headingDeg = trajectory.segments[statuses[i].loadNext[j]].heading * 180.0 / Math.PI;
 					tp.profileSlotSelect0 = groups[i].getProfileSlot();
-					tp.profileSlotSelect1 = 1;
+					tp.profileSlotSelect1 = 0;
 					tp.timeDur = TrajectoryDuration.Trajectory_Duration_0ms;
 					tp.zeroPos = statuses[i].loadNext[j] == 0;
 					tp.isLastPoint = ++statuses[i].loadNext[j] == trajectory.segments.length;

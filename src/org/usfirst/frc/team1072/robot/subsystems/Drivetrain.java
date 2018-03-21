@@ -16,6 +16,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.RemoteFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
+import com.ctre.phoenix.motorcontrol.StickyFaults;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
@@ -31,6 +32,8 @@ public class Drivetrain extends Subsystem {
 	public static final int MAIN_PID = 0, AUX_PID = 1;
 	
 	public static final int GYRO_TALON = 0;
+	
+	private StickyFaults sticky = new StickyFaults();
 	
 	/**
 	 * Singleton instance
@@ -121,11 +124,18 @@ public class Drivetrain extends Subsystem {
 							"No left encoder readings")
 					&& log(rightMaster.getSensorCollection().getPulseWidthRiseToRiseUs() != 0,
 							"No right encoder readings");
-			rightMaster.configSelectedFeedbackCoefficient(0.945, MAIN_PID, TIMEOUT);
+			rightMaster.configSelectedFeedbackCoefficient(0.975, MAIN_PID, TIMEOUT);
+			leftMaster.configSelectedFeedbackCoefficient(1.0, MAIN_PID, TIMEOUT);
+			rightMaster.configSelectedFeedbackCoefficient(0.25, AUX_PID, TIMEOUT);
+			leftMaster.configSelectedFeedbackCoefficient(0.25, AUX_PID, TIMEOUT);
+			rightMaster.configClosedLoopPeakOutput(MAIN_PID, 1.0, TIMEOUT);
+			leftMaster.configClosedLoopPeakOutput(MAIN_PID, 1.0, TIMEOUT);
+			rightFollower.configClosedLoopPeakOutput(AUX_PID, 0.1, TIMEOUT);
+			leftFollower.configClosedLoopPeakOutput(AUX_PID, 0.1, TIMEOUT);
 			// Configure pigeon
-			gyroStatus = log(leftMaster.configRemoteFeedbackFilter(RobotMap.PIGEON_IMU, RemoteSensorSource.Pigeon_Pitch,
+			gyroStatus = log(leftMaster.configRemoteFeedbackFilter(RobotMap.Intake.RIGHT_ROLLER, RemoteSensorSource.GadgeteerPigeon_Yaw,
 					0, TIMEOUT), "Pigeon IMU not found")
-					&& log(rightMaster.configRemoteFeedbackFilter(RobotMap.PIGEON_IMU, RemoteSensorSource.Pigeon_Pitch,
+					&& log(rightMaster.configRemoteFeedbackFilter(RobotMap.Intake.RIGHT_ROLLER, RemoteSensorSource.GadgeteerPigeon_Yaw,
 							0, TIMEOUT), "Pigeon IMU not found")
 					&& log(leftMaster.configSelectedFeedbackSensor(RemoteFeedbackDevice.RemoteSensor0, AUX_PID,
 							TIMEOUT), "Could not configure Pigeon IMU")
@@ -185,6 +195,52 @@ public class Drivetrain extends Subsystem {
 				&& log(leftMaster.getSensorCollection().getPulseWidthRiseToRiseUs() != 0, "No left encoder readings")
 				&& log(rightMaster.getSensorCollection().getPulseWidthRiseToRiseUs() != 0, "No right encoder readings"))
 			encoderStatus = false;
+		leftMaster.getStickyFaults(sticky);
+		if(sticky.HardwareESDReset) {
+			System.out.println("right esd reset");
+		}
+		if(sticky.ResetDuringEn) {
+			System.out.println("right reset during enabled");
+		}
+		if(sticky.SensorOutOfPhase) {
+			System.out.println("sensor out of phase");
+		}
+		if(sticky.UnderVoltage) {
+			System.out.println("under voltage");
+		}
+		if(sticky.RemoteLossOfSignal) {
+			System.out.println("remote loss of signal");
+		}
+		if(sticky.hasAnyFault()) {
+			leftMaster.clearStickyFaults(10);
+		}
+		rightMaster.getStickyFaults(sticky);
+		if(sticky.HardwareESDReset) {
+			System.out.println("right esd reset");
+		}
+		if(sticky.ResetDuringEn) {
+			System.out.println("right reset during enabled");
+		}
+		if(sticky.SensorOutOfPhase) {
+			System.out.println("sensor out of phase");
+		}
+		if(sticky.UnderVoltage) {
+			System.out.println("under voltage");
+		}
+		if(sticky.RemoteLossOfSignal) {
+			System.out.println("remote loss of signal");
+		}
+		if(sticky.hasAnyFault()) {
+			rightMaster.clearStickyFaults(10);
+		}
+//		leftMaster.getStickyFaults(sticky);
+//		log(!sticky.hasAnyFault(), "left master sticky");
+//		rightMaster.getStickyFaults(sticky);
+//		log(!sticky.hasAnyFault(), "right master sticky");
+//		leftFollower.getStickyFaults(sticky);
+//		log(!sticky.hasAnyFault(), "left follower sticky");
+//		rightFollower.getStickyFaults(sticky);
+//		log(!sticky.hasAnyFault(), "right follower sticky");
 	}
 	
 	/**

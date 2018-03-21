@@ -10,6 +10,10 @@ import static org.usfirst.frc.team1072.robot.Config.Elevator.*;
 
 import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.ParamEnum;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
+import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
+import com.ctre.phoenix.motorcontrol.StickyFaults;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
@@ -27,7 +31,7 @@ public class Elevator extends Subsystem {
 	/**
 	 * Distance in encoder units from the top to the bottom of the elevator
 	 */
-	public static final int LENGTH = Robot.IS_COMP ? 35860 : 35100;
+	public static final int LENGTH = Robot.IS_COMP ? 35860 : 35300;
 	/**
 	 * feet to encoder values
 	 */
@@ -59,6 +63,14 @@ public class Elevator extends Subsystem {
 	 * minimum encoder value
 	 */
 	private double min;
+	
+	private ControlMode mode = ControlMode.Disabled;
+	
+	private double demand = 0;
+	
+	private StickyFaults sticky = new StickyFaults();
+	
+	private boolean sensorPhase = Robot.IS_COMP;
 	
 	/**
 	 * Initialize the elevator subsystem
@@ -155,6 +167,13 @@ public class Elevator extends Subsystem {
 							"Failed to configure motion magic acceleration")) {
 				System.err.println("Elevator: Failed to configure motion magic");
 			}
+			master.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10, TIMEOUT);
+			master.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, TIMEOUT);
+			/* set the peak and nominal outputs */
+			master.configNominalOutputForward(0, TIMEOUT);
+			master.configNominalOutputReverse(0, TIMEOUT);
+			master.configPeakOutputForward(1, TIMEOUT);
+			master.configPeakOutputReverse(-1, TIMEOUT);
 		} catch(Exception e) {
 			System.err.println("Elevator: Failed to initialize motors");
 		}
@@ -167,18 +186,78 @@ public class Elevator extends Subsystem {
 	 */
 	@Override
 	public void periodic() {
-		if(encoderStatus && !log(master.getSensorCollection().getPulseWidthRiseToRiseUs() != 0, "No encoder readings"))
+		boolean encoderReadings = master.getSensorCollection().getPulseWidthRiseToRiseUs() != 0;
+		if(encoderReadings && !encoderStatus) {
+			log("Rediscovered encoder");
+			master.configPeakOutputForward(1, 0);
+			master.configPeakOutputReverse(-1, 0);
+			master.configContinuousCurrentLimit(CONTINUOUS_CURRENT_LIMIT, 0);
+			master.configPeakCurrentLimit(PEAK_CURRENT_LIMIT, 0);
+			encoderStatus = true;
+		} else if(!encoderReadings && encoderStatus) {
+			log("Lost encoder");
+			master.configPeakOutputForward(0.6, 0);
+			master.configPeakOutputReverse(-0.6, 0);
+			master.configContinuousCurrentLimit(BAD_ENCODER_CONTINUOUS_CURRENT_LIMIT, 0);
+			master.configPeakCurrentLimit(BAD_ENCODER_PEAK_CURRENT_LIMIT, 0);
 			encoderStatus = false;
+		}
+		master.getStickyFaults(sticky);
+		if(sticky.ForwardLimitSwitch || sticky.ForwardSoftLimit) {
+			if((mode == ControlMode.Position || mode == ControlMode.MotionMagic)
+					&& demand > master.getSelectedSensorPosition(0)) {
+				set(mode, master.getSelectedSensorPosition(0));
+			} else if((mode == ControlMode.PercentOutput || mode == ControlMode.Velocity) && demand > 0) {
+				set(mode, 0);
+			}
+		}
+		if(sticky.ReverseLimitSwitch || sticky.ReverseSoftLimit) {
+			if((mode == ControlMode.Position || mode == ControlMode.MotionMagic)
+					&& demand < master.getSelectedSensorPosition(0)) {
+				set(mode, master.getSelectedSensorPosition(0));
+			} else if((mode == ControlMode.PercentOutput || mode == ControlMode.Velocity) && demand < 0) {
+				set(mode, 0);
+			}
+		}
+		if(sticky.SensorOutOfPhase) {
+			sensorPhase = !sensorPhase;
+			master.setSensorPhase(sensorPhase);
+			log("Flipped sensor phase");
+		}
+		if(sticky.HardwareESDReset) {
+			log("Hardware ESD reset");
+		}
+		if(sticky.ResetDuringEn) {
+			log("Reset while enabled");
+		}
+		if(sticky.SensorOverflow) {
+			log("Sensor overflow");
+		}
+		if(sticky.UnderVoltage) {
+			log("Under voltage");
+		}
+		if(sticky.hasAnyFault()) {
+			master.clearStickyFaults(0);
+		}
 	}
 	
-	public boolean log(ErrorCode err, String value) {
+	public void set(ControlMode mode, double demand) {
+		master.set(this.mode = mode, this.demand = demand, DemandType.ArbitraryFeedForward,
+				Robot.IS_COMP ? 0.11 : 0.08);
+	}
+	
+	public static boolean log(ErrorCode err, String value) {
 		return log(err == ErrorCode.OK, value);
 	}
 	
-	public boolean log(boolean good, String value) {
+	public static boolean log(boolean good, String value) {
 		if(!good)
-			System.err.println("Elevator: " + value);
+			log(value);
 		return good;
+	}
+	
+	public static void log(String value) {
+		Robot.log("Elevator: " + value);
 	}
 	
 	/**
