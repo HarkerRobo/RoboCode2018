@@ -27,6 +27,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import org.usfirst.frc.team1072.harkerrobolib.wrappers.PneumaticsWrapper;
 import org.usfirst.frc.team1072.robot.commands.CANTestingCommand;
 import org.usfirst.frc.team1072.robot.commands.v2.AutonomousCommand;
 import org.usfirst.frc.team1072.robot.commands.v2.ZeroElevatorCommand;
@@ -53,16 +54,19 @@ public class Robot extends TimedRobot {
 	
 	public static int TIMEOUT;
 	
-	public static final boolean IS_COMP = false;
+	public static final boolean IS_COMP = true;
 	
 	private String gameData = null;
 	
-	public static final PowerDistributionPanel pdp = new PowerDistributionPanel();
+//	public static final PowerDistributionPanel pdp = new PowerDistributionPanel();
 	public static final Drivetrain drivetrain = Drivetrain.getInstance();
 	public static final Elevator elevator = Elevator.getInstance();
 	public static final Intake intake = Intake.getInstance();
 	public static final Compressor compressor = new Compressor();
-	public static final PigeonIMU pigeon = new PigeonIMU(intake.getRightRoller());
+//	public static final PigeonIMU pigeon = new PigeonIMU(intake.getRightRoller());
+	
+	public static PrintWriter pw = null;
+	
 	//Roll and Pitch are switched
 	//left is positive pitch, right is negative pitch, forwards is negative roll, backwards is negative roll
 	
@@ -82,6 +86,8 @@ public class Robot extends TimedRobot {
 	public static final SmartEnum<Goal> RLR = new SmartEnum<Goal>(Goal.SWITCH, "RLR");
 	public static final SmartEnum<Goal> RRR = new SmartEnum<Goal>(Goal.SWITCH, "RRR");
 	
+	private ClockAdapter rahulClock = new ClockAdapter();
+	
 	double [] ypr;
 	
 	/**
@@ -98,13 +104,17 @@ public class Robot extends TimedRobot {
 			SmartDashboard.putNumber("RLR Wait", 0.0);
 		if(!SmartDashboard.containsKey("RRR Wait"))
 			SmartDashboard.putNumber("RRR Wait", 0.0);
-		pigeon.configTemperatureCompensationEnable(true, 100);
-		pdp.clearStickyFaults();
+		if(!SmartDashboard.containsKey("Position Override")){
+			SmartDashboard.putNumber("Position Override", 0);
+		}
+//		pigeon.configTemperatureCompensationEnable(true, 100);
+//		pdp.clearStickyFaults();
 		compressor.setClosedLoopControl(true);
 		OI.initializeCommandBindings();
 		 ypr = new double [3];
 //		UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
 //		cam.setResolution(640, 480);
+		rahulClock.start();
 	}
 	
 	/* (non-Javadoc)
@@ -112,7 +122,8 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void robotPeriodic() {
-		
+		if(pw != null)
+			pw.flush();
 //		SmartDashboard.putNumber("pigeon heading", pigeon.getFusedHeading());
 //		pigeon.getYawPitchRoll(ypr);
 //		SmartDashboard.putNumber("pigeon yaw", ypr[0]);
@@ -132,6 +143,7 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void disabledInit() {
+		log("Disable");
 		drivetrain.set((talon) -> talon.set(ControlMode.Disabled, 0));
 		elevator.getMaster().set(ControlMode.Disabled, 0);
 		intake.set((talon) -> talon.set(ControlMode.Disabled, 0));
@@ -139,11 +151,19 @@ public class Robot extends TimedRobot {
 		elevator.getMaster().configReverseSoftLimitEnable(false, 0);
 		intake.raise();
 		intake.close();
+		if(pw != null)
+			pw.close();
+		pw = null;
 	}
 	
 	@Override
 	public void disabledPeriodic() {
 		Scheduler.getInstance().run();
+		position.refresh();
+		LLL.refresh();
+		LRL.refresh();
+		RLR.refresh();
+		RRR.refresh();
 	}
 	
 	/**
@@ -161,6 +181,23 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousInit() {
 		gameData = null;
+		String name = DriverStation.getInstance().getEventName() + DriverStation.getInstance().getMatchType() + "Match" + DriverStation.getInstance().getMatchNumber() + ".txt";
+		name = name.replaceAll(" ", "");
+		try {
+			pw = new PrintWriter("/home/lvuser/logs/" + name);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+//		try {
+//			Socket s = new Socket();
+//			PrintWriter out = new PrintWriter(s.getOutputStream());
+//			out.println("150");
+//			out.close();
+//			s.close();
+//		} catch(Exception e) {
+//			e.printStackTrace();
+//		}
+		log("Autonomous initialized");
 //		new ZeroElevatorCommand().start();
 //		try {
 //			Socket s = new Socket("10.10.72.84", 54);
@@ -193,6 +230,7 @@ public class Robot extends TimedRobot {
 		 */
 		
 		// schedule the autonomous command (example)
+		rahulClock.sendTime(15);
 	}
 	
 	/**
@@ -205,14 +243,20 @@ public class Robot extends TimedRobot {
 			gameData = DriverStation.getInstance().getGameSpecificMessage();
 			if(gameData != null && gameData.length() == 3) {
 				String autonPath = "/home/lvuser/paths/";
-				switch(position.get()) {
-					case LEFT: autonPath += "Left"; break;
-					case LEFT_SWITCH: autonPath += "LeftSwitch"; break;
-					case MID: autonPath += "Mid"; break;
-					case RIGHT_SWITCH: autonPath += "RightSwitch"; break;
-					case RIGHT: autonPath += "Right"; break;
-					default: System.err.println("No autonomous position"); return;
+				int override = (int) SmartDashboard.getNumber("Position Override", 0);
+				if(override == 0){
+					switch(position.get()) {
+						case LEFT: autonPath += "Left"; break;
+						case LEFT_SWITCH: autonPath += "LeftSwitch"; break;
+						case MID: autonPath += "Mid"; break;
+						case RIGHT_SWITCH: autonPath += "RightSwitch"; break;
+						case RIGHT: autonPath += "Right"; break;
+						default: log("No autonomous position"); return;
+					}
+				} else {
+					autonPath += "Mid";
 				}
+//				autonPath += "Mid";
 				autonPath += "To";
 				Goal goal;
 				double wait = SmartDashboard.getNumber(gameData + " Wait", 0.0);
@@ -222,16 +266,24 @@ public class Robot extends TimedRobot {
 					case "LRL": goal = LRL.get(); break;
 					case "RLR": goal = RLR.get(); break;
 					case "RRR": goal = RRR.get(); break;
-					default: System.err.println("Invalid game data"); return;
+					default: log("Invalid game data"); return;
 				}
-				switch(goal) {
-					case SWITCH: autonPath += gameData.charAt(0) == 'L' ? "LeftSwitch" : "RightSwitch"; height = 1.6; break;
-					case SWITCH_SIDE: autonPath += gameData.charAt(0) == 'L' ? "LeftSwitchSide" : "RightSwitchSide"; height = 1.6; break;
-					case SCALE: autonPath += gameData.charAt(1) == 'L' ? "LeftScale" : "RightScale"; height = 6.4; break;
-					case LINE: autonPath += "Line"; break;
-					default: System.err.println("No autonomous goal"); return;
+				if(override == 0){
+					switch(goal) {
+						case SWITCH: autonPath += gameData.charAt(0) == 'L' ? "LeftSwitch" : "RightSwitch"; height = 1.6; break;
+						case SWITCH_SIDE: autonPath += gameData.charAt(0) == 'L' ? "LeftSwitchSide" : "RightSwitchSide"; height = 1.6; break;
+						case SCALE: autonPath += gameData.charAt(1) == 'L' ? "LeftScale" : "RightScale"; height = 6.4; break;
+						case LINE: autonPath += "Line"; break;
+						default: log("No autonomous goal"); return;
+					}
+				} else {
+					autonPath += gameData.charAt(0) == 'L' ? "LeftSwitch" : "RightSwitch"; height = 1.6;
 				}
-				System.out.println("Running: " + autonPath);
+//				autonPath += gameData.charAt(1) == 'R' ? "RightScale" : (gameData.charAt(0) == 'R' ? "RightSwitchSide" : "Line");
+//				height = gameData.charAt(1) == 'R' ? 6.4 : (gameData.charAt(0) == 'R' ? 1.6 : 0);
+				log("Running: " + autonPath);
+//				autonPath = "/home/lvuser/paths/ThreeFeet";
+//				autonPath = "/home/lvuser/paths/RightToLine";
 				String leftPath = autonPath + "_left_detailed.csv";
 				String rightPath = autonPath + "_right_detailed.csv";
 				try {
@@ -247,8 +299,22 @@ public class Robot extends TimedRobot {
 					height, wait);
 					auton.start();
 				} catch(FileNotFoundException e) {
-
 					e.printStackTrace();
+					try {
+						Trajectory left = readTrajectory("/home/lvuser/paths/RightToLine_left_detailed.csv");
+						Trajectory right = readTrajectory("/home/lvuser/paths/RightToLine_left_detailed.csv");
+						AutonomousCommand auton = new AutonomousCommand(
+								new MotionProfileBuilder(10, Robot.drivetrain)
+								.group(left, Slot.LEFT_MOTION_PROFILE.getSlot(), 4.0 * Math.PI
+										/ 12.0/* 0.31918 */, 1.0/*0.945*/, Robot.drivetrain.getLeft())
+								.group(right, Slot.RIGHT_MOTION_PROFILE.getSlot(), 4.0 * Math.PI
+										/ 12.0/* 0.31918 */, 1.0, Robot.drivetrain.getRight())
+								.build(),
+						height, wait);
+						auton.start();
+					} catch(FileNotFoundException e2){
+						e2.printStackTrace();
+					}
 				}
 			}
 		}
@@ -256,12 +322,14 @@ public class Robot extends TimedRobot {
 	
 	@Override
 	public void teleopInit() {
-		pdp.clearStickyFaults();
+//		pdp.clearStickyFaults();
 //		new ZeroElevatorCommand().start();
 		// This makes sure that the autonomous stops running when
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
+		log("Teleop initialized");
+		rahulClock.sendTime(135);
 	}
 	
 	/**
@@ -282,6 +350,8 @@ public class Robot extends TimedRobot {
 	
 	public static void log(String line) {
 		System.out.println(line);
+		if(pw != null)
+			pw.println((150.0 - DriverStation.getInstance().getMatchTime()) + ": " + line);
 	}
 	
 	public static Trajectory readTrajectory(String filename) throws FileNotFoundException {
@@ -290,10 +360,10 @@ public class Robot extends TimedRobot {
 			try {
 				return Pathfinder.readFromCSV(f);
 			} catch(Exception e) {
-				System.err.println("Pathfinder failed to read trajectory: " + filename);
+				log("Pathfinder failed to read trajectory: " + filename);
 			}
 		} else {
-			System.err.println("Trajectory: " + filename + ", does not exist or is not a csv file");
+			log("Trajectory: " + filename + ", does not exist or is not a csv file");
 		}
 		throw new FileNotFoundException("No valid csv file by that name: " + filename);
 	}

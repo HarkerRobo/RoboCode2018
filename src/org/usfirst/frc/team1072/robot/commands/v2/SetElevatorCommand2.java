@@ -32,10 +32,10 @@ public class SetElevatorCommand2 extends InstantCommand {
 //    		Robot.elevator.getMaster().setIntegralAccumulator(0, 0, 0);
     		if(Robot.elevator.isMotionMagicStatus() && Robot.elevator.isEncoderStatus()) {
     			Robot.elevator.getMaster().selectProfileSlot(Slot.ELEVATOR_MOTION_MAGIC.getSlot(), 0);
-    			Robot.elevator.getMaster().set(ControlMode.MotionMagic, height);
+    			Robot.elevator.set(ControlMode.MotionMagic, height);
     		} else if(Robot.elevator.isPositionClosedStatus() && Robot.elevator.isEncoderStatus()) {
     			Robot.elevator.getMaster().selectProfileSlot(Slot.ELEVATOR_SMALL_POSITION.getSlot(), 0);
-    			Robot.elevator.getMaster().set(ControlMode.Position, height);
+    			Robot.elevator.set(ControlMode.Position, height);
     		}
     }
 }

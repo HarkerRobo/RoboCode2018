@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.command.InstantCommand;
  */
 public class RaiseElevatorCommand extends InstantCommand {
 	
-	public static final double OPEN_LOOP_SPEED = 0.5;
+	public static final double OPEN_LOOP_SPEED = 0.45;
 	
 	public RaiseElevatorCommand() {
 		requires(Robot.elevator);
@@ -28,12 +28,12 @@ public class RaiseElevatorCommand extends InstantCommand {
 //		Robot.elevator.getMaster().setIntegralAccumulator(0, 0, 0);
 		if(false && Robot.elevator.isMotionMagicStatus() && Robot.elevator.isEncoderStatus()) {
 			Robot.elevator.getMaster().selectProfileSlot(Slot.ELEVATOR_MOTION_MAGIC.getSlot(), 0);
-			Robot.elevator.getMaster().set(ControlMode.MotionMagic, Elevator.LENGTH - Elevator.BUFFER * 4.0, DemandType.ArbitraryFeedForward, Robot.IS_COMP ? 0.11: 0.08);
+			Robot.elevator.set(ControlMode.MotionMagic, Elevator.LENGTH - Elevator.BUFFER * 4.0);
 		} else if(Robot.elevator.isPositionClosedStatus() && Robot.elevator.isEncoderStatus()) {
 			Robot.elevator.getMaster().selectProfileSlot(Slot.ELEVATOR_POSITION.getSlot(), 0);
-			Robot.elevator.getMaster().set(ControlMode.Position, Elevator.LENGTH - Elevator.BUFFER * 4.0, DemandType.ArbitraryFeedForward, Robot.IS_COMP ? 0.11: 0.08);
+			Robot.elevator.set(ControlMode.Position, Elevator.LENGTH - Elevator.BUFFER * 4.0);
 		} else {
-			Robot.elevator.getMaster().set(ControlMode.PercentOutput, OPEN_LOOP_SPEED);
+			Robot.elevator.set(ControlMode.PercentOutput, OPEN_LOOP_SPEED);
 		}
 	}
 }

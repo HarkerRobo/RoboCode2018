@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.command.InstantCommand;
  */
 public class LiftIntakeCommand extends InstantCommand {
 	
-	public static final DoubleSolenoid.Value defaultLift = DoubleSolenoid.Value.kReverse;
+	public static final DoubleSolenoid.Value defaultLift = Robot.IS_COMP ? DoubleSolenoid.Value.kForward : DoubleSolenoid.Value.kReverse;
 	
 	public LiftIntakeCommand() {
 		requires(Robot.intake);

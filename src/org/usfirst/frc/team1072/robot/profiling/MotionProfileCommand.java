@@ -52,8 +52,8 @@ public class MotionProfileCommand extends Command {
 	
 	// Called just before this Command runs the first time
 	protected void initialize() {
-		Robot.pigeon.setYaw(0, 1000);
-		Robot.pigeon.setFusedHeading(0, 1000);
+//		Robot.pigeon.setYaw(0, 1000);
+//		Robot.pigeon.setFusedHeading(0, 1000);
 		System.err.println("Initializing MP Command");
 		status = new MotionProfileStatus();
 		started = false;

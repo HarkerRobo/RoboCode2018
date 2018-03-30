@@ -22,7 +22,7 @@ public class LowLevelCommand extends SetElevatorCommand {
 	 */
 	@Override
 	protected void initialize() {
-		Robot.intake.getRaise().set(Value.kForward);
+		Robot.intake.getRaise().set(Robot.IS_COMP ? Value.kReverse : Value.kForward);
 		super.initialize();
 	}
 	

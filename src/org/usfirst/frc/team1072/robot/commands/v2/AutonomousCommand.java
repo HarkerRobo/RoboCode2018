@@ -20,20 +20,22 @@ public class AutonomousCommand extends CommandGroup {
 
     public AutonomousCommand(MotionProfileCommand mainProfile, double height, double delay) {
 //        addParallel(new SetElevatorCommand(height));
-    		addParallel(new ZeroElevatorCommand());
+    		addSequential(new ZeroElevatorCommand());
     		addSequential(new WaitCommand(delay));
     		addParallel(new SlowRaiseCommand(height, mainProfile.getGroups()[0].getTrajectory().length() * 10));
 //    		Robot.elevator.getMaster().selectProfileSlot(Slot.ELEVATOR_MOTION_MAGIC.getSlot(), 0);
 //    		Robot.elevator.getMaster().set(ControlMode.MotionMagic, height * Elevator.ENCODERTOFEET, DemandType.ArbitraryFeedForward, Robot.IS_COMP ? 0.11: 0.08);
         addSequential(mainProfile);
 //        addSequential(new SetSolenoidCommand(Robot.intake.getRaise(), Value.kForward));
-        addSequential(new AutonomousReleaseCommand());
-        addSequential(new InstantCommand() {
-        		@Override
-        		public void initialize() {
-        			Robot.intake.open();
-        		}
-        });
+        if(height != 0) {
+	        addSequential(new AutonomousReleaseCommand());
+	        addSequential(new InstantCommand() {
+	        		@Override
+	        		public void initialize() {
+	        			Robot.intake.open();
+	        		}
+	        });
+        }
     }
     
     class AutonomousReleaseCommand extends TimedCommand {
@@ -54,9 +56,14 @@ public class AutonomousCommand extends CommandGroup {
 		
 		@Override
 		public void end() {
-			new AutonomousReleaseCommand();
-			Robot.intake.getLeftRoller().set(ControlMode.Disabled, 0);
-			Robot.intake.getRightRoller().set(ControlMode.Disabled, 0);
+			Robot.intake.getLeftRoller().set(ControlMode.PercentOutput, 0);
+			Robot.intake.getRightRoller().set(ControlMode.PercentOutput, 0);
+		}
+		
+		@Override
+		public void interrupted(){
+			Robot.intake.getLeftRoller().set(ControlMode.PercentOutput, 0);
+			Robot.intake.getRightRoller().set(ControlMode.PercentOutput, 0);
 		}
     }
 }

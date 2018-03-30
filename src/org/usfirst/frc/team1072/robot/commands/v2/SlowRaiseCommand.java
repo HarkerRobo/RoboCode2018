@@ -28,7 +28,7 @@ public class SlowRaiseCommand extends Command {
     		Robot.elevator.getMaster().configMotionCruiseVelocity((int) cruise, 0);
     		Robot.elevator.getMaster().configMotionAcceleration((int) (cruise * 2), 0);
 		Robot.elevator.getMaster().selectProfileSlot(Slot.ELEVATOR_MOTION_MAGIC.getSlot(), 0);
-		Robot.elevator.getMaster().set(ControlMode.MotionMagic, height, DemandType.ArbitraryFeedForward, Robot.IS_COMP ? 0.11: 0.08);
+		Robot.elevator.set(ControlMode.MotionMagic, height);
     }
 
     // Called repeatedly when this Command is scheduled to run

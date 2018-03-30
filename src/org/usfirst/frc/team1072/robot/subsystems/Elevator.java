@@ -172,8 +172,8 @@ public class Elevator extends Subsystem {
 			/* set the peak and nominal outputs */
 			master.configNominalOutputForward(0, TIMEOUT);
 			master.configNominalOutputReverse(0, TIMEOUT);
-			master.configPeakOutputForward(1, TIMEOUT);
-			master.configPeakOutputReverse(-1, TIMEOUT);
+			master.configPeakOutputForward(1.0, TIMEOUT);
+			master.configPeakOutputReverse(-1.0, TIMEOUT);
 		} catch(Exception e) {
 			System.err.println("Elevator: Failed to initialize motors");
 		}
@@ -189,8 +189,8 @@ public class Elevator extends Subsystem {
 		boolean encoderReadings = master.getSensorCollection().getPulseWidthRiseToRiseUs() != 0;
 		if(encoderReadings && !encoderStatus) {
 			log("Rediscovered encoder");
-			master.configPeakOutputForward(1, 0);
-			master.configPeakOutputReverse(-1, 0);
+			master.configPeakOutputForward(1.0, 0);
+			master.configPeakOutputReverse(-1.0, 0);
 			master.configContinuousCurrentLimit(CONTINUOUS_CURRENT_LIMIT, 0);
 			master.configPeakCurrentLimit(PEAK_CURRENT_LIMIT, 0);
 			encoderStatus = true;
@@ -242,8 +242,15 @@ public class Elevator extends Subsystem {
 	}
 	
 	public void set(ControlMode mode, double demand) {
+		if(this.mode != mode) {
+			switch(mode) {
+				case MotionMagic: master.selectProfileSlot(Slot.ELEVATOR_MOTION_MAGIC.getSlot(), 0); break;
+				case Position: master.selectProfileSlot(Slot.ELEVATOR_POSITION.getSlot(), 0); break;
+				case Velocity: master.selectProfileSlot(Slot.ELEVATOR_VELOCITY.getSlot(), 0); break;
+			}
+		}
 		master.set(this.mode = mode, this.demand = demand, DemandType.ArbitraryFeedForward,
-				Robot.IS_COMP ? 0.11 : 0.08);
+				Robot.IS_COMP ? 0.09 : 0.08);
 	}
 	
 	public static boolean log(ErrorCode err, String value) {

@@ -51,8 +51,8 @@ public class Intake extends Subsystem {
 			System.err.println("Intake: Could not find intake solenoids");
 		}
 		
-		leftRoller.setInverted(true);
-		rightRoller.setInverted(false);
+		leftRoller.setInverted(!Robot.IS_COMP);
+		rightRoller.setInverted(Robot.IS_COMP);
 		
 		set((talon) -> {
 			talon.setNeutralMode(NEUTRAL_MODE);
@@ -128,15 +128,31 @@ public class Intake extends Subsystem {
 		expansion.set(Robot.IS_COMP ? Value.kReverse : Value.kForward);
 	}
 	
+	public boolean isClosed() {
+		return expansion.get() == (Robot.IS_COMP ? Value.kReverse : Value.kForward);
+	}
+	
 	public void open() {
 		expansion.set(Robot.IS_COMP ? Value.kForward : Value.kReverse);
 	}
 	
+	public boolean isOpen() {
+		return expansion.get() == (Robot.IS_COMP ? Value.kForward : Value.kReverse);
+	}
+	
 	public void raise() {
-		raise.set(Value.kReverse);
+		raise.set(Robot.IS_COMP ? Value.kForward : Value.kReverse);
+	}
+	
+	public boolean isRaised() {
+		return raise.get() == (Robot.IS_COMP ? Value.kForward : Value.kReverse);
 	}
 	
 	public void lower() {
-		raise.set(Value.kForward);
+		raise.set(Robot.IS_COMP ? Value.kReverse : Value.kForward);
+	}
+	
+	public boolean isLowered() {
+		return raise.get() == (Robot.IS_COMP ? Value.kReverse : Value.kForward);
 	}
 }

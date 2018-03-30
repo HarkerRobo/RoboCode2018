@@ -84,26 +84,36 @@ public class OI {
 		JoystickButtonWrapper rightTrigger = new JoystickButtonWrapper(operator, GamepadWrapper.LOGITECH_TRIGGER_RIGHT);
 		DPadButtonWrapper dpadUp = new DPadButtonWrapper(operator, 0);
 		DPadButtonWrapper dpadDown = new DPadButtonWrapper(operator, 180);
-		dpadUp.whenPressed(new SetSolenoidCommand(Robot.intake.getRaise(), Value.kReverse));
+		dpadUp.whenPressed(new InstantCommand() {
+			@Override
+			public void initialize() {
+				Robot.intake.raise();
+			}
+		});
 		dpadDown.whenPressed(new InstantCommand() {
 			@Override
 			public void initialize() {
 				if(Robot.elevator.getMaster().getSelectedSensorPosition(0) < SmallRaiseCommand.DIST)
 					Robot.intake.open();
-				Robot.intake.getRaise().set(Value.kForward);
+				Robot.intake.lower();
 			}
 		});
 		leftTrigger.whenPressed(new InstantCommand() {
 			@Override
 			public void initialize() {
 				if(Robot.elevator.getMaster().getSelectedSensorPosition(0) > SmallRaiseCommand.DIST) {
-					Robot.intake.getExpansion().set(Value.kForward);
+					Robot.intake.close();
 				} else {
 					new SmallRaiseCommand().start();
 				}
 			}
 		});
-		rightTrigger.whenPressed(new SetSolenoidCommand(Robot.intake.getExpansion(), Value.kReverse));
+		rightTrigger.whenPressed(new InstantCommand() {
+			@Override
+			public void initialize() {
+				Robot.intake.open();
+			}
+		});
 		operator.getButtonY().whilePressed(new ShootCommand());
 		operator.getButtonA().whilePressed(new WeirdEjecteyCommand());
 		// gamepad.getButtonBumperLeft().whenPressed(new TestIntakeCommand());

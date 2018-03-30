@@ -32,15 +32,17 @@ public class Slot {
 //	RIGHT_MOTION_PROFILE = new Slot(0, 1.0 * 1023.0 / 4600.0, 0.3 * 1023.0 / 4600.0, 0.0012 * 1023.0 / 4600.0, 0.003, 5000, 500000, 50), //Carpet fast - comp
 //	LEFT_MOTION_PROFILE = new Slot(0, 0.9 * 1023.0 / 4600.0, 0.4 * 1023.0 / 4600.0, 0.0012 * 1023.0 / 4600.0, 0.003, 5000, 500000, 0), //Carpet fast - practice
 //	RIGHT_MOTION_PROFILE = new Slot(0, 1.0 * 1023.0 / 4600.0, 0.4 * 1023.0 / 4600.0, 0.0012 * 1023.0 / 4600.0, 0.003, 5000, 500000, 0), //Carpet fast - practice
-	LEFT_MOTION_PROFILE = new Slot(0, 0.9 * 1023.0 / 5200.0, 0.4 * 1023.0 / 5200.0, 0.0012 * 1023.0 / 5200.0, 0.003, 5000, 500000, 0), //Floor fast - practice new
-	RIGHT_MOTION_PROFILE = new Slot(0, 1.0 * 1023.0 / 5200.0, 0.4 * 1023.0 / 5200.0, 0.0012 * 1023.0 / 5200.0, 0.003, 5000, 500000, 0), //Floor fast - practice new
+//	LEFT_MOTION_PROFILE = new Slot(0, 0.9 * 1023.0 / 5200.0, 0.4 * 1023.0 / 5200.0, 0.0012 * 1023.0 / 5200.0, 0.003, 5000, 500000, 0), //Floor fast - practice new
+//	RIGHT_MOTION_PROFILE = new Slot(0, 1.0 * 1023.0 / 5200.0, 0.4 * 1023.0 / 5200.0, 0.0012 * 1023.0 / 5200.0, 0.003, 5000, 500000, 0), //Floor fast - practice new
 //	LEFT_MOTION_PROFILE = new Slot(0, 1.0 * 1023.0 / 5200.0, 0.5 * 1023.0 / 5000.0, 0.0012 * 1023.0 / 5000.0, 0.0026, 5000, 500000, 10), //Floor new - practice
 //	RIGHT_MOTION_PROFILE = new Slot(0, 1.0 * 1023.0 / 5200.0, 0.6 * 1023.0 / 5000.0, 0.0012 * 1023.0 / 5000.0, 0.0026, 5000, 500000, 10), //Floor new - practice
+		LEFT_MOTION_PROFILE = new Slot(0, 1.0 * 1023.0 / 4600.0, 0.4 * 1023.0 / 4600.0, 0.0012 * 1023.0 / 4600.0, 0.003, 5000, 500000, 0), //FINAL COMP
+		RIGHT_MOTION_PROFILE = new Slot(0, 1.0 * 1023.0 / 4500.0, 0.4 * 1023.0 / 4600.0, 0.0012 * 1023.0 / 4600.0, 0.003, 5000, 500000, 0), //FINAL COMP
 	LEFT_YAW = new Slot(1, 0, 1.0, 0.000, 0.0, 1000, 100000, 0),
 	RIGHT_YAW = new Slot(1, 0, 1.0, 0.000, 0.0, 1000, 100000, 0),
-	ELEVATOR_POSITION = new Slot(3, 0, 0.07, 0.000024, 0.0001, 20000, 10000000, 0),
-	ELEVATOR_SMALL_POSITION = new Slot(2, 0, 0.14, 0.00002, 0.0001, 20000, 10000000, 0),
-	ELEVATOR_VELOCITY = new Slot(1, 1.0 * 1023.0 / 2500.0, 0.6 * 1023.0 / 2500.0, 0.0005 * 1023.0 / 2500.0, 0.06 * 1023 / 2500, 3000, 7500000, 0),
+	ELEVATOR_POSITION = new Slot(3, 0, 0.07, 0.000016, 0.0001, 20000, 10000000, 0),
+	ELEVATOR_SMALL_POSITION = new Slot(2, 0, 0.14, 0.000012, 0.0001, 20000, 10000000, 0),
+	ELEVATOR_VELOCITY = new Slot(1, 1.02 * 1023.0 / 2500.0, 0.5 * 1023.0 / 2500.0, 0.0005 * 1023.0 / 2500.0, 0.06 * 1023 / 2500, 3000, 7500000, 0),
 	ELEVATOR_MOTION_MAGIC = new Slot(0, 1.0 * 1023.0 / 2500.0, 0.47, 0.0014, 0.01, 20000, 10000000, 0);
 	
 	private int slot, integralZone, allowableError;

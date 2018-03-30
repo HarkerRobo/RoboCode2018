@@ -13,22 +13,20 @@ import edu.wpi.first.wpilibj.command.InstantCommand;
  */
 public class IntakeExpansionCommand extends Command {
 	
-	public static final DoubleSolenoid.Value defaultLift = Robot.IS_COMP ? Value.kReverse : Value.kForward;
-	
 	public IntakeExpansionCommand() {
 		requires(Robot.intake);
 	}
 	
 	// Called just before this Command runs the first time
 	protected void initialize() {
-		if(Robot.intake.getExpansion().get() != defaultLift) {
+		if(Robot.intake.isOpen()) {
 			if(Robot.elevator.getMaster().getSelectedSensorPosition(0) > SmallRaiseCommand.DIST) {
-				Robot.intake.getExpansion().set(defaultLift);
+				Robot.intake.close();
 			} else {
 				new SmallRaiseCommand().start();
 			}
 		} else  {
-			Robot.intake.getExpansion().set(defaultLift == DoubleSolenoid.Value.kForward ? DoubleSolenoid.Value.kReverse : DoubleSolenoid.Value.kForward);
+			Robot.intake.open();
 		}
 	}
 

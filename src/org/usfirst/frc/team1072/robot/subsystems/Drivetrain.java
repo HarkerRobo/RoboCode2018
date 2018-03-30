@@ -124,7 +124,7 @@ public class Drivetrain extends Subsystem {
 							"No left encoder readings")
 					&& log(rightMaster.getSensorCollection().getPulseWidthRiseToRiseUs() != 0,
 							"No right encoder readings");
-			rightMaster.configSelectedFeedbackCoefficient(0.975, MAIN_PID, TIMEOUT);
+			rightMaster.configSelectedFeedbackCoefficient(0.94, MAIN_PID, TIMEOUT);
 			leftMaster.configSelectedFeedbackCoefficient(1.0, MAIN_PID, TIMEOUT);
 			rightMaster.configSelectedFeedbackCoefficient(0.25, AUX_PID, TIMEOUT);
 			leftMaster.configSelectedFeedbackCoefficient(0.25, AUX_PID, TIMEOUT);
@@ -133,34 +133,34 @@ public class Drivetrain extends Subsystem {
 			rightFollower.configClosedLoopPeakOutput(AUX_PID, 0.1, TIMEOUT);
 			leftFollower.configClosedLoopPeakOutput(AUX_PID, 0.1, TIMEOUT);
 			// Configure pigeon
-			gyroStatus = log(leftMaster.configRemoteFeedbackFilter(RobotMap.Intake.RIGHT_ROLLER, RemoteSensorSource.GadgeteerPigeon_Yaw,
+			gyroStatus = log(leftMaster.configRemoteFeedbackFilter(RobotMap.Intake.RIGHT_ROLLER, RemoteSensorSource.Off,
 					0, TIMEOUT), "Pigeon IMU not found")
-					&& log(rightMaster.configRemoteFeedbackFilter(RobotMap.Intake.RIGHT_ROLLER, RemoteSensorSource.GadgeteerPigeon_Yaw,
+					&& log(rightMaster.configRemoteFeedbackFilter(RobotMap.Intake.RIGHT_ROLLER, RemoteSensorSource.Off,
 							0, TIMEOUT), "Pigeon IMU not found")
-					&& log(leftMaster.configSelectedFeedbackSensor(RemoteFeedbackDevice.RemoteSensor0, AUX_PID,
+					&& log(leftMaster.configSelectedFeedbackSensor(RemoteFeedbackDevice.None, AUX_PID,
 							TIMEOUT), "Could not configure Pigeon IMU")
-					&& log(rightMaster.configSelectedFeedbackSensor(RemoteFeedbackDevice.RemoteSensor0, AUX_PID,
+					&& log(rightMaster.configSelectedFeedbackSensor(RemoteFeedbackDevice.None, AUX_PID,
 							TIMEOUT), "Could not configure Pigeon IMU");
-			log(rightMaster.configAuxPIDPolarity(false, TIMEOUT), "Could not configure auxiliary PID polarity");
-			log(leftMaster.configAuxPIDPolarity(true, TIMEOUT), "Could not configure auxiliary PID polarity");
+//			log(rightMaster.configAuxPIDPolarity(false, TIMEOUT), "Could not configure auxiliary PID polarity");
+//			log(leftMaster.configAuxPIDPolarity(true, TIMEOUT), "Could not configure auxiliary PID polarity");
 			// Load constants
 			if(!(velocityClosedStatus = false && Slot.LEFT_VELOCITY.configure(leftMaster, TIMEOUT)
 					&& Slot.RIGHT_VELOCITY.configure(rightMaster, TIMEOUT))) {
-				System.err.println("Drivetrain: Failed to configure velocity closed loop");
+				log("Drivetrain: Failed to configure velocity closed loop");
 			}
 			if(!(yawClosedStatus = Slot.LEFT_YAW.configure(leftMaster, TIMEOUT)
 					&& Slot.RIGHT_YAW.configure(rightMaster, TIMEOUT))) {
-				System.err.println("Drivetrain: Failed to configure position closed loop");
+				log("Drivetrain: Failed to configure position closed loop");
 			}
 			if(!(motionProfileStatus = Slot.LEFT_MOTION_PROFILE.configure(leftMaster, TIMEOUT)
 					&& Slot.RIGHT_MOTION_PROFILE.configure(rightMaster, TIMEOUT))) {
-				System.err.println("Drivetrain: Failed to configure motion profiling");
+				log("Drivetrain: Failed to configure motion profiling");
 			}
 			// Select profile zero
 			set((talon) -> talon.selectProfileSlot(0, 0));
 			set((talon) -> talon.selectProfileSlot(1, 1));
 		} catch(Exception e) {
-			System.err.println("Drivetrain: Failed to initialize motors");
+			log("Drivetrain: Failed to initialize motors");
 		}
 	}
 	
@@ -197,41 +197,41 @@ public class Drivetrain extends Subsystem {
 			encoderStatus = false;
 		leftMaster.getStickyFaults(sticky);
 		if(sticky.HardwareESDReset) {
-			System.out.println("right esd reset");
+			log("right esd reset");
 		}
 		if(sticky.ResetDuringEn) {
-			System.out.println("right reset during enabled");
+			log("right reset during enabled");
 		}
 		if(sticky.SensorOutOfPhase) {
-			System.out.println("sensor out of phase");
+			log("sensor out of phase");
 		}
 		if(sticky.UnderVoltage) {
-			System.out.println("under voltage");
+			log("under voltage");
 		}
 		if(sticky.RemoteLossOfSignal) {
-			System.out.println("remote loss of signal");
+//			log("remote loss of signal");
 		}
 		if(sticky.hasAnyFault()) {
-			leftMaster.clearStickyFaults(10);
+			leftMaster.clearStickyFaults(0);
 		}
 		rightMaster.getStickyFaults(sticky);
 		if(sticky.HardwareESDReset) {
-			System.out.println("right esd reset");
+			log("right esd reset");
 		}
 		if(sticky.ResetDuringEn) {
-			System.out.println("right reset during enabled");
+			log("right reset during enabled");
 		}
 		if(sticky.SensorOutOfPhase) {
-			System.out.println("sensor out of phase");
+			log("sensor out of phase");
 		}
 		if(sticky.UnderVoltage) {
-			System.out.println("under voltage");
+			log("under voltage");
 		}
 		if(sticky.RemoteLossOfSignal) {
-			System.out.println("remote loss of signal");
+//			log("remote loss of signal");
 		}
 		if(sticky.hasAnyFault()) {
-			rightMaster.clearStickyFaults(10);
+			rightMaster.clearStickyFaults(0);
 		}
 //		leftMaster.getStickyFaults(sticky);
 //		log(!sticky.hasAnyFault(), "left master sticky");
@@ -369,8 +369,12 @@ public class Drivetrain extends Subsystem {
 	
 	public boolean log(boolean good, String value) {
 		if(!good)
-			System.err.println("Drivetrain: " + value);
+			log(value);
 		return good;
+	}
+	
+	public void log(String value) {
+		Robot.log("Drivetrain: " + value);
 	}
 	
 	/**
