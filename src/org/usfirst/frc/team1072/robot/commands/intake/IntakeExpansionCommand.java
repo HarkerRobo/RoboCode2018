@@ -1,6 +1,7 @@
-package org.usfirst.frc.team1072.robot.commands;
+package org.usfirst.frc.team1072.robot.commands.intake;
 
 import org.usfirst.frc.team1072.robot.Robot;
+import org.usfirst.frc.team1072.robot.commands.elevator.SmallRaiseCommand;
 import org.usfirst.frc.team1072.robot.subsystems.Elevator;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;

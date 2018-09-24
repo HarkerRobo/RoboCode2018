@@ -6,7 +6,7 @@ import static org.usfirst.frc.team1072.robot.Config.Intake.*;
 import java.util.function.Consumer;
 
 import org.usfirst.frc.team1072.robot.Robot;
-import org.usfirst.frc.team1072.robot.commands.IntakeCommand;
+import org.usfirst.frc.team1072.robot.commands.intake.IntakeCommand;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 

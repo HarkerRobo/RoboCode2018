@@ -1,6 +1,9 @@
-package org.usfirst.frc.team1072.robot.commands;
+package org.usfirst.frc.team1072.robot.commands.auton;
 
 import org.usfirst.frc.team1072.robot.Config.Elevator;
+import org.usfirst.frc.team1072.robot.commands.elevator.SlowRaiseCommand;
+import org.usfirst.frc.team1072.robot.commands.elevator.ZeroElevatorCommand;
+import org.usfirst.frc.team1072.robot.commands.util.WaitCommand;
 import org.usfirst.frc.team1072.robot.Robot;
 import org.usfirst.frc.team1072.robot.Slot;
 import org.usfirst.frc.team1072.robot.profiling.MotionProfileCommand;

@@ -1,10 +1,11 @@
-package org.usfirst.frc.team1072.robot.commands;
+package org.usfirst.frc.team1072.robot.commands.auton;
 
 import java.io.FileNotFoundException;
 
 import org.usfirst.frc.team1072.robot.Robot;
 import org.usfirst.frc.team1072.robot.Slot;
-import org.usfirst.frc.team1072.robot.commands.AutonomousCommand.AutonomousReleaseCommand;
+import org.usfirst.frc.team1072.robot.commands.elevator.SlowRaiseCommand;
+import org.usfirst.frc.team1072.robot.commands.elevator.ZeroElevatorCommand;
 import org.usfirst.frc.team1072.robot.paths.Path;
 import org.usfirst.frc.team1072.robot.profiling.LocalMotionBuilder;
 import org.usfirst.frc.team1072.robot.profiling.LocalMotionCommand;

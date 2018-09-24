@@ -28,8 +28,8 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 import org.usfirst.frc.team1072.harkerrobolib.wrappers.PneumaticsWrapper;
-import org.usfirst.frc.team1072.robot.commands.AutonomousCommand;
-import org.usfirst.frc.team1072.robot.commands.ZeroElevatorCommand;
+import org.usfirst.frc.team1072.robot.commands.auton.AutonomousCommand;
+import org.usfirst.frc.team1072.robot.commands.elevator.ZeroElevatorCommand;
 import org.usfirst.frc.team1072.robot.profiling.MotionProfileBuilder;
 import org.usfirst.frc.team1072.robot.subsystems.Drivetrain;
 import org.usfirst.frc.team1072.robot.subsystems.Elevator;

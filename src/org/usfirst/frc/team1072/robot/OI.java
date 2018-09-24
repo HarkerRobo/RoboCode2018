@@ -9,6 +9,17 @@
 package org.usfirst.frc.team1072.robot;
 
 import org.usfirst.frc.team1072.robot.commands.*;
+import org.usfirst.frc.team1072.robot.commands.elevator.LowerElevatorCommand;
+import org.usfirst.frc.team1072.robot.commands.elevator.RaiseElevatorCommand;
+import org.usfirst.frc.team1072.robot.commands.elevator.SetElevatorCommand;
+import org.usfirst.frc.team1072.robot.commands.elevator.SetElevatorCommand2;
+import org.usfirst.frc.team1072.robot.commands.elevator.SmallRaiseCommand;
+import org.usfirst.frc.team1072.robot.commands.elevator.ZeroElevatorCommand;
+import org.usfirst.frc.team1072.robot.commands.intake.IntakeExpansionCommand;
+import org.usfirst.frc.team1072.robot.commands.intake.JiggleCommand;
+import org.usfirst.frc.team1072.robot.commands.intake.LiftIntakeCommand;
+import org.usfirst.frc.team1072.robot.commands.intake.ShootCommand;
+import org.usfirst.frc.team1072.robot.commands.intake.WeirdEjecteyCommand;
 import org.usfirst.frc.team1072.robot.profiling.MotionProfileBuilder;
 import org.usfirst.frc.team1072.robot.subsystems.Elevator;
 
