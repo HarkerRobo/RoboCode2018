@@ -8,8 +8,7 @@
 
 package org.usfirst.frc.team1072.robot;
 
-import org.usfirst.frc.team1072.robot.commands.CANTestingCommand;
-import org.usfirst.frc.team1072.robot.commands.v2.*;
+import org.usfirst.frc.team1072.robot.commands.*;
 import org.usfirst.frc.team1072.robot.profiling.MotionProfileBuilder;
 import org.usfirst.frc.team1072.robot.subsystems.Elevator;
 

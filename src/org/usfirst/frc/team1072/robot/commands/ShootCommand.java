@@ -5,32 +5,24 @@ import org.usfirst.frc.team1072.robot.Robot;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
  */
-public class VariableSpeedCommand extends Command {
-	
-	private double def;
-	private String name;
+public class ShootCommand extends Command {
 
-    public VariableSpeedCommand(double def, String name) {
+    public ShootCommand() {
         requires(Robot.intake);
-        this.def = def;
-        this.name = name;
-        SmartDashboard.putNumber(name + " right speed", def);
-        SmartDashboard.putNumber(name + " left speed", def * 0.66);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
+    		Robot.intake.getLeftRoller().set(ControlMode.PercentOutput, 0.75);
+    		Robot.intake.getRightRoller().set(ControlMode.PercentOutput, 0.75);
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    		Robot.intake.getRightRoller().set(ControlMode.PercentOutput, SmartDashboard.getNumber(name + " right speed", def));
-    		Robot.intake.getLeftRoller().set(ControlMode.PercentOutput, SmartDashboard.getNumber(name + " left speed", def));
     }
 
     // Make this return true when this Command no longer needs to run execute()
@@ -40,12 +32,12 @@ public class VariableSpeedCommand extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-    		Robot.intake.set((talon) -> talon.set(ControlMode.Disabled, 0));
+    		Robot.intake.getLeftRoller().set(ControlMode.PercentOutput, 0);
+    		Robot.intake.getRightRoller().set(ControlMode.PercentOutput, 0);
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
-    		Robot.intake.set((talon) -> talon.set(ControlMode.Disabled, 0));
     }
 }

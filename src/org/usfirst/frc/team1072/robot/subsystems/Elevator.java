@@ -4,7 +4,7 @@ import static org.usfirst.frc.team1072.robot.RobotMap.Elevator.*;
 
 import org.usfirst.frc.team1072.robot.Robot;
 import org.usfirst.frc.team1072.robot.Slot;
-import org.usfirst.frc.team1072.robot.commands.v2.ElevatorDriveCommand;
+import org.usfirst.frc.team1072.robot.commands.ElevatorDriveCommand;
 
 import static org.usfirst.frc.team1072.robot.Config.Elevator.*;
 

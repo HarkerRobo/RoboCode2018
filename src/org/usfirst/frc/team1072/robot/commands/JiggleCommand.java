@@ -1,37 +1,35 @@
-package org.usfirst.frc.team1072.robot.commands.v2;
+package org.usfirst.frc.team1072.robot.commands;
 
-import org.usfirst.frc.team1072.robot.OI;
 import org.usfirst.frc.team1072.robot.Robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.TimedCommand;
 
 /**
  *
  */
-public class OperatorIntakeCommand extends Command {
+public class JiggleCommand extends TimedCommand {
 
-    public OperatorIntakeCommand() {
+	public static final double TIMEOUT = 0.4;
+	public static final double IN_SPEED = 0.7, OUT_SPEED = -0.3;
+	
+    public JiggleCommand() {
+        super(TIMEOUT);
         requires(Robot.intake);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
+    		Robot.intake.getLeftRoller().set(ControlMode.PercentOutput, OUT_SPEED);
+    		Robot.intake.getRightRoller().set(ControlMode.PercentOutput, IN_SPEED);
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    		Robot.intake.getLeftRoller().set(ControlMode.PercentOutput, OI.operator.getLeftTrigger());
-    		Robot.intake.getRightRoller().set(ControlMode.PercentOutput, OI.operator.getRightTrigger());
     }
 
-    // Make this return true when this Command no longer needs to run execute()
-    protected boolean isFinished() {
-        return false;
-    }
-
-    // Called once after isFinished returns true
+    // Called once after timeout
     protected void end() {
     		Robot.intake.getLeftRoller().set(ControlMode.Disabled, 0);
     		Robot.intake.getRightRoller().set(ControlMode.Disabled, 0);

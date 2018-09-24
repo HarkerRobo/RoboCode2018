@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 import org.usfirst.frc.team1072.robot.Robot;
 import org.usfirst.frc.team1072.robot.RobotMap;
 import org.usfirst.frc.team1072.robot.Slot;
-import org.usfirst.frc.team1072.robot.commands.v2.ArcadeDriveCommand;
+import org.usfirst.frc.team1072.robot.commands.ArcadeDriveCommand;
 
 import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
