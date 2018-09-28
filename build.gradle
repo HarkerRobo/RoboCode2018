@@ -33,8 +33,6 @@ dependencies {
     compile ctre()
     compile navx()
     compile files('lib/Pathfinder-Java-1.8.jar')
-    compile files('lib/Pathfinder-Java-1.8-sources.jar')
-    compile files('lib/Pathfinder-Java-1.8-javadoc.jar')
 }
 
 // Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')
